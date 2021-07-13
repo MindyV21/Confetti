@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -101,7 +102,7 @@ public class SignUpActivity extends AppCompatActivity {
             return 0;
         }
 
-        if (password.equals(confirmPassword)) {
+        if (!password.equals(confirmPassword)) {
             Log.i(TAG, "Password != Confirm password");
             etConfirmPassword.setError("Passwords do not match!");
             etConfirmPassword.requestFocus();
@@ -164,17 +165,29 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            //User user = new User(fullName, email);
-                            // user signed in successfully!
-                            Log.i(TAG, "onSuccess user create account");
-                            Toast.makeText(SignUpActivity.this, "Account creation success!", Toast.LENGTH_SHORT).show();
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            // pass user to main activity
+                            User user = new User(fullName, email);
+                            FirebaseDatabase.getInstance().getReference("Users")
+                                    .child(FirebaseAuth.getInstance().getUid())
+                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()){
+                                        // user registered successfully!
+                                        Log.i(TAG, "onSuccess user create account");
+                                        Toast.makeText(SignUpActivity.this, "User has been registered successfully!", Toast.LENGTH_LONG).show();
+                                        pbLoading.setVisibility(View.GONE);
+                                        // redirect to login layout!
+                                    } else {
+                                        // failed to upload user to database
+                                        Toast.makeText(SignUpActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
+                                        pbLoading.setVisibility(View.GONE);
+                                    }
+                                }
+                            });
                         } else {
-                            // user sign in failed!
-                            Log.i(TAG, "onFailure user create account");
-                            Toast.makeText(SignUpActivity.this, "Account creation failed.", Toast.LENGTH_SHORT).show();
-                            // do something
+                            // failed to create user
+                            Toast.makeText(SignUpActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
+                            pbLoading.setVisibility(View.GONE);
                         }
                     }
                 });
