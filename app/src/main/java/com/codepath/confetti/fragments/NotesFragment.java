@@ -23,6 +23,7 @@ import com.codepath.confetti.models.Note;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 import okhttp3.Call;
@@ -111,13 +112,16 @@ public class NotesFragment extends Fragment {
     }
 
     private void queryNotes() {
-        String url = String.format(getString(R.string.nanonets_notes_query_url), getString(R.string.nanonets_notes_model_id));
+        //int startDay = LocalDate.now().toEpochDay();
+        String url = String.format("https://app.nanonets.com/api/v2/Inferences/Model/{%s}/" +
+                "ImageLevelInferences?start_day_interval={start_day}&current_batch_day={end_day}",
+                getString(R.string.nanonets_notes_model_id));
         Log.d(TAG, url);
 
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .url("https://app.nanonets.com/api/v2/Inferences/Model/{{model_id}}/ImageLevelInferences?start_day_interval={start_day}&current_batch_day={end_day}")
+                .url(url)
                 .get()
                 .addHeader("authorization", okhttp3.Credentials.basic("B1HIDqZA0Q_z0xTAqUy62o83M6xGv-xT", ""))
                 .build();
@@ -139,6 +143,8 @@ public class NotesFragment extends Fragment {
                 // response worked !
                 Toast.makeText(getActivity(), "Connection successful", Toast.LENGTH_LONG).show();
                 Log.d(TAG, response.toString());
+
+                // specific code to update any view within response
             }
         });
     }
