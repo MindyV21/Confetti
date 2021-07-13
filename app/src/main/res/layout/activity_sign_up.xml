@@ -55,4 +55,13 @@
         android:layout_height="wrap_content"
         android:text="Create account"
         android:layout_below="@+id/etConfirmPassword"/>
+
+    <ProgressBar
+        android:id="@+id/pbLoading"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/btnCreateAccount"
+        android:layout_marginTop="20dp"/>
 </RelativeLayout>
