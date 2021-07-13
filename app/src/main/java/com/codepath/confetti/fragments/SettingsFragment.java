@@ -2,13 +2,24 @@ package com.codepath.confetti.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
+import com.codepath.confetti.MainActivity;
 import com.codepath.confetti.R;
+import com.codepath.confetti.databinding.FragmentSettingsBinding;
+import com.codepath.confetti.databinding.FragmentUploadBinding;
+import com.google.firebase.auth.FirebaseAuth;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +27,11 @@ import com.codepath.confetti.R;
  * create an instance of this fragment.
  */
 public class SettingsFragment extends Fragment {
+
+    public static final String TAG = "NotesFragment";
+
+    private FragmentSettingsBinding binding;
+    private Button btnLogout;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,7 +76,31 @@ public class SettingsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        binding = FragmentSettingsBinding.inflate(getLayoutInflater(), container, false);
+        // layout of fragment is stored in a special property called root
+        View view = binding.getRoot();
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        btnLogout = binding.btnLogout;
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+            }
+        });
+    }
+
+    public void logout() {
+        FirebaseAuth.getInstance().signOut();
+        Log.i(TAG, "User logging out");
+        Toast.makeText(getContext(), "Logging out", Toast.LENGTH_SHORT).show();
+        getActivity().finish();
     }
 }

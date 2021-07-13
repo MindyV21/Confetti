@@ -63,10 +63,4 @@ public class MainActivity extends AppCompatActivity {
         // Set default selection
         bottomNavigationView.setSelectedItemId(R.id.action_home);
     }
-
-    public void logout() {
-        FirebaseAuth.getInstance().signOut();
-        Log.i(TAG, "User logging out");
-        Toast.makeText(MainActivity.this, "Logging out", Toast.LENGTH_SHORT).show();
-    }
 }

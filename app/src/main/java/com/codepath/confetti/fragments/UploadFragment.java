@@ -3,12 +3,14 @@ package com.codepath.confetti.fragments;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
@@ -98,6 +100,10 @@ public class UploadFragment extends Fragment {
 
         btnUploadGallery = binding.btnUploadGallery;
         ivPreview = binding.ivPreview;
+
+        // placeholder image
+//        Drawable drawable = AppCompatResources.getDrawable(getContext(), R);
+//        ivPreview.setImageDrawable(drawable);
 
         btnUploadGallery.setOnClickListener(new View.OnClickListener() {
             @Override
