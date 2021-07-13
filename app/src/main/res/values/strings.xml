@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Confetti</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="nanonets_notes_query_url">https://app.nanonets.com/api/v2/OCR/Model/%s/LabelUrls/</string>
 </resources>

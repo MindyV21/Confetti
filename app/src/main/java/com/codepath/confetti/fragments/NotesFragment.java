@@ -9,17 +9,29 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.codepath.confetti.R;
 import com.codepath.confetti.adapters.NotesAdapter;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
 import com.codepath.confetti.models.Note;
-import com.google.android.gms.common.api.Response;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,7 +40,7 @@ import java.util.List;
  */
 public class NotesFragment extends Fragment {
 
-    public static final String TAG = "PostFragment";
+    public static final String TAG = "NotesFragment";
 
     FragmentNotesBinding binding;
     private NotesAdapter adapter;
@@ -99,5 +111,35 @@ public class NotesFragment extends Fragment {
     }
 
     private void queryNotes() {
+        String url = String.format(getString(R.string.nanonets_notes_query_url), getString(R.string.nanonets_notes_model_id));
+        Log.d(TAG, url);
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url("https://app.nanonets.com/api/v2/Inferences/Model/{{model_id}}/ImageLevelInferences?start_day_interval={start_day}&current_batch_day={end_day}")
+                .get()
+                .addHeader("authorization", okhttp3.Credentials.basic("B1HIDqZA0Q_z0xTAqUy62o83M6xGv-xT", ""))
+                .build();
+
+        //Response response = client.newCall(request).execute();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                // response worked !
+                Toast.makeText(getActivity(), "Connection successful", Toast.LENGTH_LONG).show();
+                Log.d(TAG, response.toString());
+            }
+        });
     }
 }
