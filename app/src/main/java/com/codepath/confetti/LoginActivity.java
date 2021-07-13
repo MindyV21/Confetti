@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etPassword;
     private Button btnLogin;
     private TextView tvSignUp;
+    private ProgressBar pbLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         etPassword = binding.etPassword;
         btnLogin = binding.btnLogin;
         tvSignUp = binding.tvSignUp;
+        pbLoading = binding.pbLoading;
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override

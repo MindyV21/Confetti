@@ -11,10 +11,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.codepath.confetti.databinding.ActivityLoginBinding;
 import com.codepath.confetti.databinding.ActivitySignUpBinding;
+import com.codepath.confetti.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -33,6 +35,7 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText etPassword;
     private EditText etConfirmPassword;
     private Button btnCreateAccount;
+    private ProgressBar pbLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,7 @@ public class SignUpActivity extends AppCompatActivity {
         etPassword = binding.etPassword;
         etConfirmPassword = binding.etConfirmPassword;
         btnCreateAccount = binding.btnCreateAccount;
+        pbLoading = binding.pbLoading;
 
         btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +64,9 @@ public class SignUpActivity extends AppCompatActivity {
                 if (checkNameInput() != VALID) return;
                 if (checkEmailInput() != VALID) return;
                 if (checkPasswordsInput() != VALID) return;
+
+                pbLoading.setVisibility(View.VISIBLE);
+                registerUser();
             }
         });
     }
@@ -147,12 +154,17 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    public void createUser(String email, String password) {
+    public void registerUser() {
+        String email = etEmail.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
+        String fullName = etFullName.getText().toString().trim();
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            //User user = new User(fullName, email);
                             // user signed in successfully!
                             Log.i(TAG, "onSuccess user create account");
                             Toast.makeText(SignUpActivity.this, "Account creation success!", Toast.LENGTH_SHORT).show();
