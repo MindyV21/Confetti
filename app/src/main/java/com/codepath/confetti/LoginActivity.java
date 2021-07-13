@@ -60,10 +60,10 @@ public class LoginActivity extends AppCompatActivity {
                 // TODO: improve input checks
                 // check input values
                 if (checkEmailInput() != VALID) return;
-
                 if (checkPasswordInput() != VALID) return;
 
-
+                pbLoading.setVisibility(View.VISIBLE);
+                loginUser();
             }
         });
 
@@ -123,11 +123,15 @@ public class LoginActivity extends AppCompatActivity {
         // check if user is signed in (non-null) and update UI accordingly
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
-            // TODO: go into app
+            Log.i(TAG, "user already logged in");
+            goToMainActivity();
         }
     }
 
-    public void signIn(String email, String password) {
+    public void loginUser() {
+        String email = etEmail.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
+
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -136,13 +140,13 @@ public class LoginActivity extends AppCompatActivity {
                             // user signed in successfully!
                             Log.i(TAG, "onSuccess user sign in");
                             Toast.makeText(LoginActivity.this, "User signed in!", Toast.LENGTH_SHORT).show();
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            // pass user to main activity
+                            pbLoading.setVisibility(View.GONE);
+                            goToMainActivity();
                         } else {
                             // user sign in failed!
                             Log.i(TAG, "onFailure user sign in");
-                            Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                            // do something
+                            Toast.makeText(LoginActivity.this, "Failed to login! Please check your credentials.", Toast.LENGTH_LONG).show();
+                            pbLoading.setVisibility(View.GONE);
                         }
                     }
                 });
