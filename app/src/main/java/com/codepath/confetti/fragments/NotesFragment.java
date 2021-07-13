@@ -21,9 +21,12 @@ import com.codepath.confetti.databinding.FragmentNotesBinding;
 import com.codepath.confetti.models.Note;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -102,13 +105,20 @@ public class NotesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        allNotes = new ArrayList<>();
+
         rvNotes = binding.rvNotes;
         adapter = new NotesAdapter(getContext(), allNotes);
         rvNotes.setAdapter(adapter);
         rvNotes.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // add notes
-        queryNotes();
+        //queryNotes();
+
+        // add dummy data to notes
+        Note note = new Note("TEST");
+        allNotes.add(0, new Note("TEST"));
+        adapter.notifyItemInserted(0);
     }
 
     private void queryNotes() {
@@ -137,7 +147,7 @@ public class NotesFragment extends Fragment {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    throw new IOException("Unexpected code " + response);
+                    throw new IOException("Unexpected code " + response.toString());
                 }
 
                 // response worked !
