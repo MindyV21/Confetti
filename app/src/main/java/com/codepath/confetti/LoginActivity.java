@@ -76,11 +76,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void goToSignUpActivity() {
+        clearFields();
         Intent i = new Intent(this, SignUpActivity.class);
         startActivity(i);
     }
 
     private void goToMainActivity() {
+        clearFields();
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
     }
@@ -128,7 +130,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void loginUser() {
+    private void loginUser() {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
@@ -150,5 +152,10 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void clearFields() {
+        etEmail.setText("");
+        etPassword.setText("");
     }
 }

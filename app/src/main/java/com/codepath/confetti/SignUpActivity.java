@@ -176,7 +176,9 @@ public class SignUpActivity extends AppCompatActivity {
                                         Log.i(TAG, "onSuccess user create account");
                                         Toast.makeText(SignUpActivity.this, "User has been registered successfully!", Toast.LENGTH_LONG).show();
                                         pbLoading.setVisibility(View.GONE);
+                                        clearFields();
                                         // redirect to login layout!
+                                        finish();
                                     } else {
                                         // failed to upload user to database
                                         Toast.makeText(SignUpActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
@@ -191,5 +193,12 @@ public class SignUpActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void clearFields(){
+        etFullName.setText("");
+        etEmail.setText("");
+        etPassword.setText("");
+        etConfirmPassword.setText("");
     }
 }
