@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(view);
 
         mAuth = FirebaseAuth.getInstance();
-        Log.i(TAG, "" + mAuth.getCurrentUser().getDisplayName());
+        Log.i(TAG, "" + mAuth.getCurrentUser());
 
         bottomNavigationView = binding.bottomNavigation;
 

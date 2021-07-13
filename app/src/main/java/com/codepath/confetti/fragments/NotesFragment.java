@@ -1,5 +1,6 @@
 package com.codepath.confetti.fragments;
 
+import android.net.Credentials;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import com.codepath.confetti.R;
 import com.codepath.confetti.adapters.NotesAdapter;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
 import com.codepath.confetti.models.Note;
+import com.google.android.gms.common.api.Response;
 
 import java.util.List;
 
@@ -91,5 +93,11 @@ public class NotesFragment extends Fragment {
         adapter = new NotesAdapter(getContext(), allNotes);
         rvNotes.setAdapter(adapter);
         rvNotes.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // add notes
+        queryNotes();
+    }
+
+    private void queryNotes() {
     }
 }
