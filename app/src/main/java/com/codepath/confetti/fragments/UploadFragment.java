@@ -1,14 +1,31 @@
 package com.codepath.confetti.fragments;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import com.codepath.confetti.R;
+import com.codepath.confetti.databinding.FragmentNotesBinding;
+import com.codepath.confetti.databinding.FragmentUploadBinding;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +33,14 @@ import com.codepath.confetti.R;
  * create an instance of this fragment.
  */
 public class UploadFragment extends Fragment {
+
+    public static final String TAG = "NotesFragment";
+
+    private FragmentUploadBinding binding;
+    private Button btnUploadGallery;
+    private ImageView ivPreview;
+
+    public final static int PICK_PHOTO_CODE = 1046;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,7 +85,71 @@ public class UploadFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        binding = FragmentUploadBinding.inflate(getLayoutInflater(), container, false);
+        // layout of fragment is stored in a special property called root
+        View view = binding.getRoot();
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_upload, container, false);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        btnUploadGallery = binding.btnUploadGallery;
+        ivPreview = binding.ivPreview;
+
+        btnUploadGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "photo gallery intent!");
+                onPickPhoto(v);
+            }
+        });
+    }
+
+    // Trigger gallery selection for a photo
+    public void onPickPhoto(View view) {
+        // Create intent for picking a photo from the gallery
+        Intent intent = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
+        // So as long as the result is not null, it's safe to use the intent.
+        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+            // Bring up gallery to select a photo
+            startActivityForResult(intent, PICK_PHOTO_CODE);
+        }
+    }
+
+    public Bitmap loadFromUri(Uri photoUri) {
+        Bitmap image = null;
+        try {
+            // check version of Android on device
+            if(Build.VERSION.SDK_INT > 27){
+                // on newer versions of Android, use the new decodeBitmap method
+                ImageDecoder.Source source = ImageDecoder.createSource(getContext().getContentResolver(), photoUri);
+                image = ImageDecoder.decodeBitmap(source);
+            } else {
+                // support older versions of Android by using getBitmap
+                image = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photoUri);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if ((data != null) && requestCode == PICK_PHOTO_CODE) {
+            Uri photoUri = data.getData();
+
+            // Load the image located at photoUri into selectedImage
+            Bitmap selectedImage = loadFromUri(photoUri);
+
+            // Load the selected image into a preview
+            ivPreview.setImageBitmap(selectedImage);
+        }
     }
 }

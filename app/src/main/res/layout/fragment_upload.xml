@@ -5,10 +5,26 @@
     android:layout_height="match_parent"
     tools:context=".fragments.UploadFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/btnUploadGallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Upload from Photo Library"
+            android:layout_above="@id/ivPreview"
+            android:layout_centerHorizontal="true"/>
+
+        <ImageView
+            android:id="@+id/ivPreview"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_centerInParent="true"
+            android:scaleType="centerCrop"
+            tools:srcCompat="@tools:sample/avatars" />
+
+    </RelativeLayout>
 
 </FrameLayout>

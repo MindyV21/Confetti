@@ -46,7 +46,7 @@ public class NotesFragment extends Fragment {
 
     public static final String TAG = "NotesFragment";
 
-    FragmentNotesBinding binding;
+    private FragmentNotesBinding binding;
     private NotesAdapter adapter;
     private RecyclerView rvNotes;
     private List<Note> allNotes;
