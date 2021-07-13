@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.codepath.confetti.databinding.ActivityMainBinding;
 import com.codepath.confetti.databinding.ActivitySignUpBinding;
 import com.codepath.confetti.fragments.NotesFragment;
+import com.codepath.confetti.fragments.SettingsFragment;
+import com.codepath.confetti.fragments.UploadFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -40,17 +42,17 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment = null;
+                Fragment fragment;
                 switch (item.getItemId()) {
-                    case R.id.action_home:
-                        fragment = new NotesFragment();
+                    case R.id.action_settings:
+                        fragment = new SettingsFragment();
                         break;
                     case R.id.action_upload:
-//                        fragment = new ComposeFragment();
+                        fragment = new UploadFragment();
                         break;
-                    case R.id.action_profile:
+                    case R.id.action_home:
                     default:
-//                        fragment = new InstaProfileFragment();
+                        fragment = new NotesFragment();
                         break;
                 }
                 fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
