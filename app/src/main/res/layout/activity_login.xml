@@ -22,6 +22,7 @@
         android:ems="10"
         android:layout_marginTop="15dp"
         android:hint="email"
+        android:inputType="textEmailAddress"
         android:layout_above="@id/etPassword"/>
 
     <EditText

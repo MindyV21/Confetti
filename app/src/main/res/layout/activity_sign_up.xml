@@ -12,22 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         app:srcCompat="@drawable/ic_baseline_person_24"
-        android:layout_above="@id/etFirstName"/>
+        android:layout_above="@id/etFullName"/>
 
     <EditText
-        android:id="@+id/etFirstName"
+        android:id="@+id/etFullName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="first name"
-        android:layout_above="@id/etLastName"/>
-
-    <EditText
-        android:id="@+id/etLastName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="last name"
+        android:hint="full name"
         android:layout_above="@id/etEmail"/>
 
     <EditText
@@ -36,6 +28,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="email"
+        android:inputType="textEmailAddress"
         android:layout_centerInParent="true"/>
 
     <EditText
