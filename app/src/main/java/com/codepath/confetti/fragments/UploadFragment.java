@@ -124,9 +124,6 @@ public class UploadFragment extends Fragment {
 //        Drawable drawable = AppCompatResources.getDrawable(getContext(), R);
 //        ivPreview.setImageDrawable(drawable);
 
-        //Initialize where to store the picked photo:
-//        photoFile = getPhotoFileUri(photoFileName);
-        //fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider.confetti", photoFile);
         btnUploadGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,8 +135,13 @@ public class UploadFragment extends Fragment {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // check an image is loaded in TODO: make untrue to actually use button
-                if (true || photoFile == null || ivPreview.getDrawable() == null) {
+                // TODO: make submit button usable again
+                if (true) {
+                    Log.i(TAG, "you thoUGHT");
+                    return;
+                };
+                // check an image is loaded in
+                if (photoFile == null || ivPreview.getDrawable() == null) {
                     Toast.makeText(getContext(), "There is no image!", Toast.LENGTH_SHORT).show();
                     return;
                 }
