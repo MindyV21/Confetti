@@ -50,7 +50,6 @@ public class NanonetsApi {
                 }
 
                 // response worked !
-                //Toast.makeText(getActivity(), "Connection successful", Toast.LENGTH_LONG).show();
                 String responseBody = response.body().string();
                 response.close();
                 Log.d(TAG, responseBody);
@@ -68,7 +67,7 @@ public class NanonetsApi {
 
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("file", "REPLACE_IMAGE_PATH.jpg", RequestBody.create(MEDIA_TYPE_JPG, new File("REPLACE_IMAGE_PATH.jpg")))
+                .addFormDataPart("file", file.getAbsolutePath(), RequestBody.create(MEDIA_TYPE_JPG, new File(file.getAbsolutePath())))
                 .build();
 
         Request request = new Request.Builder()
@@ -88,6 +87,13 @@ public class NanonetsApi {
                 if (!response.isSuccessful()) {
                     throw new IOException("Unexpected code " + response.toString());
                 }
+
+                // response worked !
+                String responseBody = response.body().string();
+                response.close();
+                Log.d(TAG, responseBody);
+
+                // specific code to update any view within response
             }
         });
 

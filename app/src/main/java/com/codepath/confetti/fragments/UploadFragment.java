@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.codepath.confetti.NanonetsApi;
 import com.codepath.confetti.R;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
 import com.codepath.confetti.databinding.FragmentUploadBinding;
@@ -137,21 +138,14 @@ public class UploadFragment extends Fragment {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // check an image is loaded in          photoFile == null ||
-                if (ivPreview.getDrawable() == null) {
+                // check an image is loaded in TODO: make untrue to actually use button
+                if (true || photoFile == null || ivPreview.getDrawable() == null) {
                     Toast.makeText(getContext(), "There is no image!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 Log.i(TAG, "upload photo to nanonets database for prediction!");
-                File file = new File(getContext().getCacheDir(), "photo.jpg");
-                try {
-                    file.createNewFile();
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                NanonetsApi.asyncPredictFile(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), photoFile);
             }
         });
 
@@ -178,6 +172,8 @@ public class UploadFragment extends Fragment {
             } catch (IOException e){
                 Log.d(TAG, e.getLocalizedMessage());
             }
+
+            // write bitmap to an image file
             File testDir = getContext().getFilesDir();
             photoFile = new File(testDir, "photo.jpg");
             OutputStream os;
