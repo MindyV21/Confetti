@@ -60,33 +60,36 @@ public class NanonetsApi {
         });
     }
 
-//    public static void asyncPredictFile(String modelId, File file) {
-//        OkHttpClient client = new OkHttpClient();
-//
-//        RequestBody requestBody = new MultipartBody.Builder()
-//                .setType(MultipartBody.FORM)
-//                .addFormDataPart("file", "REPLACE_IMAGE_PATH.jpg", RequestBody.create(MEDIA_TYPE_JPG, new File("REPLACE_IMAGE_PATH.jpg")))
-//                .build();
-//
-//        Request request = new Request.Builder()
-//                .url("https://app.nanonets.com/api/v2/OCR/Model/{{model_id}}/LabelFile/?async=true")
-//                .post(requestBody)
-//                .addHeader("Authorization", Credentials.basic("REPLACE_API_KEY", ""))
-//                .build();
-//
-//        client.newCall(request).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            @Override
-//            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-//                if (!response.isSuccessful()) {
-//                    throw new IOException("Unexpected code " + response.toString());
-//                }
-//            }
-//        });
-//
-//    }
+    public static void asyncPredictFile(String apiKey, String modelId, File file) {
+        OkHttpClient client = new OkHttpClient();
+        MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpeg");
+        String url = String.format("https://app.nanonets.com/api/v2/OCR/Model/%s/LabelFile/?async=true",
+                modelId);
+
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("file", "REPLACE_IMAGE_PATH.jpg", RequestBody.create(MEDIA_TYPE_JPG, new File("REPLACE_IMAGE_PATH.jpg")))
+                .build();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .addHeader("Authorization", Credentials.basic(apiKey, ""))
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response.toString());
+                }
+            }
+        });
+
+    }
 }

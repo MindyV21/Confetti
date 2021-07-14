@@ -2,6 +2,7 @@ package com.codepath.confetti.fragments;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -11,8 +12,10 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.codepath.confetti.R;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
@@ -27,7 +31,13 @@ import com.codepath.confetti.databinding.FragmentUploadBinding;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,11 +48,18 @@ public class UploadFragment extends Fragment {
 
     public static final String TAG = "NotesFragment";
 
+    public final String APP_TAG = "MyCustomApp";
+
     private FragmentUploadBinding binding;
     private Button btnUploadGallery;
     private ImageView ivPreview;
+    private Button btnSubmit;
 
     public final static int PICK_PHOTO_CODE = 1046;
+    private Bitmap selectedImage;
+    public String photoFileName = "photo.jpg";
+    File photoFile;
+    Uri fileProvider;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -100,62 +117,82 @@ public class UploadFragment extends Fragment {
 
         btnUploadGallery = binding.btnUploadGallery;
         ivPreview = binding.ivPreview;
+        btnSubmit = binding.btnSubmit;
 
         // placeholder image
 //        Drawable drawable = AppCompatResources.getDrawable(getContext(), R);
 //        ivPreview.setImageDrawable(drawable);
 
+        //Initialize where to store the picked photo:
+//        photoFile = getPhotoFileUri(photoFileName);
+        //fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider.confetti", photoFile);
         btnUploadGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "photo gallery intent!");
-                onPickPhoto(v);
+                onUploadPhoto();
             }
         });
-    }
 
-    // Trigger gallery selection for a photo
-    public void onPickPhoto(View view) {
-        // Create intent for picking a photo from the gallery
-        Intent intent = new Intent(Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // check an image is loaded in          photoFile == null ||
+                if (ivPreview.getDrawable() == null) {
+                    Toast.makeText(getContext(), "There is no image!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
-        // So as long as the result is not null, it's safe to use the intent.
-        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-            // Bring up gallery to select a photo
-            startActivityForResult(intent, PICK_PHOTO_CODE);
-        }
-    }
+                Log.i(TAG, "upload photo to nanonets database for prediction!");
+                File file = new File(getContext().getCacheDir(), "photo.jpg");
+                try {
+                    file.createNewFile();
 
-    public Bitmap loadFromUri(Uri photoUri) {
-        Bitmap image = null;
-        try {
-            // check version of Android on device
-            if(Build.VERSION.SDK_INT > 27){
-                // on newer versions of Android, use the new decodeBitmap method
-                ImageDecoder.Source source = ImageDecoder.createSource(getContext().getContentResolver(), photoUri);
-                image = ImageDecoder.decodeBitmap(source);
-            } else {
-                // support older versions of Android by using getBitmap
-                image = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photoUri);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return image;
+        });
+
     }
+
+    public void onUploadPhoto(){
+        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, PICK_PHOTO_CODE);
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if ((data != null) && requestCode == PICK_PHOTO_CODE) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == PICK_PHOTO_CODE && resultCode == RESULT_OK && data != null){
             Uri photoUri = data.getData();
+            selectedImage = null;
+            try {
+                selectedImage = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photoUri);
+            }catch (FileNotFoundException e){
+                e.printStackTrace();
+                Log.e(TAG, "File not found");
+            } catch (IOException e){
+                Log.d(TAG, e.getLocalizedMessage());
+            }
+            File testDir = getContext().getFilesDir();
+            photoFile = new File(testDir, "photo.jpg");
+            OutputStream os;
+            try {
+                os = new FileOutputStream(photoFile);
+                selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                os.flush();
+                os.close();
 
-            // Load the image located at photoUri into selectedImage
-            Bitmap selectedImage = loadFromUri(photoUri);
-
-            // Load the selected image into a preview
-            ivPreview.setImageBitmap(selectedImage);
+                // testing to see if file actually contains image file
+                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                ivPreview.setImageBitmap(takenImage);
+            } catch (Exception e) {
+                Log.e(getClass().getSimpleName(), "Error writing bitmap", e);
+            }
         }
     }
 }
