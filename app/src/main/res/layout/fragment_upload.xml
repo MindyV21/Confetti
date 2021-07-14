@@ -25,6 +25,14 @@
             android:scaleType="centerCrop"
             tools:srcCompat="@tools:sample/avatars" />
 
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:layout_below="@id/ivPreview"
+            android:layout_centerHorizontal="true"/>
+
     </RelativeLayout>
 
 </FrameLayout>

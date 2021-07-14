@@ -15,27 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.codepath.confetti.NanonetsAPI;
 import com.codepath.confetti.R;
 import com.codepath.confetti.adapters.NotesAdapter;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
 import com.codepath.confetti.models.Note;
 
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -113,7 +100,7 @@ public class NotesFragment extends Fragment {
         rvNotes.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // add notes
-        queryNotes();
+        NanonetsAPI.queryNotes(getString(R.string.nanonets_notes_model_id));
 
         // add dummy data to notes
         Note note = new Note("TEST");
@@ -121,45 +108,5 @@ public class NotesFragment extends Fragment {
         adapter.notifyItemInserted(0);
     }
 
-    private void queryNotes() {
-        int startDay = (int) LocalDate.now().toEpochDay();
-        String url = String.format("https://app.nanonets.com/api/v2/Inferences/Model/%s/" +
-                "ImageLevelInferences?start_day_interval=%d&current_batch_day=%d",
-                getString(R.string.nanonets_notes_model_id), startDay, startDay);
-//        url = String.format(url, startDay);
-//        url = String.format(url, startDay);
-        Log.d(TAG, url);
 
-        OkHttpClient client = new OkHttpClient();
-
-        Request request = new Request.Builder()
-                .url(url)
-                .get()
-                .addHeader("authorization", okhttp3.Credentials.basic("B1HIDqZA0Q_z0xTAqUy62o83M6xGv-xT", ""))
-                .build();
-
-        //Response response = client.newCall(request).execute();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    throw new IOException("Unexpected code " + response.toString());
-                }
-
-                // response worked !
-                //Toast.makeText(getActivity(), "Connection successful", Toast.LENGTH_LONG).show();
-                String responseBody = response.body().string();
-                response.close();
-                Log.d(TAG, responseBody);
-
-                // specific code to update any view within response
-            }
-        });
-    }
 }
