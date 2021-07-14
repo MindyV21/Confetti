@@ -113,7 +113,7 @@ public class NotesFragment extends Fragment {
         rvNotes.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // add notes
-        //queryNotes();
+        queryNotes();
 
         // add dummy data to notes
         Note note = new Note("TEST");
@@ -122,10 +122,12 @@ public class NotesFragment extends Fragment {
     }
 
     private void queryNotes() {
-        //int startDay = LocalDate.now().toEpochDay();
-        String url = String.format("https://app.nanonets.com/api/v2/Inferences/Model/{%s}/" +
-                "ImageLevelInferences?start_day_interval={start_day}&current_batch_day={end_day}",
-                getString(R.string.nanonets_notes_model_id));
+        int startDay = (int) LocalDate.now().toEpochDay();
+        String url = String.format("https://app.nanonets.com/api/v2/Inferences/Model/%s/" +
+                "ImageLevelInferences?start_day_interval=%d&current_batch_day=%d",
+                getString(R.string.nanonets_notes_model_id), startDay, startDay);
+//        url = String.format(url, startDay);
+//        url = String.format(url, startDay);
         Log.d(TAG, url);
 
         OkHttpClient client = new OkHttpClient();
@@ -151,8 +153,10 @@ public class NotesFragment extends Fragment {
                 }
 
                 // response worked !
-                Toast.makeText(getActivity(), "Connection successful", Toast.LENGTH_LONG).show();
-                Log.d(TAG, response.toString());
+                //Toast.makeText(getActivity(), "Connection successful", Toast.LENGTH_LONG).show();
+                String responseBody = response.body().string();
+                response.close();
+                Log.d(TAG, responseBody);
 
                 // specific code to update any view within response
             }
