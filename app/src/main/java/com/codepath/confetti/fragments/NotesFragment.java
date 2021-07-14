@@ -1,6 +1,5 @@
 package com.codepath.confetti.fragments;
 
-import android.net.Credentials;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,13 +8,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.codepath.confetti.NanonetsAPI;
+import com.codepath.confetti.NanonetsApi;
 import com.codepath.confetti.R;
 import com.codepath.confetti.adapters.NotesAdapter;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
@@ -100,7 +97,7 @@ public class NotesFragment extends Fragment {
         rvNotes.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // add notes
-        NanonetsAPI.queryNotes(getString(R.string.nanonets_notes_model_id));
+        NanonetsApi.queryNotes(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id));
 
         // add dummy data to notes
         Note note = new Note("TEST");
