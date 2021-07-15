@@ -63,7 +63,4 @@ dependencies {
 
     // for nanonets
     implementation 'com.squareup.okhttp3:okhttp:4.1.0'
-
-    // tag search
-    compile 'com.github.Cutta:TagView:1.3'
 }
