@@ -1,16 +1,20 @@
 package com.codepath.confetti.fragments;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.SearchView;
 
 import com.codepath.confetti.NanonetsApi;
@@ -37,6 +41,7 @@ public class NotesFragment extends Fragment {
     private List<Note> allNotes;
 
     private SearchView searchView;
+    private ImageView ivSearchToggle;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -117,6 +122,16 @@ public class NotesFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String s) {
                 return false;
+            }
+        });
+
+        ivSearchToggle = binding.ivSearchToggle;
+        Drawable drawable = AppCompatResources.getDrawable(getContext(), R.drawable.ic_baseline_label_24);
+        ivSearchToggle.setImageDrawable(drawable);
+        ivSearchToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "switch between search and tag search !");
             }
         });
 

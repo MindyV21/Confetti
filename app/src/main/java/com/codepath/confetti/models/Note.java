@@ -13,8 +13,10 @@ public class Note {
 
     public static final String TAG = "NoteModel";
 
+    public String name;
     public List<String> text;
-    // TODO: add tags map?
+    // TODO: add tags map? or can only add a limited amount so use array
+    public List<String> tags;
 
     public Note() {};
 
