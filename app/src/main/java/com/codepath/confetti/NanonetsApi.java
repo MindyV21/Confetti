@@ -81,10 +81,9 @@ public class NanonetsApi {
     }
 
     // finds a specific predicted file from the nanonets database
-    public static void queryNote(String apiKey, String modelId, String requestFileId, String photoUrl) {
+    public static void queryNote(String apiKey, String modelId, String requestFileId, File file) {
         String url = String.format("https://app.nanonets.com/api/v2/Inferences/Model/%s/ImageLevelInferences/%s",
-                modelId, "40d54cf3-c78f-4853-b05c-b7e24cb24b62");
-        Log.d(TAG, url);
+                modelId, requestFileId);
 
         OkHttpClient client = new OkHttpClient();
 
@@ -109,33 +108,34 @@ public class NanonetsApi {
                 // response worked !
                 String responseBody = response.body().string();
                 response.close();
+                Log.i(TAG, url);
                 Log.d(TAG, responseBody);
 
                 JSONObject jsonObject = createJsonObject(responseBody);
 
                 // create Note object from jsonObject
-                Note note = new Note(photoUrl);
+                Note note = new Note();
                 try {
                     note.setText(jsonObject);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                // in case try catch fails ^^
-                if (note.text == null) return;
+                // create Prediction object from jsonArray
 
-                // upload Note object to firebase database
-                FirebaseDatabase.getInstance().getReference("Notes")
-                        .child(FirebaseAuth.getInstance().getUid())
-                        .child(requestFileId)
-                        .setValue(note).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<Void> task) {
-                        if (!task.isSuccessful()){
 
-                        }
-                    }
-                });
+//                // upload Note object to firebase database
+//                FirebaseDatabase.getInstance().getReference("Notes")
+//                        .child(FirebaseAuth.getInstance().getUid())
+//                        .child(requestFileId)
+//                        .setValue(note).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull @NotNull Task<Void> task) {
+//                        if (!task.isSuccessful()){
+//
+//                        }
+//                    }
+//                });
             }
         });
     }
@@ -182,10 +182,8 @@ public class NanonetsApi {
                     String requestFileId = result.getString("request_file_id");
                     String filePath = result.getString("filepath");
 
-                    String photoUrl = jsonObject.getJSONObject("signed_urls").getJSONObject(filePath).getString("original");
-
                     // query file in nanonets database
-                    queryNote(apiKey, modelId, requestFileId, photoUrl);
+                    queryNote(apiKey, modelId, requestFileId, file);
                 } catch (JSONException e) {
                     Log.e(TAG, "Error reading from jsonObject to extract requestFileId + url");
                     e.printStackTrace();

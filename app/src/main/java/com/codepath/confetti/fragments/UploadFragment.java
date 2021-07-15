@@ -48,9 +48,7 @@ import static android.app.Activity.RESULT_OK;
  */
 public class UploadFragment extends Fragment {
 
-    public static final String TAG = "NotesFragment";
-
-    public final String APP_TAG = "MyCustomApp";
+    public static final String TAG = "UploadFragment";
 
     private FragmentUploadBinding binding;
     private Button btnUploadGallery;
@@ -59,9 +57,7 @@ public class UploadFragment extends Fragment {
 
     public final static int PICK_PHOTO_CODE = 1046;
     private Bitmap selectedImage;
-    public String photoFileName = "photo.jpg";
     File photoFile;
-    Uri fileProvider;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -138,6 +134,7 @@ public class UploadFragment extends Fragment {
             public void onClick(View v) {
                 // TODO: make submit button usable again
                 if (true) {
+                    saveNote();
                     Log.i(TAG, "you thoUGHT");
                     return;
                 };
@@ -197,6 +194,7 @@ public class UploadFragment extends Fragment {
 
     // TODO: hardcoded for testing purposes
     private void saveNote() {
-        NanonetsApi.queryNote(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), "40d54cf3-c78f-4853-b05c-b7e24cb24b62", "https://nnts.imgix.net/uploadedfiles/0e8b4832-f64e-4b31-b111-6477ac4b743a/PredictionImages/334541032.jpeg?expires=1626310316&or=0&s=76cf939105f108c3eee53f2b020779a4");
+        //NanonetsApi.queryNotes(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id));
+        NanonetsApi.queryNote(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), "40d54cf3-c78f-4853-b05c-b7e24cb24b62", photoFile);
     }
 }
