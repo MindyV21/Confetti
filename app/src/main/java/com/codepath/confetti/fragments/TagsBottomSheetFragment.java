@@ -2,6 +2,8 @@ package com.codepath.confetti.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -12,6 +14,12 @@ import com.codepath.confetti.R;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
 import com.codepath.confetti.databinding.FragmentTagsBottomSheetBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +31,7 @@ public class TagsBottomSheetFragment extends BottomSheetDialogFragment {
     public static final String TAG = "TagsBottomSheetFragment";
 
     private FragmentTagsBottomSheetBinding binding;
+    private ChipGroup chipGroup;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -72,5 +81,28 @@ public class TagsBottomSheetFragment extends BottomSheetDialogFragment {
         View view = binding.getRoot();
         // Inflate the layout for this fragment
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        chipGroup = binding.chipGroup;
+
+        int checkedChipId = chipGroup.getCheckedChipId(); // Returns View.NO_ID if singleSelection = false
+        List<Integer> checkedChipIds = chipGroup.getCheckedChipIds(); // Returns a list of the selected chips' IDs, if any
+
+        chipGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // responds to child chip checked/unchecked
+            }
+        });
+
+        //dummy chips
+        Chip one = new Chip(getContext());
+        one.setText("Dog");
+        one.setCheckable(true);
+        chipGroup.addView(one);
     }
 }
