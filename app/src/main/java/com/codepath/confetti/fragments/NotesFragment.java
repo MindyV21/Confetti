@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.codepath.confetti.NanonetsApi;
 import com.codepath.confetti.R;
@@ -34,6 +35,8 @@ public class NotesFragment extends Fragment {
     private NotesAdapter adapter;
     private RecyclerView rvNotes;
     private List<Note> allNotes;
+
+    private SearchView searchView;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -95,6 +98,27 @@ public class NotesFragment extends Fragment {
         adapter = new NotesAdapter(getContext(), allNotes);
         rvNotes.setAdapter(adapter);
         rvNotes.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        searchView = binding.searchView;
+        searchView.setQueryHint("Search your notes");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // fetchNotes(query)
+
+                // reset SearchView
+                searchView.clearFocus();
+                searchView.setQuery("", false);
+                searchView.setIconified(true);
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
 
         //TODO: un comment / modify this later - add notes
         NanonetsApi.queryNotes(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id));

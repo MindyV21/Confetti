@@ -88,7 +88,7 @@ public class NanonetsApi {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .url(url)
+                .url("https://app.nanonets.com/api/v2/Inferences/Model/0e8b4832-f64e-4b31-b111-6477ac4b743a/ImageLevelInferences/40d54cf3-c78f-4853-b05c-b7e24cb24b62")
                 .get()
                 .addHeader("authorization", okhttp3.Credentials.basic(apiKey, ""))
                 .build();
