@@ -131,7 +131,9 @@ public class NotesFragment extends Fragment {
         ivSearchToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(TAG, "switch between search and tag search !");
+                Log.i(TAG, "tags!");
+                TagsBottomSheetFragment tagFragment = new TagsBottomSheetFragment();
+                tagFragment.show(getChildFragmentManager(), tagFragment.getTag());
             }
         });
 
