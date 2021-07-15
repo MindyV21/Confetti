@@ -2,11 +2,22 @@ package com.codepath.confetti;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.codepath.confetti.models.Note;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -22,6 +33,17 @@ public class NanonetsApi {
 
     public static final String TAG = "NanonetsApi";
 
+    private static JSONObject createJsonObject(String responseBody) {
+        JSONObject json = null;
+        try {
+            json = new JSONObject(responseBody);
+        } catch (JSONException e) {
+            Log.e(TAG, "failed to create json object", e);
+        }
+        return json;
+    }
+
+    // finds all predicted files from nanonets database
     public static void queryNotes(String apiKey, String modelId) {
         int startDay = (int) LocalDate.now().toEpochDay();
         String url = String.format("https://app.nanonets.com/api/v2/Inferences/Model/%s/" +
@@ -53,8 +75,58 @@ public class NanonetsApi {
                 String responseBody = response.body().string();
                 response.close();
                 Log.d(TAG, responseBody);
+            }
+        });
+    }
 
-                // specific code to update any view within response
+    // finds a specific predicted file from the nanonets database
+    public static void queryNote(String apiKey, String modelId, String fileId) {
+        String url = String.format("https://app.nanonets.com/api/v2/Inferences/Model/%s/ImageLevelInferences/%s",
+                modelId, "40d54cf3-c78f-4853-b05c-b7e24cb24b62");
+        Log.d(TAG, url);
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("authorization", okhttp3.Credentials.basic(apiKey, ""))
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response.toString());
+                }
+
+                // response worked !
+                String responseBody = response.body().string();
+                response.close();
+                Log.d(TAG, responseBody);
+
+                JSONObject jsonObject = createJsonObject(responseBody);
+
+                // create Note object from jsonObject
+                // upload Note object to firebase database
+                // make it so when switch to home it queries firebase data base again OR communication between fragments?
+
+                Note note = Note.fromJsonObject(jsonObject);
+                FirebaseDatabase.getInstance().getReference("Notes")
+                        .child(FirebaseAuth.getInstance().getUid())
+                        .setValue(note).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<Void> task) {
+                        if (!task.isSuccessful()){
+
+                        }
+                    }
+                });
             }
         });
     }
@@ -92,8 +164,7 @@ public class NanonetsApi {
                 String responseBody = response.body().string();
                 response.close();
                 Log.d(TAG, responseBody);
-
-                // specific code to update any view within response
+                // TODO: create a new Note instance and return
             }
         });
 

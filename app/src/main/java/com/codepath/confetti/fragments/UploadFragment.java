@@ -31,6 +31,7 @@ import com.codepath.confetti.databinding.FragmentNotesBinding;
 import com.codepath.confetti.databinding.FragmentUploadBinding;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -192,5 +193,10 @@ public class UploadFragment extends Fragment {
                 Log.e(getClass().getSimpleName(), "Error writing bitmap", e);
             }
         }
+    }
+
+    // TODO: to be deleted / modified, uploads Note objects to firebase database for set up
+    private void saveNote() {
+        NanonetsApi.queryNote(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), "");
     }
 }
