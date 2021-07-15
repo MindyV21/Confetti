@@ -22,6 +22,7 @@ import com.codepath.confetti.R;
 import com.codepath.confetti.adapters.NotesAdapter;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
 import com.codepath.confetti.models.Note;
+import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,8 @@ public class NotesFragment extends Fragment {
 
     private SearchView searchView;
     private ImageView ivSearchToggle;
+
+    private ChipGroup chipGroup;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -140,9 +143,23 @@ public class NotesFragment extends Fragment {
         //TODO: un comment / modify this later - add notes
         //NanonetsApi.queryNotes(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id));
 
-////         add dummy data to notes
-//        Note note = new Note("TEST");
-//        allNotes.add(0, new Note("TEST"));
-//        adapter.notifyItemInserted(0);
+        dummyData();
+    }
+
+    protected void dummyData() {
+        allNotes.add(new Note("hello"));
+        allNotes.add(new Note("my"));
+        allNotes.add(new Note("name"));
+        allNotes.add(new Note("is"));
+        allNotes.add(new Note("bread"));
+        allNotes.add(new Note("!"));
+
+        adapter.notifyDataSetChanged();
+
+    }
+
+    protected void clearNotes() {
+        allNotes.clear();
+        adapter.notifyDataSetChanged();
     }
 }

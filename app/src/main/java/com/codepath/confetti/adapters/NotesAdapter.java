@@ -69,6 +69,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
         public void bind(Note note) {
             // bind var
+            tvNoteName.setText(note.name);
             Drawable drawable = AppCompatResources.getDrawable(context, R.drawable.ic_launcher_foreground);
             ivImage.setImageDrawable(drawable);
         }

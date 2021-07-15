@@ -1,5 +1,6 @@
 package com.codepath.confetti.fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -87,22 +88,34 @@ public class TagsBottomSheetFragment extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // clear notes
+        NotesFragment parentFragment = ((NotesFragment) TagsBottomSheetFragment.this.getParentFragment());
+        parentFragment.clearNotes();
+
         chipGroup = binding.chipGroup;
 
         int checkedChipId = chipGroup.getCheckedChipId(); // Returns View.NO_ID if singleSelection = false
         List<Integer> checkedChipIds = chipGroup.getCheckedChipIds(); // Returns a list of the selected chips' IDs, if any
-
-        chipGroup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // responds to child chip checked/unchecked
-            }
-        });
 
         //dummy chips
         Chip one = new Chip(getContext());
         one.setText("Dog");
         one.setCheckable(true);
         chipGroup.addView(one);
+
+        chipGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // responds to child chip checked/unchecked
+
+            }
+        });
+    }
+
+    @Override
+    public void onDismiss(@NonNull @NotNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        NotesFragment parentFragment = ((NotesFragment) TagsBottomSheetFragment.this.getParentFragment());
+        parentFragment.dummyData();
     }
 }

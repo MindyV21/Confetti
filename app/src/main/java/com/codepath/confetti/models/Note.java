@@ -18,6 +18,10 @@ public class Note {
 
     public Note() {};
 
+    public Note(String name) {
+        this.name = name;
+    }
+
     public void setText(JSONObject jsonObject) throws JSONException {
         predictions = new ArrayList<>();
         JSONArray prediction = jsonObject.getJSONArray("result").getJSONObject(0).getJSONArray("prediction");
