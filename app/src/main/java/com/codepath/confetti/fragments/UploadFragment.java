@@ -195,8 +195,8 @@ public class UploadFragment extends Fragment {
         }
     }
 
-    // TODO: to be deleted / modified, uploads Note objects to firebase database for set up
+    // TODO: hardcoded for testing purposes
     private void saveNote() {
-        NanonetsApi.queryNote(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), "");
+        NanonetsApi.queryNote(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), "40d54cf3-c78f-4853-b05c-b7e24cb24b62", "https://nnts.imgix.net/uploadedfiles/0e8b4832-f64e-4b31-b111-6477ac4b743a/PredictionImages/334541032.jpeg?expires=1626310316&or=0&s=76cf939105f108c3eee53f2b020779a4");
     }
 }

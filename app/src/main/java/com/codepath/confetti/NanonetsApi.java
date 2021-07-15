@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -80,7 +81,7 @@ public class NanonetsApi {
     }
 
     // finds a specific predicted file from the nanonets database
-    public static void queryNote(String apiKey, String modelId, String fileId) {
+    public static void queryNote(String apiKey, String modelId, String requestFileId, String photoUrl) {
         String url = String.format("https://app.nanonets.com/api/v2/Inferences/Model/%s/ImageLevelInferences/%s",
                 modelId, "40d54cf3-c78f-4853-b05c-b7e24cb24b62");
         Log.d(TAG, url);
@@ -113,12 +114,20 @@ public class NanonetsApi {
                 JSONObject jsonObject = createJsonObject(responseBody);
 
                 // create Note object from jsonObject
-                // upload Note object to firebase database
-                // make it so when switch to home it queries firebase data base again OR communication between fragments?
+                Note note = new Note(photoUrl);
+                try {
+                    note.setText(jsonObject);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-                Note note = Note.fromJsonObject(jsonObject);
+                // in case try catch fails ^^
+                if (note.text == null) return;
+
+                // upload Note object to firebase database
                 FirebaseDatabase.getInstance().getReference("Notes")
                         .child(FirebaseAuth.getInstance().getUid())
+                        .child(requestFileId)
                         .setValue(note).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull @NotNull Task<Void> task) {
@@ -164,7 +173,23 @@ public class NanonetsApi {
                 String responseBody = response.body().string();
                 response.close();
                 Log.d(TAG, responseBody);
-                // TODO: create a new Note instance and return
+
+                // query file in nanonets database
+                try {
+                    // extract data from async upload response
+                    JSONObject jsonObject = new JSONObject(responseBody);
+                    JSONObject result = jsonObject.getJSONArray("result").getJSONObject(0);
+                    String requestFileId = result.getString("request_file_id");
+                    String filePath = result.getString("filepath");
+
+                    String photoUrl = jsonObject.getJSONObject("signed_urls").getJSONObject(filePath).getString("original");
+
+                    // query file in nanonets database
+                    queryNote(apiKey, modelId, requestFileId, photoUrl);
+                } catch (JSONException e) {
+                    Log.e(TAG, "Error reading from jsonObject to extract requestFileId + url");
+                    e.printStackTrace();
+                }
             }
         });
 

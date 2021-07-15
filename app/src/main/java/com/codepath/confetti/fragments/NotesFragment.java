@@ -100,8 +100,8 @@ public class NotesFragment extends Fragment {
         //NanonetsApi.queryNotes(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id));
 
         // add dummy data to notes
-        Note note = new Note("TEST");
-        allNotes.add(0, new Note("TEST"));
-        adapter.notifyItemInserted(0);
+//        Note note = new Note("TEST");
+//        allNotes.add(0, new Note("TEST"));
+//        adapter.notifyItemInserted(0);
     }
 }
