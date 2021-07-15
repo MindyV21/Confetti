@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.Cutta:TagView:1.3@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/011f128ea4010d188b3df6394473edbf/TagView-1.3/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/011f128ea4010d188b3df6394473edbf/TagView-1.3/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/011f128ea4010d188b3df6394473edbf/TagView-1.3/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.Cutta/TagView/1.3/51d51fa6bcc16ef936662de750d77a1fb38f729/TagView-1.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
