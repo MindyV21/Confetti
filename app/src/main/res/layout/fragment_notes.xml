@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.NotesFragment">
 
     <RelativeLayout
@@ -13,17 +14,11 @@
             android:id="@+id/relLayoutSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-            <RelativeLayout
-                android:id="@+id/relLayoutSearchTagView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
 
-                <SearchView
-                    android:id="@+id/searchView"
-                    android:layout_width="375dp"
-                    android:layout_height="wrap_content" />
-
-            </RelativeLayout>
+            <SearchView
+                android:id="@+id/searchView"
+                android:layout_width="375dp"
+                android:layout_height="wrap_content" />
 
             <ImageView
                 android:id="@+id/ivSearchToggle"
@@ -31,15 +26,30 @@
                 android:layout_height="35dp"
                 tools:srcCompat="@drawable/ic_baseline_label_24"
                 android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/relLayoutSearchTagView"
+                android:layout_toEndOf="@id/searchView"
                 android:clickable="true"/>
         </RelativeLayout>
+
+        <HorizontalScrollView
+            android:id="@+id/hScrollViewTags"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_below="@id/relLayoutSearch">
+            <com.google.android.material.chip.ChipGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleLine="true">
+
+            <!-- Chips can be declared here, or added dynamically. -->
+
+            </com.google.android.material.chip.ChipGroup>
+        </HorizontalScrollView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvNotes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/relLayoutSearch"/>
+            android:layout_below="@+id/hScrollViewTags"/>
     </RelativeLayout>
 
 </FrameLayout>
