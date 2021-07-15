@@ -14,19 +14,17 @@ public class Note {
     public static final String TAG = "NoteModel";
 
     public String name;
-    public List<String> text;
-    // TODO: add tags map? or can only add a limited amount so use array
-    public List<String> tags;
+    public List<Prediction> predictions;
 
     public Note() {};
 
     public void setText(JSONObject jsonObject) throws JSONException {
-        text = new ArrayList<>();
+        predictions = new ArrayList<>();
         JSONArray prediction = jsonObject.getJSONArray("result").getJSONObject(0).getJSONArray("prediction");
 
         for (int i = 0; i < prediction.length(); i++) {
-            text.add(prediction.getJSONObject(i).getString("ocr_text"));
-            Log.d(TAG, prediction.getJSONObject(i).getString("ocr_text"));
+            predictions.add(new Prediction(prediction.getJSONObject(i)));
+            Log.d(TAG, predictions.get(i).text);
         }
     }
 }

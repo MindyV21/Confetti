@@ -136,7 +136,7 @@ public class NotesFragment extends Fragment {
         });
 
         //TODO: un comment / modify this later - add notes
-        NanonetsApi.queryNotes(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id));
+        //NanonetsApi.queryNotes(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id));
 
 ////         add dummy data to notes
 //        Note note = new Note("TEST");
