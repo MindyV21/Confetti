@@ -82,7 +82,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
         @Override
         public void onClick(View v) {
-            Log.i(TAG, "item clicked!");
+            Log.i(TAG, "item clicked! - " + tvNoteName);
             // get position
             int position = getAdapterPosition();
             // make sure valid position

@@ -162,6 +162,31 @@ public class NotesFragment extends Fragment {
         });
 
 //        dummyData();
+
+        // Get a reference to our posts
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Notes/" + FirebaseAuth.getInstance().getUid() + "/Files");
+
+        // Attach a listener to read the data at our posts reference
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i(TAG, dataSnapshot.toString());
+                Iterable<DataSnapshot> iterable = dataSnapshot.getChildren();
+                for (DataSnapshot data : iterable) {
+                    Log.i(TAG, data.toString());
+                    Note note = data.getValue(Note.class);
+                    note.setName("predict size - " + note.predictions.size());
+                    allNotes.add(note);
+                }
+                adapter.notifyItemInserted(allNotes.size() - 1);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
     }
 
     protected void dummyData() {
