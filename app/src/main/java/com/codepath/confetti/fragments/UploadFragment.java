@@ -145,7 +145,7 @@ public class UploadFragment extends Fragment {
                 }
 
                 Log.i(TAG, "upload photo to nanonets database for prediction!");
-                NanonetsApi.asyncPredictFile(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), photoFile);
+                NanonetsApi.asyncPredictFile(getContext(), getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), photoFile);
             }
         });
 
@@ -194,7 +194,7 @@ public class UploadFragment extends Fragment {
 
     // TODO: hardcoded for testing purposes
     private void saveNote() {
-        //NanonetsApi.queryNotes(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id));
-        NanonetsApi.queryNote(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), "522cdc69-e4e5-11eb-93ae-e2f76a726d2b", photoFile);
+        //NanonetsApi.queryNotes(getContext(), getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id));
+        NanonetsApi.queryNote(getContext(), getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), "522cdc69-e4e5-11eb-93ae-e2f76a726d2b", photoFile);
     }
 }

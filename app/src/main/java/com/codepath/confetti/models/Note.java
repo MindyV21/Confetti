@@ -14,15 +14,17 @@ public class Note {
     public static final String TAG = "NoteModel";
 
     public String name;
+//    public String url;
     public List<Prediction> predictions;
 
     public Note() {};
 
+    // for dummy data
     public Note(String name) {
         this.name = name;
     }
 
-    public void setText(JSONObject jsonObject) throws JSONException {
+    public void getPredictions(JSONObject jsonObject) throws JSONException {
         predictions = new ArrayList<>();
         JSONArray prediction = jsonObject.getJSONArray("result").getJSONObject(0).getJSONArray("prediction");
 
