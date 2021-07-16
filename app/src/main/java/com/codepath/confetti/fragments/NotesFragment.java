@@ -37,6 +37,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -52,6 +53,7 @@ public class NotesFragment extends Fragment {
     private NotesAdapter adapter;
     private RecyclerView rvNotes;
     private List<Note> allNotes;
+    private Map<String, Note> notes;
 
     private SearchView searchView;
     private ImageView ivSearchToggle;

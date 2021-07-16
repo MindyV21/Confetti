@@ -140,11 +140,11 @@ public class UploadFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // TODO: hardcoded part
-                if (true) {
-                    saveNote();
-                    Log.i(TAG, "you thoUGHT");
-                    return;
-                };
+//                if (true) {
+//                    saveNote();
+//                    Log.i(TAG, "you thoUGHT");
+//                    return;
+//                };
                 // check an image is loaded in
                 if (photoFile == null || ivPreview.getDrawable() == null) {
                     Toast.makeText(getContext(), "There is no image!", Toast.LENGTH_SHORT).show();
@@ -202,8 +202,6 @@ public class UploadFragment extends Fragment {
 
     // TODO: hardcoded for testing purposes becuase i mess up code
     private void saveNote() {
-        //NanonetsApi.queryNotes(getContext(), getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id));
-//        NanonetsApi.queryNote(getContext(), getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), "779daad3-e672-11eb-ba0d-3e2338bb69e6", photoFile);
-//        Firebase.uploadImage(photoFile, "779daad3-e672-11eb-ba0d-3e2338bb69e6");
+        NanonetsApi.queryNote(getContext(), getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), "d110063c-e67b-11eb-af1e-9a1974bea1bf", photoFile);
     }
 }

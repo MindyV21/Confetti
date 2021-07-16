@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -191,7 +192,12 @@ public class NanonetsApi {
 
     // sends image file to nanonets to predict data
     public static void predictFile(Context context, String apiKey, String modelId, File file) {
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.connectTimeout(5, TimeUnit.MINUTES) // connect timeout
+                .writeTimeout(5, TimeUnit.MINUTES) // write timeout
+                .readTimeout(5, TimeUnit.MINUTES); // read timeout
+
+        OkHttpClient client = builder.build();
         MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpeg");
         String url = String.format("https://app.nanonets.com/api/v2/OCR/Model/%s/LabelFile/",
                 modelId);
@@ -229,17 +235,14 @@ public class NanonetsApi {
                     // extract data from async upload response
                     JSONObject jsonObject = new JSONObject(responseBody);
                     JSONObject result = jsonObject.getJSONArray("result").getJSONObject(0);
+                    Log.d(TAG, "predictFile json: " + result.toString());
                     String id = result.getString("id");
                     Log.d(TAG, "predictFile id: " + id);
 
                     // create Note object from jsonObject
                     Note note = new Note();
                     note.setName("change name later");
-                    try {
-                        note.getPredictions(jsonObject);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    note.getPredictions(jsonObject);
 
                     // upload note to database
                     Firebase.uploadNote(context, note, id);
@@ -250,7 +253,7 @@ public class NanonetsApi {
 //                    // query file in nanonets database
 //                    queryNote(context, apiKey, modelId, id, file);
                 } catch (JSONException e) {
-                    Log.e(TAG, "Error reading from jsonObject to extract id + url");
+                    Log.e(TAG, "Error in nanonets data handling");
                     e.printStackTrace();
                 }
             }
