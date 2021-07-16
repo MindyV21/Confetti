@@ -38,29 +38,54 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "" + mAuth.getCurrentUser());
 
         bottomNavigationView = binding.bottomNavigation;
-
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment fragment;
                 switch (item.getItemId()) {
                     case R.id.action_settings:
-                        fragment = new SettingsFragment();
+                        switchFragments("settings", "upload", "notes");
                         break;
                     case R.id.action_upload:
-                        fragment = new UploadFragment();
+                        switchFragments("upload", "settings", "notes");
                         break;
                     case R.id.action_home:
                     default:
-                        fragment = new NotesFragment();
+                        switchFragments("notes", "upload", "settings");
                         break;
                 }
-                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
+//                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
                 return true;
             }
         });
 
         // Set default selection
         bottomNavigationView.setSelectedItemId(R.id.action_home);
+    }
+
+    private void switchFragments(String currentTag, String hiddenTagOne, String hiddenTagTwo) {
+        if(fragmentManager.findFragmentByTag(currentTag) != null) {
+            //if the fragment exists, show it.
+            fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag(currentTag)).commit();
+        } else {
+            //if the fragment does not exist, add it to fragment manager.
+            Fragment fragment;
+            if (currentTag.equals("settings"))
+                fragment = new SettingsFragment();
+            else if (currentTag.equals("upload"))
+                fragment = new UploadFragment();
+            else
+                fragment = new NotesFragment();
+
+            fragmentManager.beginTransaction().add(R.id.flContainer, fragment, currentTag).commit();
+        }
+        if(fragmentManager.findFragmentByTag(hiddenTagOne) != null){
+            //if the other fragment is visible, hide it.
+            fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag(hiddenTagOne)).commit();
+        }
+        if(fragmentManager.findFragmentByTag(hiddenTagTwo) != null){
+            //if the other fragment is visible, hide it.
+            fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag(hiddenTagTwo)).commit();
+        }
     }
 }

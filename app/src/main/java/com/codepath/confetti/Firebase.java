@@ -24,6 +24,7 @@ import com.google.firebase.storage.UploadTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class Firebase {
 
@@ -71,6 +72,23 @@ public class Firebase {
                     // note failed to upload to firebase
                     Log.i(TAG, "onFailure to upload note to firebase");
                     Toast.makeText(context, "Note upload failed! Try again.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public static void createChip(String chipName, ArrayList<String> fileIds) {
+        // upload Note object to firebase database
+        FirebaseDatabase.getInstance().getReference("Chips")
+                .child(FirebaseAuth.getInstance().getUid())
+                .child(chipName)
+                .setValue(fileIds).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    Log.i(TAG, "onSuccess to create chip in firebase database");
+                } else {
+                    Log.i(TAG, "onFailure to create chip in firebase database");
                 }
             }
         });

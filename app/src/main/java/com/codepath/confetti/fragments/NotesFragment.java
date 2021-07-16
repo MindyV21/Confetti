@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SearchView;
 
+import com.codepath.confetti.Firebase;
 import com.codepath.confetti.NanonetsApi;
 import com.codepath.confetti.R;
 import com.codepath.confetti.adapters.NotesAdapter;
@@ -194,7 +195,7 @@ public class NotesFragment extends Fragment {
             }
         });
 
-        NanonetsApi.queryNotes(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id));
+        //NanonetsApi.queryNotes(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id));
     }
 
     protected void dummyData() {
@@ -217,5 +218,15 @@ public class NotesFragment extends Fragment {
     protected void addChip(Chip chip) {
         Log.d(TAG, chip.getText().toString());
         chipGroup.addView(chip);
+    }
+
+    private void hardcodeChips() {
+        ArrayList<String> list = new ArrayList<>();
+        list.add("522cdc69-e4e5-11eb-93ae-e2f76a726d2b"); // baguette
+        list.add("844f05c1-e670-11eb-bff2-d2e268007c8a"); // brioche
+        list.add("aa54e6b2-e67f-11eb-81a9-d2e268007c8a"); // croissant
+        list.add("d110063c-e67b-11eb-af1e-9a1974bea1bf"); // boule de pain
+
+        Firebase.createChip("french breads", list);
     }
 }

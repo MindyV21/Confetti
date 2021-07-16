@@ -27,20 +27,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.codepath.confetti.Firebase;
 import com.codepath.confetti.NanonetsApi;
 import com.codepath.confetti.R;
-import com.codepath.confetti.databinding.FragmentNotesBinding;
 import com.codepath.confetti.databinding.FragmentUploadBinding;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
