@@ -22,6 +22,7 @@ import com.codepath.confetti.R;
 import com.codepath.confetti.adapters.NotesAdapter;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
 import com.codepath.confetti.models.Note;
+import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,6 +31,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.List;

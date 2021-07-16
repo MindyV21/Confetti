@@ -29,6 +29,12 @@ import com.codepath.confetti.NanonetsApi;
 import com.codepath.confetti.R;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
 import com.codepath.confetti.databinding.FragmentUploadBinding;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
@@ -196,5 +202,29 @@ public class UploadFragment extends Fragment {
     private void saveNote() {
         //NanonetsApi.queryNotes(getContext(), getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id));
         NanonetsApi.queryNote(getContext(), getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), "522cdc69-e4e5-11eb-93ae-e2f76a726d2b", photoFile);
+    }
+
+    // TODO: please refactor all your nanonets and firebase calls
+    public void uploadImage() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference fileRef = storageRef.child(FirebaseAuth.getInstance().getUid() + "/" + "522cdc69-e4e5-11eb-93ae-e2f76a726d2b");
+
+        Uri file = Uri.fromFile(photoFile);
+        UploadTask uploadTask = fileRef.putFile(file);
+        // Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                Log.e(TAG, "OnFailure upload photo to firebase storage");
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                Log.i(TAG, "OnSuccess upload photo to firebase storage");
+            }
+        });
     }
 }

@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class Note {
     public String name;
 //    public String url;
     public List<Prediction> predictions;
+    private File imageFile;
 
     public Note() {};
 
