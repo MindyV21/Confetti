@@ -46,10 +46,11 @@ public class NanonetsApi {
 
     // finds all predicted files from nanonets database
     public static void queryNotes(String apiKey, String modelId) {
-        int startDay = (int) LocalDate.now().toEpochDay();
+        int startDay = 18820;
+        int endDay = (int) LocalDate.now().toEpochDay();
         String url = String.format("https://app.nanonets.com/api/v2/Inferences/Model/%s/" +
                         "ImageLevelInferences?start_day_interval=%d&current_batch_day=%d",
-                modelId, startDay, startDay);
+                modelId, startDay, endDay);
         Log.d(TAG, url);
 
         OkHttpClient client = new OkHttpClient();
