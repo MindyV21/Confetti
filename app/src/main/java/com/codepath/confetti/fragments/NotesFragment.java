@@ -24,6 +24,12 @@ import com.codepath.confetti.databinding.FragmentNotesBinding;
 import com.codepath.confetti.models.Note;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,10 +157,7 @@ public class NotesFragment extends Fragment {
             }
         });
 
-        //TODO: un comment / modify this later - add notes
-        //NanonetsApi.queryNotes(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id));
-
-        dummyData();
+//        dummyData();
     }
 
     protected void dummyData() {
