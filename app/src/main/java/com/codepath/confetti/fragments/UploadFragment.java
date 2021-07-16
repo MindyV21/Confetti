@@ -153,7 +153,8 @@ public class UploadFragment extends Fragment {
 //                    return;
 //                };
                 // make sure there is a file name
-                if (etFileName == null || etFileName.getText().toString().trim().equals("")) {
+                String fileName = etFileName.getText().toString().trim();
+                if (etFileName == null || fileName.equals("")) {
                     Toast.makeText(getContext(), "There is no description!", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -165,7 +166,7 @@ public class UploadFragment extends Fragment {
 
                 Log.i(TAG, "upload photo to nanonets database for prediction!");
                 pbLoading.setVisibility(View.VISIBLE);
-                NanonetsApi.predictFile(getContext(), getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), photoFile);
+                NanonetsApi.predictFile(getContext(), fileName, getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), photoFile);
             }
         });
 

@@ -191,7 +191,7 @@ public class NanonetsApi {
     }
 
     // sends image file to nanonets to predict data
-    public static void predictFile(Context context, String apiKey, String modelId, File file) {
+    public static void predictFile(Context context, String fileName, String apiKey, String modelId, File file) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(5, TimeUnit.MINUTES) // connect timeout
                 .writeTimeout(5, TimeUnit.MINUTES) // write timeout
@@ -241,7 +241,7 @@ public class NanonetsApi {
 
                     // create Note object from jsonObject
                     Note note = new Note();
-                    note.setName("change name later");
+                    note.setName(fileName);
                     note.getPredictions(jsonObject);
 
                     // upload note to database and then photo to storage
