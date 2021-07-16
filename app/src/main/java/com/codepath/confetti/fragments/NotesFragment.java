@@ -27,6 +27,7 @@ import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,6 +36,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +64,7 @@ public class NotesFragment extends Fragment {
     private ImageView ivSearchToggle;
 
     private ChipGroup chipGroup;
-    protected Set<Chip> chips;
+    protected Set<Chip> allChips;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -168,12 +171,12 @@ public class NotesFragment extends Fragment {
 
 //        dummyData();
 
-        // Get a reference to our posts
+        // Get a reference to our notes
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Notes/" + FirebaseAuth.getInstance().getUid() + "/Files");
+        DatabaseReference refFiles = database.getReference("Notes/" + FirebaseAuth.getInstance().getUid() + "/Files");
 
         // Attach a listener to read the data at our posts reference
-        ref.addValueEventListener(new ValueEventListener() {
+        refFiles.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.i(TAG, dataSnapshot.toString());
@@ -195,7 +198,24 @@ public class NotesFragment extends Fragment {
             }
         });
 
-        //NanonetsApi.queryNotes(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id));
+        // read chip data once
+        DatabaseReference refChips = database.getReference("Chips/" + FirebaseAuth.getInstance().getUid());
+        refChips.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                Log.i(TAG, snapshot.toString());
+                Iterable<DataSnapshot> iterable = snapshot.getChildren();
+                for (DataSnapshot data : iterable) {
+                    Log.i(TAG, data.toString());
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
     }
 
     protected void dummyData() {
