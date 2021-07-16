@@ -194,7 +194,7 @@ public class UploadFragment extends Fragment {
 
     // TODO: hardcoded for testing purposes
     private void saveNote() {
-        NanonetsApi.queryNotes(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id));
-        //NanonetsApi.queryNote(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), "40d54cf3-c78f-4853-b05c-b7e24cb24b62", photoFile);
+        //NanonetsApi.queryNotes(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id));
+        NanonetsApi.queryNote(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), "522cdc69-e4e5-11eb-93ae-e2f76a726d2b", photoFile);
     }
 }
