@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ public class TagsBottomSheetFragment extends BottomSheetDialogFragment {
     public static final String TAG = "TagsBottomSheetFragment";
 
     private FragmentTagsBottomSheetBinding binding;
+    private NotesFragment parentFragment;
     private ChipGroup chipGroup;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -89,7 +91,7 @@ public class TagsBottomSheetFragment extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         // clear notes
-        NotesFragment parentFragment = ((NotesFragment) TagsBottomSheetFragment.this.getParentFragment());
+        parentFragment = ((NotesFragment) TagsBottomSheetFragment.this.getParentFragment());
         parentFragment.clearNotes();
 
         chipGroup = binding.chipGroup;
@@ -107,7 +109,6 @@ public class TagsBottomSheetFragment extends BottomSheetDialogFragment {
             @Override
             public void onClick(View view) {
                 // responds to child chip checked/unchecked
-
             }
         });
     }
@@ -115,7 +116,14 @@ public class TagsBottomSheetFragment extends BottomSheetDialogFragment {
     @Override
     public void onDismiss(@NonNull @NotNull DialogInterface dialog) {
         super.onDismiss(dialog);
-        NotesFragment parentFragment = ((NotesFragment) TagsBottomSheetFragment.this.getParentFragment());
         parentFragment.dummyData();
+        List<Integer> checkedChipIds = chipGroup.getCheckedChipIds();
+        for (Integer id : checkedChipIds) {
+            // TODO: CREATE A CHIP CLASS TO MAKE THESE MORE EASILY
+            Chip chip = new Chip(getContext());
+            chip.setText(((Chip) chipGroup.findViewById(id)).getText());
+            chip.setCheckable(true);
+            parentFragment.addChip(chip);
+        }
     }
 }

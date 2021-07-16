@@ -22,10 +22,12 @@ import com.codepath.confetti.R;
 import com.codepath.confetti.adapters.NotesAdapter;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
 import com.codepath.confetti.models.Note;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,6 +47,7 @@ public class NotesFragment extends Fragment {
     private ImageView ivSearchToggle;
 
     private ChipGroup chipGroup;
+    protected Set<Chip> chips;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -128,6 +131,14 @@ public class NotesFragment extends Fragment {
             }
         });
 
+        chipGroup = binding.chipGroup;
+
+        //dummy chips
+        Chip one = new Chip(getContext());
+        one.setText("Cat");
+        one.setCheckable(true);
+        chipGroup.addView(one);
+
         ivSearchToggle = binding.ivSearchToggle;
         Drawable drawable = AppCompatResources.getDrawable(getContext(), R.drawable.ic_baseline_label_24);
         ivSearchToggle.setImageDrawable(drawable);
@@ -159,7 +170,13 @@ public class NotesFragment extends Fragment {
     }
 
     protected void clearNotes() {
+        chipGroup.removeAllViews();
         allNotes.clear();
         adapter.notifyDataSetChanged();
+    }
+
+    protected void addChip(Chip chip) {
+        Log.d(TAG, chip.getText().toString());
+        chipGroup.addView(chip);
     }
 }
