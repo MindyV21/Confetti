@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.codepath.confetti.Firebase;
 import com.codepath.confetti.NanonetsApi;
 import com.codepath.confetti.R;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
@@ -138,7 +139,7 @@ public class UploadFragment extends Fragment {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: make submit button usable again
+                // TODO: hardcoded part
                 if (true) {
                     saveNote();
                     Log.i(TAG, "you thoUGHT");
@@ -151,7 +152,8 @@ public class UploadFragment extends Fragment {
                 }
 
                 Log.i(TAG, "upload photo to nanonets database for prediction!");
-                NanonetsApi.asyncPredictFile(getContext(), getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), photoFile);
+                //NanonetsApi.asyncPredictFile(getContext(), getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), photoFile);
+                NanonetsApi.predictFile(getContext(), getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), photoFile);
             }
         });
 
@@ -198,33 +200,10 @@ public class UploadFragment extends Fragment {
         }
     }
 
-    // TODO: hardcoded for testing purposes
+    // TODO: hardcoded for testing purposes becuase i mess up code
     private void saveNote() {
         //NanonetsApi.queryNotes(getContext(), getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id));
-        NanonetsApi.queryNote(getContext(), getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), "522cdc69-e4e5-11eb-93ae-e2f76a726d2b", photoFile);
-    }
-
-    // TODO: please refactor all your nanonets and firebase calls
-    public void uploadImage() {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-        StorageReference fileRef = storageRef.child(FirebaseAuth.getInstance().getUid() + "/" + "522cdc69-e4e5-11eb-93ae-e2f76a726d2b");
-
-        Uri file = Uri.fromFile(photoFile);
-        UploadTask uploadTask = fileRef.putFile(file);
-        // Register observers to listen for when the download is done or if it fails
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-                Log.e(TAG, "OnFailure upload photo to firebase storage");
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                Log.i(TAG, "OnSuccess upload photo to firebase storage");
-            }
-        });
+//        NanonetsApi.queryNote(getContext(), getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), "779daad3-e672-11eb-ba0d-3e2338bb69e6", photoFile);
+//        Firebase.uploadImage(photoFile, "779daad3-e672-11eb-ba0d-3e2338bb69e6");
     }
 }

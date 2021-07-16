@@ -36,16 +36,6 @@ public class NanonetsApi {
 
     public static final String TAG = "NanonetsApi";
 
-    private static JSONObject createJsonObject(String responseBody) {
-        JSONObject json = null;
-        try {
-            json = new JSONObject(responseBody);
-        } catch (JSONException e) {
-            Log.e(TAG, "failed to create json object", e);
-        }
-        return json;
-    }
-
     // finds all predicted files from nanonets database
     public static void queryNotes(String apiKey, String modelId) {
         int startDay = 18820;
@@ -78,7 +68,17 @@ public class NanonetsApi {
                 // response worked !
                 String responseBody = response.body().string();
                 response.close();
-                Log.d(TAG, responseBody);
+
+                // gets all model ids
+                try {
+                    JSONObject jsonObject = new JSONObject(responseBody);
+                    JSONArray images = jsonObject.getJSONArray("unmoderated_images");
+                    for (int i = 0; i < images.length(); i++) {
+                        Log.d(TAG, images.getJSONObject(i).getString("id"));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -113,39 +113,31 @@ public class NanonetsApi {
                 response.close();
                 Log.d(TAG, responseBody);
 
-                JSONObject jsonObject = createJsonObject(responseBody);
-
-                // create Note object from jsonObject
-                Note note = new Note();
+                JSONObject jsonObject = null;
                 try {
+                    jsonObject = new JSONObject(responseBody);
+
+
+                    // create Note object from jsonObject
+                    Note note = new Note();
+                    note.setName("change name later");
                     note.getPredictions(jsonObject);
+
+                    // upload note to database
+                    Firebase.uploadNote(context, note, id);
+
+                    // save photo in storage
+                    Firebase.uploadImage(file, id);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                // upload Note object to firebase database
-                FirebaseDatabase.getInstance().getReference("Notes")
-                        .child(FirebaseAuth.getInstance().getUid())
-                        .child("Files")
-                        .child(id)
-                        .setValue(note).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            // note uploaded to firebase
-                            Log.i(TAG, "onSuccess to upload note to firebase");
-                            Toast.makeText(context, "Note uploaded successfully!", Toast.LENGTH_SHORT).show();
-                        } else {
-                            // note failed to upload to firebase
-                            Log.i(TAG, "onFailure to upload note to firebase");
-                            Toast.makeText(context, "Note upload failed! Try again.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
             }
         });
     }
 
+    // sends image file to nanonets to predict data
     public static void asyncPredictFile(Context context, String apiKey, String modelId, File file) {
         OkHttpClient client = new OkHttpClient();
         MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpeg");
@@ -185,8 +177,7 @@ public class NanonetsApi {
                     // extract data from async upload response
                     JSONObject jsonObject = new JSONObject(responseBody);
                     JSONObject result = jsonObject.getJSONArray("result").getJSONObject(0);
-                    String id = result.getString("request_file_id");
-                    String filePath = result.getString("filepath");
+                    String id = result.getString("id");
 
                     // query file in nanonets database
                     queryNote(context, apiKey, modelId, id, file);
@@ -196,6 +187,73 @@ public class NanonetsApi {
                 }
             }
         });
+    }
 
+    // sends image file to nanonets to predict data
+    public static void predictFile(Context context, String apiKey, String modelId, File file) {
+        OkHttpClient client = new OkHttpClient();
+        MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpeg");
+        String url = String.format("https://app.nanonets.com/api/v2/OCR/Model/%s/LabelFile/",
+                modelId);
+
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("file", file.getAbsolutePath(), RequestBody.create(MEDIA_TYPE_JPG, new File(file.getAbsolutePath())))
+                .build();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .addHeader("Authorization", Credentials.basic(apiKey, ""))
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response.toString());
+                }
+
+                // response worked !
+                String responseBody = response.body().string();
+                response.close();
+                Log.d(TAG, "predictFile response: " + responseBody);
+
+                // query file in nanonets database
+                try {
+                    // extract data from async upload response
+                    JSONObject jsonObject = new JSONObject(responseBody);
+                    JSONObject result = jsonObject.getJSONArray("result").getJSONObject(0);
+                    String id = result.getString("id");
+                    Log.d(TAG, "predictFile id: " + id);
+
+                    // create Note object from jsonObject
+                    Note note = new Note();
+                    note.setName("change name later");
+                    try {
+                        note.getPredictions(jsonObject);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    // upload note to database
+                    Firebase.uploadNote(context, note, id);
+
+                    // save photo in storage
+                    Firebase.uploadImage(file, id);
+
+//                    // query file in nanonets database
+//                    queryNote(context, apiKey, modelId, id, file);
+                } catch (JSONException e) {
+                    Log.e(TAG, "Error reading from jsonObject to extract id + url");
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

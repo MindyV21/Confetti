@@ -26,8 +26,6 @@ public class Note {
         this.name = name;
     }
 
-
-
     public void getPredictions(JSONObject jsonObject) throws JSONException {
         predictions = new ArrayList<>();
         JSONArray prediction = jsonObject.getJSONArray("result").getJSONObject(0).getJSONArray("prediction");

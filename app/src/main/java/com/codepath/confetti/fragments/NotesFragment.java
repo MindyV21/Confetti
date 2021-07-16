@@ -173,13 +173,15 @@ public class NotesFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.i(TAG, dataSnapshot.toString());
                 Iterable<DataSnapshot> iterable = dataSnapshot.getChildren();
+                int i = 0;
                 for (DataSnapshot data : iterable) {
                     Log.i(TAG, data.toString());
                     Note note = data.getValue(Note.class);
-                    note.setName("predict size - " + note.predictions.size());
+                    note.setName("" + (i++));
                     allNotes.add(note);
                 }
-                adapter.notifyItemInserted(allNotes.size() - 1);
+                Log.i(TAG, "" + allNotes.size());
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -187,6 +189,8 @@ public class NotesFragment extends Fragment {
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
+
+        NanonetsApi.queryNotes(getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id));
     }
 
     protected void dummyData() {
