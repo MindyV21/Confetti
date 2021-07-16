@@ -22,7 +22,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.codepath.confetti.Firebase;
@@ -58,9 +60,11 @@ public class UploadFragment extends Fragment {
     public static final String TAG = "UploadFragment";
 
     private FragmentUploadBinding binding;
+    private EditText etFileName;
     private Button btnUploadGallery;
     private ImageView ivPreview;
     private Button btnSubmit;
+    private ProgressBar pbLoading;
 
     public final static int PICK_PHOTO_CODE = 1046;
     private Bitmap selectedImage;
@@ -120,13 +124,17 @@ public class UploadFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        etFileName = binding.etFileName;
         btnUploadGallery = binding.btnUploadGallery;
         ivPreview = binding.ivPreview;
         btnSubmit = binding.btnSubmit;
+        pbLoading = binding.pbLoading;
 
         // placeholder image
 //        Drawable drawable = AppCompatResources.getDrawable(getContext(), R);
 //        ivPreview.setImageDrawable(drawable);
+
+        etFileName.setText("");
 
         btnUploadGallery.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,9 +150,13 @@ public class UploadFragment extends Fragment {
                 // TODO: hardcoded part
 //                if (true) {
 //                    saveNote();
-//                    Log.i(TAG, "you thoUGHT");
 //                    return;
 //                };
+                // make sure there is a file name
+                if (etFileName == null || etFileName.getText().toString().trim().equals("")) {
+                    Toast.makeText(getContext(), "There is no description!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 // check an image is loaded in
                 if (photoFile == null || ivPreview.getDrawable() == null) {
                     Toast.makeText(getContext(), "There is no image!", Toast.LENGTH_SHORT).show();
@@ -152,7 +164,7 @@ public class UploadFragment extends Fragment {
                 }
 
                 Log.i(TAG, "upload photo to nanonets database for prediction!");
-                //NanonetsApi.asyncPredictFile(getContext(), getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), photoFile);
+                pbLoading.setVisibility(View.VISIBLE);
                 NanonetsApi.predictFile(getContext(), getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), photoFile);
             }
         });

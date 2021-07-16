@@ -2,11 +2,14 @@ package com.codepath.confetti;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.codepath.confetti.fragments.UploadFragment;
 import com.codepath.confetti.models.Note;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -49,7 +52,7 @@ public class Firebase {
         });
     }
 
-    public static void uploadNote(Context context, Note note, String id) {
+    public static void uploadNote(Context context, Note note, String id, File photoFile) {
         // upload Note object to firebase database
         FirebaseDatabase.getInstance().getReference("Notes")
                 .child(FirebaseAuth.getInstance().getUid())
@@ -63,6 +66,7 @@ public class Firebase {
                     // TODO: even if successful, note may have been empty == no note uploaded, need to wait for nanonets to finish image processing
                     Log.i(TAG, "onSuccess to upload note to firebase");
                     Toast.makeText(context, "Note uploaded successfully!", Toast.LENGTH_SHORT).show();
+                    Firebase.uploadImage(photoFile, id);
                 } else {
                     // note failed to upload to firebase
                     Log.i(TAG, "onFailure to upload note to firebase");

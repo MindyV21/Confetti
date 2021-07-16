@@ -125,7 +125,7 @@ public class NanonetsApi {
                     note.getPredictions(jsonObject);
 
                     // upload note to database
-                    Firebase.uploadNote(context, note, id);
+                    Firebase.uploadNote(context, note, id, file);
 
                     // save photo in storage
                     Firebase.uploadImage(file, id);
@@ -244,11 +244,8 @@ public class NanonetsApi {
                     note.setName("change name later");
                     note.getPredictions(jsonObject);
 
-                    // upload note to database
-                    Firebase.uploadNote(context, note, id);
-
-                    // save photo in storage
-                    Firebase.uploadImage(file, id);
+                    // upload note to database and then photo to storage
+                    Firebase.uploadNote(context, note, id, file);
 
 //                    // query file in nanonets database
 //                    queryNote(context, apiKey, modelId, id, file);
