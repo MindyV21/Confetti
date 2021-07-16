@@ -90,10 +90,6 @@ public class TagsBottomSheetFragment extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // clear notes
-        parentFragment = ((NotesFragment) TagsBottomSheetFragment.this.getParentFragment());
-        parentFragment.clearNotes();
-
         chipGroup = binding.chipGroup;
 
         int checkedChipId = chipGroup.getCheckedChipId(); // Returns View.NO_ID if singleSelection = false
@@ -116,7 +112,11 @@ public class TagsBottomSheetFragment extends BottomSheetDialogFragment {
     @Override
     public void onDismiss(@NonNull @NotNull DialogInterface dialog) {
         super.onDismiss(dialog);
-        parentFragment.dummyData();
+        // clear notes
+        parentFragment = ((NotesFragment) TagsBottomSheetFragment.this.getParentFragment());
+        parentFragment.clearNotes();
+
+        // load chips into horizontal view
         List<Integer> checkedChipIds = chipGroup.getCheckedChipIds();
         for (Integer id : checkedChipIds) {
             // TODO: CREATE A CHIP CLASS TO MAKE THESE MORE EASILY

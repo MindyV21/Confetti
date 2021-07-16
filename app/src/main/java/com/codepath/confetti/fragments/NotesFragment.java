@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -52,8 +53,8 @@ public class NotesFragment extends Fragment {
     private FragmentNotesBinding binding;
     private NotesAdapter adapter;
     private RecyclerView rvNotes;
-    private List<Note> allNotes;
-    private Map<String, Note> notes;
+    private List<Note> currentNotes;
+    private Map<String, Note> allNotes;
 
     private SearchView searchView;
     private ImageView ivSearchToggle;
@@ -115,10 +116,11 @@ public class NotesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        allNotes = new ArrayList<>();
+        currentNotes = new ArrayList<>();
+        allNotes = new TreeMap<>();
 
         rvNotes = binding.rvNotes;
-        adapter = new NotesAdapter(getContext(), allNotes);
+        adapter = new NotesAdapter(getContext(), currentNotes);
         rvNotes.setAdapter(adapter);
         rvNotes.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -175,14 +177,14 @@ public class NotesFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.i(TAG, dataSnapshot.toString());
                 Iterable<DataSnapshot> iterable = dataSnapshot.getChildren();
-                int i = 0;
                 for (DataSnapshot data : iterable) {
                     Log.i(TAG, data.toString());
                     Note note = data.getValue(Note.class);
-                    note.setName("" + (i++));
-                    allNotes.add(note);
+                    currentNotes.add(note);
+                    allNotes.put(data.getKey(), note);
                 }
-                Log.i(TAG, "" + allNotes.size());
+                Log.i(TAG, "currentNotes: " + currentNotes.size());
+                Log.i(TAG, "allNotes: " + allNotes.size());
                 adapter.notifyDataSetChanged();
             }
 
@@ -196,12 +198,12 @@ public class NotesFragment extends Fragment {
     }
 
     protected void dummyData() {
-        allNotes.add(new Note("hello"));
-        allNotes.add(new Note("my"));
-        allNotes.add(new Note("name"));
-        allNotes.add(new Note("is"));
-        allNotes.add(new Note("bread"));
-        allNotes.add(new Note("!"));
+        currentNotes.add(new Note("hello"));
+        currentNotes.add(new Note("my"));
+        currentNotes.add(new Note("name"));
+        currentNotes.add(new Note("is"));
+        currentNotes.add(new Note("bread"));
+        currentNotes.add(new Note("!"));
 
         adapter.notifyDataSetChanged();
 
@@ -209,8 +211,7 @@ public class NotesFragment extends Fragment {
 
     protected void clearNotes() {
         chipGroup.removeAllViews();
-        allNotes.clear();
-        adapter.notifyDataSetChanged();
+        currentNotes.clear();
     }
 
     protected void addChip(Chip chip) {
