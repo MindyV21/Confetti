@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.action_home);
     }
 
+    // hides not seen fragments, shows current fragment
     private void switchFragments(String currentTag, String hiddenTagOne, String hiddenTagTwo) {
         if(fragmentManager.findFragmentByTag(currentTag) != null) {
             //if the fragment exists, show it.

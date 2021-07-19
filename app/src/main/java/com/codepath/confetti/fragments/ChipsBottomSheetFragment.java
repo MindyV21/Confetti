@@ -7,13 +7,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.codepath.confetti.R;
-import com.codepath.confetti.databinding.FragmentNotesBinding;
 import com.codepath.confetti.databinding.FragmentTagsBottomSheetBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.chip.Chip;
@@ -25,12 +22,12 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link TagsBottomSheetFragment#newInstance} factory method to
+ * Use the {@link ChipsBottomSheetFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TagsBottomSheetFragment extends BottomSheetDialogFragment {
+public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
 
-    public static final String TAG = "TagsBottomSheetFragment";
+    public static final String TAG = "ChipsBottomSheetFragment";
 
     private FragmentTagsBottomSheetBinding binding;
     private NotesFragment parentFragment;
@@ -45,7 +42,7 @@ public class TagsBottomSheetFragment extends BottomSheetDialogFragment {
     private String mParam1;
     private String mParam2;
 
-    public TagsBottomSheetFragment() {
+    public ChipsBottomSheetFragment() {
         // Required empty public constructor
     }
 
@@ -55,11 +52,11 @@ public class TagsBottomSheetFragment extends BottomSheetDialogFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment TagsBottomSheetFragment.
+     * @return A new instance of fragment ChipsBottomSheetFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static TagsBottomSheetFragment newInstance(String param1, String param2) {
-        TagsBottomSheetFragment fragment = new TagsBottomSheetFragment();
+    public static ChipsBottomSheetFragment newInstance(String param1, String param2) {
+        ChipsBottomSheetFragment fragment = new ChipsBottomSheetFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -113,7 +110,7 @@ public class TagsBottomSheetFragment extends BottomSheetDialogFragment {
     public void onDismiss(@NonNull @NotNull DialogInterface dialog) {
         super.onDismiss(dialog);
         // clear notes
-        parentFragment = ((NotesFragment) TagsBottomSheetFragment.this.getParentFragment());
+        parentFragment = ((NotesFragment) ChipsBottomSheetFragment.this.getParentFragment());
         parentFragment.clearNotes();
 
         // load chips into horizontal view
