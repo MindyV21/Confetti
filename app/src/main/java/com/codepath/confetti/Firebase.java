@@ -78,19 +78,22 @@ public class Firebase {
     }
 
     public static void createChip(String chipName, ArrayList<String> fileIds) {
-        // upload Note object to firebase database
-        FirebaseDatabase.getInstance().getReference("Chips")
-                .child(FirebaseAuth.getInstance().getUid())
-                .child(chipName)
-                .setValue(fileIds).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull @NotNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    Log.i(TAG, "onSuccess to create chip in firebase database");
-                } else {
-                    Log.i(TAG, "onFailure to create chip in firebase database");
+        for (String fileId : fileIds) {
+            // upload Note object to firebase database
+            FirebaseDatabase.getInstance().getReference("Chips")
+                    .child(FirebaseAuth.getInstance().getUid())
+                    .child(chipName)
+                    .child(fileId)
+                    .setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull @NotNull Task<Void> task) {
+                    if (task.isSuccessful()){
+                        Log.i(TAG, "onSuccess to create chip in firebase database");
+                    } else {
+                        Log.i(TAG, "onFailure to create chip in firebase database");
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 }

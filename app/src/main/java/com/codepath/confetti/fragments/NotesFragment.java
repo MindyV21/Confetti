@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,14 +52,14 @@ public class NotesFragment extends Fragment {
     private FragmentNotesBinding binding;
     private NotesAdapter adapter;
     private RecyclerView rvNotes;
-    private List<Note> currentNotes;
-    private Map<String, Note> allNotes;
+    protected List<Note> currentNotes;
+    protected Map<String, Note> allNotes;
 
     private SearchView searchView;
     private ImageView ivSearchToggle;
 
     private ChipGroup chipGroup;
-    protected Set<Chip> allChips;
+    protected Map<String, Boolean> allChips;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -116,6 +117,7 @@ public class NotesFragment extends Fragment {
 
         currentNotes = new ArrayList<>();
         allNotes = new TreeMap<>();
+        allChips = new TreeMap<>();
 
         rvNotes = binding.rvNotes;
         adapter = new NotesAdapter(getContext(), currentNotes);
@@ -127,13 +129,6 @@ public class NotesFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // fetchNotes(query)
-
-                // reset SearchView
-//                searchView.clearFocus();
-//                searchView.setQuery("", false);
-//                searchView.setIconified(true);
-
                 return false;
             }
 
@@ -145,12 +140,6 @@ public class NotesFragment extends Fragment {
         });
 
         chipGroup = binding.chipGroup;
-
-        //dummy chips
-        Chip one = new Chip(getContext());
-        one.setText("Cat");
-        one.setCheckable(true);
-        chipGroup.addView(one);
 
         ivSearchToggle = binding.ivSearchToggle;
         Drawable drawable = AppCompatResources.getDrawable(getContext(), R.drawable.ic_baseline_label_24);
@@ -166,10 +155,10 @@ public class NotesFragment extends Fragment {
 
         // Get a reference to our notes
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference refFiles = database.getReference("Notes/" + FirebaseAuth.getInstance().getUid() + "/Files");
+        DatabaseReference refNotes = database.getReference("Notes/" + FirebaseAuth.getInstance().getUid() + "/Files");
 
-        // Attach a listener to read the data at our posts reference
-        refFiles.addValueEventListener(new ValueEventListener() {
+        // Attach a listener to read the data at our notes reference
+        refNotes.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.i(TAG, dataSnapshot.toString());
@@ -182,50 +171,37 @@ public class NotesFragment extends Fragment {
                 }
                 Log.i(TAG, "currentNotes: " + currentNotes.size());
                 Log.i(TAG, "allNotes: " + allNotes.size());
-                adapter.notifyDataSetChanged();
+                adapter.getFilter().filter(searchView.getQuery());
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
+            public void onCancelled(DatabaseError error) {
+                Log.i(TAG, "The note read failed: " + error.getCode());
             }
         });
 
-        // read chip data once
+        // Attach a listener to read the data at our chips reference ONCE
         DatabaseReference refChips = database.getReference("Chips/" + FirebaseAuth.getInstance().getUid());
         refChips.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                // populate allChips
                 Log.i(TAG, snapshot.toString());
                 Iterable<DataSnapshot> iterable = snapshot.getChildren();
                 for (DataSnapshot data : iterable) {
-                    Log.i(TAG, data.toString());
-
+                    Log.i(TAG, "CHIPS " + data.toString());
+                    // false because on startup no chips are selected
+                    allChips.put(data.getKey(), false);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
+                Log.i(TAG, "The chip read failed: " + error.getCode());
             }
         });
-    }
 
-    protected void dummyData() {
-        currentNotes.add(new Note("hello"));
-        currentNotes.add(new Note("my"));
-        currentNotes.add(new Note("name"));
-        currentNotes.add(new Note("is"));
-        currentNotes.add(new Note("bread"));
-        currentNotes.add(new Note("!"));
-
-        adapter.notifyDataSetChanged();
-
-    }
-
-    protected void clearNotes() {
-        chipGroup.removeAllViews();
-        currentNotes.clear();
+        // TODO: Attach a onChildAdded/Changed/Removed listener to read the data at our chips reference
     }
 
     protected void addChip(Chip chip) {

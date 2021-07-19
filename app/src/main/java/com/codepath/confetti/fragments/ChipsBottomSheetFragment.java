@@ -7,18 +7,29 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.codepath.confetti.databinding.FragmentTagsBottomSheetBinding;
+import com.codepath.confetti.models.Chips;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -87,16 +98,16 @@ public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // ref to NotesFragment
+        parentFragment = ((NotesFragment) ChipsBottomSheetFragment.this.getParentFragment());
+
         chipGroup = binding.chipGroup;
 
         int checkedChipId = chipGroup.getCheckedChipId(); // Returns View.NO_ID if singleSelection = false
         List<Integer> checkedChipIds = chipGroup.getCheckedChipIds(); // Returns a list of the selected chips' IDs, if any
 
-        //dummy chips
-        Chip one = new Chip(getContext());
-        one.setText("Dog");
-        one.setCheckable(true);
-        chipGroup.addView(one);
+        // populate fragment with all chips available
+        Chips.populateChipsSelectable(getContext(), chipGroup, parentFragment.allChips);
 
         chipGroup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,12 +120,17 @@ public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
     @Override
     public void onDismiss(@NonNull @NotNull DialogInterface dialog) {
         super.onDismiss(dialog);
-        // clear notes
-        parentFragment = ((NotesFragment) ChipsBottomSheetFragment.this.getParentFragment());
-        parentFragment.clearNotes();
 
         // load chips into horizontal view
         List<Integer> checkedChipIds = chipGroup.getCheckedChipIds();
+
+        // if no chips selected
+        if (checkedChipIds.size() == 0) {
+            parentFragment.currentNotes = new ArrayList<>(parentFragment.allNotes.values());
+            return;
+        }
+
+        // load chips into horizontal view
         for (Integer id : checkedChipIds) {
             // TODO: CREATE A CHIP CLASS TO MAKE THESE MORE EASILY
             Chip chip = new Chip(getContext());
