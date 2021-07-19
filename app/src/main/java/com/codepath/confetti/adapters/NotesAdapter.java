@@ -77,7 +77,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                 filteredList.addAll(notesFull);
             } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
-                Log.i(TAG, "" + notesFull.size());
 
                 // compares note titles
                 for (Note note : notesFull) {

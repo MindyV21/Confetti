@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.codepath.confetti.Firebase;
 import com.codepath.confetti.databinding.FragmentTagsBottomSheetBinding;
 import com.codepath.confetti.models.Chips;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -103,18 +104,8 @@ public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
 
         chipGroup = binding.chipGroup;
 
-        int checkedChipId = chipGroup.getCheckedChipId(); // Returns View.NO_ID if singleSelection = false
-        List<Integer> checkedChipIds = chipGroup.getCheckedChipIds(); // Returns a list of the selected chips' IDs, if any
-
         // populate fragment with all chips available
         Chips.populateChipsSelectable(getContext(), chipGroup, parentFragment.allChips);
-
-        chipGroup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // responds to child chip checked/unchecked
-            }
-        });
     }
 
     @Override
@@ -130,14 +121,20 @@ public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
             return;
         }
 
-        // load chips into horizontal view
+        // populate parent fragment with all chips selected
+        // change currentNotes to contain notes with these selected chips
+        parentFragment.currentNotes.clear();
+        Set<String> chippedNotes = new TreeSet<>();
         for (Integer id : checkedChipIds) {
             Chip chip = chipGroup.findViewById(id);
 
-            // mark chip as selected
-            parentFragment.allChips.put(chip.getText().toString(), true);
+            // get selected note file ids
+            Firebase.getChippedNotes(parentFragment.allNotes, parentFragment.currentNotes, chippedNotes, chip.getText().toString());
 
-            //
+            // populate parent fragment chip group with all chips selected
+            Chips.populateChipsDeletable();
         }
+        Log.i(TAG, "" + chippedNotes.size());
+
     }
 }

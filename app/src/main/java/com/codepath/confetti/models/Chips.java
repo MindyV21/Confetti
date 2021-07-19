@@ -6,6 +6,7 @@ import android.view.View;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
+import java.util.List;
 import java.util.Map;
 
 public class Chips {
@@ -22,6 +23,7 @@ public class Chips {
                 newChip.setChecked(true);
             }
 
+            // listener to update things when ship is selected / unselected
             newChip.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -34,13 +36,8 @@ public class Chips {
         }
     }
 
-    // create chips that can be deleted
-    public static void populateChipsDeletable(Context context, ChipGroup chipGroup, Map<String, Boolean> allChips) {
-        for (Map.Entry<String, Boolean> chip : allChips.entrySet()) {
-            Chip newChip = new Chip(context);
-            newChip.setText(chip.getKey());
-            newChip.setCheckable(true);
-            chipGroup.addView(newChip);
-        }
+    // TODO: create chips that can be deleted
+    public static void populateChipsDeletable() {
+
     }
 }

@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -25,6 +26,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 public class Firebase {
 
@@ -95,5 +100,31 @@ public class Firebase {
                 }
             });
         }
+    }
+
+    public static void getChippedNotes(Map<String, Note> allNotes, List<Note> currentNotes, Set<String> chippedNoteIds, String chipName) {
+        FirebaseDatabase.getInstance().getReference("Chips")
+                .child(FirebaseAuth.getInstance().getUid())
+                .child(chipName)
+                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
+                if (task.isSuccessful()){
+                    Log.i(TAG, "onSuccess to get chip in firebase database");
+
+                    // add note file ids that are chipped with this chipName
+                    Iterable<DataSnapshot> iterable = task.getResult().getChildren();
+                    for (DataSnapshot data : iterable) {
+                        // check if file is in the treeSet
+                        if (!chippedNoteIds.contains(data.getKey())) {
+                            currentNotes.add(allNotes.get(data.getKey()));
+                        }
+                        chippedNoteIds.add(data.getKey());
+                    }
+                } else {
+                    Log.i(TAG, "onFailure to get chip in firebase database");
+                }
+            }
+        });
     }
 }

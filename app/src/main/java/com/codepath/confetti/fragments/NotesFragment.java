@@ -60,6 +60,7 @@ public class NotesFragment extends Fragment {
 
     private ChipGroup chipGroup;
     protected Map<String, Boolean> allChips;
+    protected Set<String> currentChips;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -118,6 +119,7 @@ public class NotesFragment extends Fragment {
         currentNotes = new ArrayList<>();
         allNotes = new TreeMap<>();
         allChips = new TreeMap<>();
+        currentChips = new TreeSet<>();
 
         rvNotes = binding.rvNotes;
         adapter = new NotesAdapter(getContext(), currentNotes);
