@@ -132,11 +132,12 @@ public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
 
         // load chips into horizontal view
         for (Integer id : checkedChipIds) {
-            // TODO: CREATE A CHIP CLASS TO MAKE THESE MORE EASILY
-            Chip chip = new Chip(getContext());
-            chip.setText(((Chip) chipGroup.findViewById(id)).getText());
-            chip.setCheckable(true);
-            parentFragment.addChip(chip);
+            Chip chip = chipGroup.findViewById(id);
+
+            // mark chip as selected
+            parentFragment.allChips.put(chip.getText().toString(), true);
+
+            //
         }
     }
 }

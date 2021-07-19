@@ -1,6 +1,7 @@
 package com.codepath.confetti.models;
 
 import android.content.Context;
+import android.view.View;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -15,6 +16,20 @@ public class Chips {
             Chip newChip = new Chip(context);
             newChip.setText(chip.getKey());
             newChip.setCheckable(true);
+
+            // checks if chip has been previously selected
+            if (chip.getValue()) {
+                newChip.setChecked(true);
+            }
+
+            newChip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // update chips checked state in the treemap
+                    allChips.put(chip.getKey(), !chip.getValue());
+                }
+            });
+
             chipGroup.addView(newChip);
         }
     }
