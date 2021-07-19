@@ -123,22 +123,23 @@ public class NotesFragment extends Fragment {
         rvNotes.setLayoutManager(new LinearLayoutManager(getContext()));
 
         searchView = binding.searchView;
-        searchView.setQueryHint("Search your notes");
+        searchView.setQueryHint("Search by name");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // fetchNotes(query)
 
                 // reset SearchView
-                searchView.clearFocus();
-                searchView.setQuery("", false);
-                searchView.setIconified(true);
+//                searchView.clearFocus();
+//                searchView.setQuery("", false);
+//                searchView.setIconified(true);
 
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
+                adapter.getFilter().filter(s);
                 return false;
             }
         });
@@ -162,8 +163,6 @@ public class NotesFragment extends Fragment {
                 tagFragment.show(getChildFragmentManager(), tagFragment.getTag());
             }
         });
-
-//        dummyData();
 
         // Get a reference to our notes
         final FirebaseDatabase database = FirebaseDatabase.getInstance();

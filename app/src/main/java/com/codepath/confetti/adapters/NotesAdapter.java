@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,18 +22,23 @@ import com.codepath.confetti.R;
 import com.codepath.confetti.fragments.NoteDetailsFragment;
 import com.codepath.confetti.models.Note;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
+public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> implements Filterable {
 
     public static final String TAG = "NotesAdapter";
 
     private Context context;
     private List<Note> notes;
+    private List<Note> notesFull;
 
-    public NotesAdapter(Context context, List<Note> notes) {
+    // notesFull is the current pool of available notes
+    // notes is the filtered notes from notesFull
+    public NotesAdapter(Context context, List<Note> notesFull) {
         this.context = context;
-        this.notes = notes;
+        notes = new ArrayList<>(notesFull);
+        this.notesFull = notesFull;
     }
 
     @NonNull
@@ -51,6 +58,48 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     public int getItemCount() {
         return notes.size();
     }
+
+    // filtering currentNotes in searchView
+    @Override
+    public Filter getFilter() {
+        return notesFilter;
+    }
+
+    private Filter notesFilter = new Filter() {
+        // returns filtered list of notes to publishResults method
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            // auto run on background thread
+            List<Note> filteredList = new ArrayList<>();
+
+            // checks if there is searchView input
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(notesFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                Log.i(TAG, "" + notesFull.size());
+
+                // compares note titles
+                for (Note note : notesFull) {
+                    if (note.getName().toLowerCase().contains(filterPattern)) {
+                        Log.i(TAG, "ADDED " + note.getName());
+                        filteredList.add(note);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            notes.clear();
+            notes.addAll((List) filterResults.values);
+            notifyDataSetChanged();
+        }
+    };
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
