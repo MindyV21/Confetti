@@ -5,16 +5,20 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.codepath.confetti.adapters.NotesAdapter;
 import com.codepath.confetti.fragments.UploadFragment;
 import com.codepath.confetti.models.Note;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
@@ -82,49 +86,41 @@ public class Firebase {
         });
     }
 
-    public static void createChip(String chipName, ArrayList<String> fileIds) {
-        for (String fileId : fileIds) {
-            // upload Note object to firebase database
+    public static void getChippedNotes(List<Integer> checkedChipIds, ChipGroup allChipsGroup,
+                                       NotesAdapter adapter, SearchView searchView,
+                                       Map<String, Note> allNotes, List<Note> currentNotes, Set<String> chippedNoteIds) {
+        for (Integer id : checkedChipIds) {
+            Chip chip = allChipsGroup.findViewById(id);
+            Log.d(TAG, chip.getText().toString());
             FirebaseDatabase.getInstance().getReference("Chips")
                     .child(FirebaseAuth.getInstance().getUid())
-                    .child(chipName)
-                    .child(fileId)
-                    .setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    .child(chip.getText().toString())
+                    .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
-                public void onComplete(@NonNull @NotNull Task<Void> task) {
-                    if (task.isSuccessful()){
-                        Log.i(TAG, "onSuccess to create chip in firebase database");
+                public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        Log.i(TAG, "onSuccess to get chip in firebase database");
+
+                        // add note file ids that are chipped with this chipName
+                        Iterable<DataSnapshot> iterable = task.getResult().getChildren();
+                        for (DataSnapshot data : iterable) {
+                            Log.d(TAG, "iterating: " + data.getKey());
+                            // check if file is in the treeSet
+                            if (!chippedNoteIds.contains(data.getKey())) {
+                                currentNotes.add(allNotes.get(data.getKey()));
+                            }
+                            chippedNoteIds.add(data.getKey());
+                        }
+
+                        adapter.getFilter().filter(searchView.getQuery());
+
+                        Log.d(TAG, "currentNotes size: " + currentNotes.size());
+                        Log.d(TAG, "chippedNoteIds size: " + chippedNoteIds.size());
                     } else {
-                        Log.i(TAG, "onFailure to create chip in firebase database");
+                        Log.i(TAG, "onFailure to get chip in firebase database");
                     }
                 }
             });
         }
-    }
-
-    public static void getChippedNotes(Map<String, Note> allNotes, List<Note> currentNotes, Set<String> chippedNoteIds, String chipName) {
-        FirebaseDatabase.getInstance().getReference("Chips")
-                .child(FirebaseAuth.getInstance().getUid())
-                .child(chipName)
-                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
-                if (task.isSuccessful()){
-                    Log.i(TAG, "onSuccess to get chip in firebase database");
-
-                    // add note file ids that are chipped with this chipName
-                    Iterable<DataSnapshot> iterable = task.getResult().getChildren();
-                    for (DataSnapshot data : iterable) {
-                        // check if file is in the treeSet
-                        if (!chippedNoteIds.contains(data.getKey())) {
-                            currentNotes.add(allNotes.get(data.getKey()));
-                        }
-                        chippedNoteIds.add(data.getKey());
-                    }
-                } else {
-                    Log.i(TAG, "onFailure to get chip in firebase database");
-                }
-            }
-        });
     }
 }

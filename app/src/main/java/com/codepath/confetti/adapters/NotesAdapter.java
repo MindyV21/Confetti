@@ -59,6 +59,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         return notes.size();
     }
 
+    public void setNotesFull(List<Note> notesFull) {
+        this.notesFull = notesFull;
+    }
+
+    public List<Note> getNotesFull() {
+        return notesFull;
+    }
+
     // filtering currentNotes in searchView
     @Override
     public Filter getFilter() {
@@ -71,6 +79,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         protected FilterResults performFiltering(CharSequence constraint) {
             // auto run on background thread
             List<Note> filteredList = new ArrayList<>();
+            Log.i(TAG, "NOTES FULL SIZE: " + notesFull.size());
 
             // checks if there is searchView input
             if (constraint == null || constraint.length() == 0) {
@@ -94,6 +103,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            Log.i(TAG, "publishing query results");
             notes.clear();
             notes.addAll((List) filterResults.values);
             notifyDataSetChanged();

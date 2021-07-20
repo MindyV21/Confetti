@@ -118,23 +118,10 @@ public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
         // if no chips selected
         if (checkedChipIds.size() == 0) {
             parentFragment.currentNotes = new ArrayList<>(parentFragment.allNotes.values());
+            // adapter refresh
             return;
         }
 
-        // populate parent fragment with all chips selected
-        // change currentNotes to contain notes with these selected chips
-        parentFragment.currentNotes.clear();
-        Set<String> chippedNotes = new TreeSet<>();
-        for (Integer id : checkedChipIds) {
-            Chip chip = chipGroup.findViewById(id);
-
-            // get selected note file ids
-            Firebase.getChippedNotes(parentFragment.allNotes, parentFragment.currentNotes, chippedNotes, chip.getText().toString());
-
-            // populate parent fragment chip group with all chips selected
-            Chips.populateChipsDeletable();
-        }
-        Log.i(TAG, "" + chippedNotes.size());
-
+        parentFragment.refreshChips(checkedChipIds, chipGroup);
     }
 }

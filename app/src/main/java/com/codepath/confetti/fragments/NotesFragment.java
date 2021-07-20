@@ -21,6 +21,7 @@ import com.codepath.confetti.Firebase;
 import com.codepath.confetti.R;
 import com.codepath.confetti.adapters.NotesAdapter;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
+import com.codepath.confetti.models.Chips;
 import com.codepath.confetti.models.Note;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -50,12 +51,12 @@ public class NotesFragment extends Fragment {
     public static final String TAG = "NotesFragment";
 
     private FragmentNotesBinding binding;
-    private NotesAdapter adapter;
+    protected NotesAdapter adapter;
     private RecyclerView rvNotes;
     protected List<Note> currentNotes;
     protected Map<String, Note> allNotes;
 
-    private SearchView searchView;
+    protected SearchView searchView;
     private ImageView ivSearchToggle;
 
     private ChipGroup chipGroup;
@@ -206,18 +207,18 @@ public class NotesFragment extends Fragment {
         // TODO: Attach a onChildAdded/Changed/Removed listener to read the data at our chips reference
     }
 
-    protected void addChip(Chip chip) {
-        Log.d(TAG, chip.getText().toString());
-        chipGroup.addView(chip);
-    }
+    protected void refreshChips(List<Integer> checkedChipIds, ChipGroup allChipsGroup) {
+        Log.i(TAG, "updating chips and currentNotes like based on chips selected");
 
-    private void hardcodeChips() {
-        ArrayList<String> list = new ArrayList<>();
-        list.add("522cdc69-e4e5-11eb-93ae-e2f76a726d2b"); // baguette
-        list.add("844f05c1-e670-11eb-bff2-d2e268007c8a"); // brioche
-        list.add("aa54e6b2-e67f-11eb-81a9-d2e268007c8a"); // croissant
-        list.add("d110063c-e67b-11eb-af1e-9a1974bea1bf"); // boule de pain
+        // populate parent fragment with all chips selected
+        // change currentNotes to contain notes with these selected chips
+        currentNotes.clear();
+        adapter.setNotesFull(currentNotes);
+        Log.d(TAG, "notesFull size: " + adapter.getNotesFull().size());
+        Set<String> chippedNotes = new TreeSet<>();
+        Firebase.getChippedNotes(checkedChipIds, allChipsGroup, adapter, searchView, allNotes, currentNotes, chippedNotes);
 
-        Firebase.createChip("french breads", list);
+        // populate parent fragment chip group with all chips selected
+        Chips.populateChipsDeletable();
     }
 }

@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
                         switchFragments("notes", "upload", "settings");
                         break;
                 }
-//                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
                 return true;
             }
         });
