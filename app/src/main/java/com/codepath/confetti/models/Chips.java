@@ -44,11 +44,10 @@ public class Chips {
     }
 
     // TODO: create chips that can be deleted
-    public static void populateChipsDeletable(Context context, ChipGroup chipGroup, List<Integer> checkedChipIds,
+    public static void populateChipsDeletable(Context context, ChipGroup chipGroup, List<Integer> checkedChipIds, Set<Integer> checkedChipIdsSet,
                                               ChipGroup allChipsGroup, NotesAdapter adapter, SearchView searchView,
                                               Map<String, Note> allNotes, List<Note> currentNotes, Map<String, Boolean> allChips) {
-        for (int i = checkedChipIds.size() - 1; i >= 0; i--) {
-            final int index = i;
+        for (int i = 0; i <  checkedChipIds.size(); i++) {
             Integer id = checkedChipIds.get(i);
 
             // set attributes of chip
@@ -70,10 +69,10 @@ public class Chips {
                     // remove chip from scroll view
                     chipGroup.removeView(newChip);
                     // remove id from checkedChipIds
-                    checkedChipIds.remove(index);
+                    checkedChipIdsSet.remove(id);
 
                     // check if there are no more chips selected
-                    if (checkedChipIds.size() == 0) {
+                    if (checkedChipIdsSet.size() == 0) {
                         // reset notes list to default
                         currentNotes.clear();
                         for (Map.Entry<String, Note> note : allNotes.entrySet()) {
@@ -84,7 +83,7 @@ public class Chips {
                     } else {
                         // refilter notes list
                         Set<String> chippedNoteIds = new TreeSet<>();
-                        Firebase.getChippedNotes(checkedChipIds, allChipsGroup, adapter, searchView, allNotes, currentNotes, chippedNoteIds);
+                        Firebase.getChippedNotes(checkedChipIdsSet, allChipsGroup, adapter, searchView, allNotes, currentNotes, chippedNoteIds);
                     }
                 }
             });

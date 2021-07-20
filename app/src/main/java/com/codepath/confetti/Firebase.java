@@ -113,10 +113,10 @@ public class Firebase {
         });
     }
 
-    public static void getChippedNotes(List<Integer> checkedChipIds, ChipGroup allChipsGroup,
+    public static void getChippedNotes(Set<Integer> checkedChipIdsSet, ChipGroup allChipsGroup,
                                        NotesAdapter adapter, SearchView searchView,
                                        Map<String, Note> allNotes, List<Note> currentNotes, Set<String> chippedNoteIds) {
-        for (Integer id : checkedChipIds) {
+        for (Integer id : checkedChipIdsSet) {
             Chip chip = allChipsGroup.findViewById(id);
             Log.d(TAG, chip.getText().toString());
             FirebaseDatabase.getInstance().getReference("Chips")

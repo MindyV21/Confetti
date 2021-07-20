@@ -224,14 +224,18 @@ public class NotesFragment extends Fragment {
 
     protected void refreshChips(List<Integer> checkedChipIds, ChipGroup allChipsGroup, Boolean resetChips) {
         Log.i(TAG, "updating chips and currentNotes like based on chips selected");
+        Set<Integer> checkedChipIdsSet = new TreeSet<>();
+        for (Integer i : checkedChipIds) {
+            checkedChipIdsSet.add(i);
+        }
 
         // change currentNotes to contain notes with these selected chips
         currentNotes.clear();
         adapter.setNotesFull(currentNotes);
         Set<String> chippedNotes = new TreeSet<>();
-        Firebase.getChippedNotes(checkedChipIds, allChipsGroup, adapter, searchView, allNotes, currentNotes, chippedNotes);
+        Firebase.getChippedNotes(checkedChipIdsSet, allChipsGroup, adapter, searchView, allNotes, currentNotes, chippedNotes);
 
         // populate parent fragment chip group with all chips selected
-        Chips.populateChipsDeletable(getContext(), chipGroup, checkedChipIds, allChipsGroup, adapter, searchView, allNotes, currentNotes, allChips);
+        Chips.populateChipsDeletable(getContext(), chipGroup, checkedChipIds, checkedChipIdsSet, allChipsGroup, adapter, searchView, allNotes, currentNotes, allChips);
     }
 }
