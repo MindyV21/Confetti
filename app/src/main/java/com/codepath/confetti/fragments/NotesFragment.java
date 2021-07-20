@@ -189,6 +189,7 @@ public class NotesFragment extends Fragment {
                     adapter.setNotesFull(currentNotes);
                     adapter.getFilter().filter(searchView.getQuery().toString().trim());
                 } else {
+                    // TODO: future listener for when you add a chip to a note
                     List<Integer> checkedChipIds = chipGroup.getCheckedChipIds();
                     refreshChips(checkedChipIds, chipGroup, false);
                 }
@@ -224,6 +225,8 @@ public class NotesFragment extends Fragment {
 
     protected void refreshChips(List<Integer> checkedChipIds, ChipGroup allChipsGroup, Boolean resetChips) {
         Log.i(TAG, "updating chips and currentNotes like based on chips selected");
+
+        // copy over ids for retrieving corresponding chip files - use list only to populate scroll view
         Set<Integer> checkedChipIdsSet = new TreeSet<>();
         for (Integer i : checkedChipIds) {
             checkedChipIdsSet.add(i);

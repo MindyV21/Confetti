@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.codepath.confetti.R;
 import com.codepath.confetti.fragments.NoteDetailsFragment;
 import com.codepath.confetti.models.Note;
+import com.codepath.confetti.models.Prediction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +93,15 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                     if (note.getName().toLowerCase().contains(filterPattern)) {
                         Log.i(TAG, "ADDED " + note.getName());
                         filteredList.add(note);
+                    } else {
+                        // filter through predictions list
+                        List<Prediction> predictions = note.getPredictions();
+                        for (Prediction prediction : predictions) {
+                            if (prediction.text.toLowerCase().contains(filterPattern)) {
+                                Log.i(TAG, "ADDED (by keyword) " + note.getName());
+                                filteredList.add(note);
+                            }
+                        }
                     }
                 }
             }
