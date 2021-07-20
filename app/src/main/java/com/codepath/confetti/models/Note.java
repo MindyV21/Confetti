@@ -18,6 +18,7 @@ public class Note {
 //    public String url;
     public List<Prediction> predictions;
     private File imageFile;
+    private String id;
 
     public Note() {};
 
@@ -50,5 +51,12 @@ public class Note {
 
     public void setPredictions(List<Prediction> predictions) {
         this.predictions = predictions;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+    public String getId() {
+        return id;
     }
 }

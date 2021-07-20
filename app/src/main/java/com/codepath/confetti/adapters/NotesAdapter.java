@@ -13,6 +13,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -27,6 +28,13 @@ import com.codepath.confetti.R;
 import com.codepath.confetti.fragments.NoteDetailsFragment;
 import com.codepath.confetti.models.Note;
 import com.codepath.confetti.models.Prediction;
+import com.codepath.confetti.utlils.Firebase;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -177,7 +185,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                             // The dialog is automatically dismissed when a dialog button is clicked.
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    // Continue with delete operation
+                                    Log.i(TAG, "deleting note " + tvNoteName.getText().toString());
+                                    Firebase.deleteNote(context, notes.get(getAdapterPosition()).getId());
                                 }
                             })
 

@@ -145,4 +145,26 @@ public class Firebase {
             });
         }
     }
+
+    public static void deleteNote(Context context, String id) {
+        // Continue with delete operation
+        FirebaseDatabase.getInstance().getReference("Notes")
+                .child(FirebaseAuth.getInstance().getUid())
+                .child("Files")
+                .child(id)
+                .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    // note delete from firebase
+                    Log.i(TAG, "onSuccess to delete note to firebase");
+                    Toast.makeText(context, "Note deleted successfully!", Toast.LENGTH_SHORT).show();
+                } else {
+                    // note failed to delete from firebase
+                    Log.i(TAG, "onFailure to delete note to firebase");
+                    Toast.makeText(context, "Note deletion failed! Try again.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 }

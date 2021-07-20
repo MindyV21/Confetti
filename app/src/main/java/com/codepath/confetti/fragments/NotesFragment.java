@@ -184,6 +184,7 @@ public class NotesFragment extends Fragment {
                 for (DataSnapshot data : iterable) {
                     Log.i(TAG, data.toString());
                     Note note = data.getValue(Note.class);
+                    note.setId(data.getKey());
                     currentNotes.add(note);
                     allNotes.put(data.getKey(), note);
                 }
@@ -247,36 +248,4 @@ public class NotesFragment extends Fragment {
         // populate parent fragment chip group with all chips selected
         Chips.populateChipsDeletable(getContext(), chipGroup, checkedChipIds, checkedChipIdsSet, allChipsGroup, adapter, searchView, allNotes, currentNotes, allChips);
     }
-
-    // callback for swipe deleting a note
-    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-        @Override
-        public boolean onMove(@NonNull @NotNull RecyclerView recyclerView, @NonNull @NotNull RecyclerView.ViewHolder viewHolder, @NonNull @NotNull RecyclerView.ViewHolder target) {
-            return false;
-        }
-
-        @Override
-        public void onSwiped(@NonNull @NotNull RecyclerView.ViewHolder viewHolder, int direction) {
-            int position = viewHolder.getAdapterPosition();
-            Note note = adapter.getNotes().get(position);
-            Log.d(TAG, "delete: " + position);
-        }
-
-        @Override
-        public void onChildDraw(@NonNull @NotNull Canvas c, @NonNull @NotNull RecyclerView recyclerView, @NonNull @NotNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-            View itemView = viewHolder.itemView;
-            final ColorDrawable background = new ColorDrawable(Color.RED);
-            background.setBounds(0, itemView.getTop(),   itemView.getLeft() + (int) dX, itemView.getBottom());
-            background.draw(c);
-//
-//            Drawable icon = ContextCompat.getDrawable(getContext(), R.drawable.ic_baseline_delete_24);
-//            int iconHorizontalMargin = 20;
-//            int top = 20;
-//            // compute top and left margin to the view bounds
-//            icon.setBounds(viewHolder.itemView.getRight() - iconHorizontalMargin, top, viewHolder.itemView.getRight() - iconHorizontalMargin, top + icon.getIntrinsicHeight());
-//            icon.draw(c);
-
-            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-        }
-    };
 }
