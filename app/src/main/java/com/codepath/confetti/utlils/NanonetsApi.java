@@ -1,17 +1,11 @@
-package com.codepath.confetti;
+package com.codepath.confetti.utlils;
 
 import android.content.Context;
 import android.util.Log;
 import android.widget.ProgressBar;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 
 import com.codepath.confetti.models.Note;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
+import com.codepath.confetti.utlils.Firebase;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -21,7 +15,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;

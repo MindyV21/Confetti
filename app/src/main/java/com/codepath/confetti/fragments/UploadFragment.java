@@ -3,19 +3,13 @@ package com.codepath.confetti.fragments;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.ImageDecoder;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,8 +21,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.codepath.confetti.Firebase;
-import com.codepath.confetti.NanonetsApi;
+import com.codepath.confetti.utlils.Firebase;
+import com.codepath.confetti.utlils.NanonetsApi;
 import com.codepath.confetti.R;
 import com.codepath.confetti.databinding.FragmentUploadBinding;
 import com.codepath.confetti.models.Note;

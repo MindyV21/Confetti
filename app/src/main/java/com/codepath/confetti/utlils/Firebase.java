@@ -1,9 +1,7 @@
-package com.codepath.confetti;
+package com.codepath.confetti.utlils;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -13,7 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.codepath.confetti.adapters.NotesAdapter;
-import com.codepath.confetti.fragments.UploadFragment;
 import com.codepath.confetti.models.Note;
 import com.codepath.confetti.models.Prediction;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,11 +29,9 @@ import com.google.firebase.storage.UploadTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 public class Firebase {
 

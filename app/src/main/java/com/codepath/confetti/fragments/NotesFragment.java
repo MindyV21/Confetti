@@ -16,18 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.Toast;
 
-import com.codepath.confetti.Firebase;
+import com.codepath.confetti.utlils.Firebase;
 import com.codepath.confetti.R;
 import com.codepath.confetti.adapters.NotesAdapter;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
-import com.codepath.confetti.models.Chips;
+import com.codepath.confetti.utlils.Chips;
 import com.codepath.confetti.models.Note;
-import com.codepath.confetti.models.Prediction;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -131,8 +126,11 @@ public class NotesFragment extends Fragment {
         rvNotes.setAdapter(adapter);
         rvNotes.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        // init deleting a note by swiping
+
+
         searchView = binding.searchView;
-        searchView.setQueryHint("Search by name");
+        searchView.setQueryHint("Searching for...");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

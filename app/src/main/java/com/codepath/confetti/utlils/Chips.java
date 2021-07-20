@@ -1,16 +1,14 @@
-package com.codepath.confetti.models;
+package com.codepath.confetti.utlils;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
 
-import com.codepath.confetti.Firebase;
 import com.codepath.confetti.adapters.NotesAdapter;
+import com.codepath.confetti.models.Note;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

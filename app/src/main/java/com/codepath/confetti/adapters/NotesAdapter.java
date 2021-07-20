@@ -25,6 +25,8 @@ import com.codepath.confetti.models.Prediction;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> implements Filterable {
 
@@ -86,20 +88,27 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
             if (constraint == null || constraint.length() == 0) {
                 filteredList.addAll(notesFull);
             } else {
+                Set<String> filteredSet = new TreeSet<>();
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
-                // compares note titles
+                // loop through all of the available (chipped) notes
                 for (Note note : notesFull) {
                     if (note.getName().toLowerCase().contains(filterPattern)) {
+                        // checks through note names
                         Log.i(TAG, "ADDED " + note.getName());
                         filteredList.add(note);
+                        filteredSet.add(note.getName());
                     } else {
                         // filter through predictions list
                         List<Prediction> predictions = note.getPredictions();
                         for (Prediction prediction : predictions) {
                             if (prediction.text.toLowerCase().contains(filterPattern)) {
-                                Log.i(TAG, "ADDED (by keyword) " + note.getName());
-                                filteredList.add(note);
+                                // checks if note has already been added before
+                                if (!filteredSet.contains(note.getName())) {
+                                    Log.i(TAG, "ADDED (by keyword) " + note.getName());
+                                    filteredList.add(note);
+                                }
+                                filteredSet.add(note.getName());
                             }
                         }
                     }
