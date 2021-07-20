@@ -14,6 +14,16 @@ public class Prediction {
 
     public Prediction() {}
 
+    // dummy data predictions
+    public Prediction(int xMin, int yMin, int xMax, int yMax, String text) {
+        label = "Topic";
+        this.xMin = xMin;
+        this.yMin = yMin;
+        this.xMax = xMax;
+        this.yMax = yMax;
+        this.text = text;
+    }
+
     public Prediction(JSONObject jsonObject) throws JSONException {
         label = jsonObject.getString("label");
         xMin = jsonObject.getInt("xmin");

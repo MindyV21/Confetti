@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -13,6 +15,7 @@ import androidx.annotation.NonNull;
 import com.codepath.confetti.adapters.NotesAdapter;
 import com.codepath.confetti.fragments.UploadFragment;
 import com.codepath.confetti.models.Note;
+import com.codepath.confetti.models.Prediction;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -39,7 +42,29 @@ public class Firebase {
 
     public static final String TAG = "Firebase";
 
-    public static void uploadImage(File photoFile, String id) {
+    public static void uploadPredictions(List<Prediction> predictions, String id) {
+        for (Prediction prediction : predictions) {
+            if (prediction.label.equals("Topic")){
+                FirebaseDatabase.getInstance().getReference("Topics")
+                        .child(FirebaseAuth.getInstance().getUid())
+                        .child(prediction.text)
+                        .child(id)
+                        .setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Log.i(TAG, "onSuccess to upload predictions to firebase");
+                        } else {
+                            // note failed to upload to firebase
+                            Log.i(TAG, "onFailure to upload predictions to firebase");
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    public static void uploadImage(Note note, File photoFile, String id) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         StorageReference fileRef = storageRef.child(FirebaseAuth.getInstance().getUid() + "/" + id);
@@ -58,11 +83,12 @@ public class Firebase {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                 Log.i(TAG, "OnSuccess upload photo to firebase storage");
+                uploadPredictions(note.getPredictions(), id);
             }
         });
     }
 
-    public static void uploadNote(Context context, Note note, String id, File photoFile) {
+    public static void uploadNote(Context context, ProgressBar pbLoading, Note note, String id, File photoFile) {
         // upload Note object to firebase database
         FirebaseDatabase.getInstance().getReference("Notes")
                 .child(FirebaseAuth.getInstance().getUid())
@@ -73,13 +99,14 @@ public class Firebase {
             public void onComplete(@NonNull @NotNull Task<Void> task) {
                 if (task.isSuccessful()){
                     // note uploaded to firebase
-                    // TODO: even if successful, note may have been empty == no note uploaded, need to wait for nanonets to finish image processing
                     Log.i(TAG, "onSuccess to upload note to firebase");
                     Toast.makeText(context, "Note uploaded successfully!", Toast.LENGTH_SHORT).show();
-                    Firebase.uploadImage(photoFile, id);
+                    pbLoading.setVisibility(View.INVISIBLE);
+                    Firebase.uploadImage(note, photoFile, id);
                 } else {
                     // note failed to upload to firebase
                     Log.i(TAG, "onFailure to upload note to firebase");
+                    pbLoading.setVisibility(View.INVISIBLE);
                     Toast.makeText(context, "Note upload failed! Try again.", Toast.LENGTH_SHORT).show();
                 }
             }

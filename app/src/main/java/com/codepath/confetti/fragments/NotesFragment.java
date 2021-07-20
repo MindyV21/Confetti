@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.codepath.confetti.Firebase;
 import com.codepath.confetti.R;
@@ -23,6 +24,9 @@ import com.codepath.confetti.adapters.NotesAdapter;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
 import com.codepath.confetti.models.Chips;
 import com.codepath.confetti.models.Note;
+import com.codepath.confetti.models.Prediction;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
@@ -164,6 +168,11 @@ public class NotesFragment extends Fragment {
         refNotes.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                // reset current and all Notes
+                currentNotes.clear();
+                allNotes.clear();
+
+                // update notes with changes
                 Log.i(TAG, dataSnapshot.toString());
                 Iterable<DataSnapshot> iterable = dataSnapshot.getChildren();
                 for (DataSnapshot data : iterable) {
@@ -172,9 +181,17 @@ public class NotesFragment extends Fragment {
                     currentNotes.add(note);
                     allNotes.put(data.getKey(), note);
                 }
-                Log.i(TAG, "currentNotes: " + currentNotes.size());
                 Log.i(TAG, "allNotes: " + allNotes.size());
-                adapter.getFilter().filter(searchView.getQuery());
+
+                // update currentNotes taking into account filters and query input
+                Log.d(TAG, "" + chipGroup.getChildCount());
+                if (chipGroup.getChildCount() == 0) {
+                    adapter.setNotesFull(currentNotes);
+                    adapter.getFilter().filter(searchView.getQuery().toString().trim());
+                } else {
+                    List<Integer> checkedChipIds = chipGroup.getCheckedChipIds();
+                    refreshChips(checkedChipIds, chipGroup, false);
+                }
             }
 
             @Override
@@ -203,33 +220,18 @@ public class NotesFragment extends Fragment {
                 Log.i(TAG, "The chip read failed: " + error.getCode());
             }
         });
-
-        // TODO: Attach a onChildAdded/Changed/Removed listener to read the data at our chips reference
     }
 
-    protected void refreshChips(List<Integer> checkedChipIds, ChipGroup allChipsGroup) {
+    protected void refreshChips(List<Integer> checkedChipIds, ChipGroup allChipsGroup, Boolean resetChips) {
         Log.i(TAG, "updating chips and currentNotes like based on chips selected");
-
-        // reset chipGroup
-        chipGroup.removeAllViews();
 
         // change currentNotes to contain notes with these selected chips
         currentNotes.clear();
         adapter.setNotesFull(currentNotes);
-        Log.d(TAG, "notesFull size: " + adapter.getNotesFull().size());
         Set<String> chippedNotes = new TreeSet<>();
         Firebase.getChippedNotes(checkedChipIds, allChipsGroup, adapter, searchView, allNotes, currentNotes, chippedNotes);
 
         // populate parent fragment chip group with all chips selected
         Chips.populateChipsDeletable(getContext(), chipGroup, checkedChipIds, allChipsGroup, adapter, searchView, allNotes, currentNotes, allChips);
-    }
-
-    /**
-     * Refreshs notes list when there are no chips currently selected
-     */
-    protected void refreshNoChips() {
-        currentNotes = new ArrayList<>(allNotes.values());
-        adapter.getFilter().filter(searchView.getQuery());
-        chipGroup.removeAllViews();
     }
 }

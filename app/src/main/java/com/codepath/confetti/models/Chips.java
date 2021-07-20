@@ -74,6 +74,7 @@ public class Chips {
 
                     // check if there are no more chips selected
                     if (checkedChipIds.size() == 0) {
+                        // reset notes list to default
                         currentNotes.clear();
                         for (Map.Entry<String, Note> note : allNotes.entrySet()) {
                             currentNotes.add(note.getValue());

@@ -115,12 +115,18 @@ public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
         // load chips into horizontal view
         List<Integer> checkedChipIds = chipGroup.getCheckedChipIds();
 
+        // reset chipGroup
+        parentFragment.chipGroup.removeAllViews();
+
         // if no chips selected
         if (checkedChipIds.size() == 0) {
-            parentFragment.refreshNoChips();
+            // reset notes list
+            parentFragment.currentNotes = new ArrayList<>(parentFragment.allNotes.values());
+            parentFragment.adapter.setNotesFull(parentFragment.currentNotes);
+            parentFragment.adapter.getFilter().filter(parentFragment.searchView.getQuery());
             return;
         }
 
-        parentFragment.refreshChips(checkedChipIds, chipGroup);
+        parentFragment.refreshChips(checkedChipIds, chipGroup, true);
     }
 }

@@ -27,9 +27,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.codepath.confetti.Firebase;
 import com.codepath.confetti.NanonetsApi;
 import com.codepath.confetti.R;
 import com.codepath.confetti.databinding.FragmentUploadBinding;
+import com.codepath.confetti.models.Note;
+import com.codepath.confetti.models.Prediction;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -38,6 +41,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -121,10 +126,6 @@ public class UploadFragment extends Fragment {
         btnSubmit = binding.btnSubmit;
         pbLoading = binding.pbLoading;
 
-        // placeholder image
-//        Drawable drawable = AppCompatResources.getDrawable(getContext(), R);
-//        ivPreview.setImageDrawable(drawable);
-
         etFileName.setText("");
 
         btnUploadGallery.setOnClickListener(new View.OnClickListener() {
@@ -157,7 +158,15 @@ public class UploadFragment extends Fragment {
 
                 Log.i(TAG, "upload photo to nanonets database for prediction!");
                 pbLoading.setVisibility(View.VISIBLE);
-                NanonetsApi.predictFile(getContext(), fileName, getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), photoFile);
+
+                // for testing
+                Note note = new Note(fileName);
+                List<Prediction> predictions = new ArrayList<>();
+                predictions.add(new Prediction(0, 1, 2, 3, "bread"));
+                note.setPredictions(predictions);
+                Firebase.uploadNote(getContext(), pbLoading, note, "testId", photoFile);
+
+                //NanonetsApi.predictFile(getContext(), fileName, getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), photoFile);
             }
         });
 

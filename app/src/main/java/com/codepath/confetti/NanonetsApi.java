@@ -2,6 +2,7 @@ package com.codepath.confetti;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -125,10 +126,7 @@ public class NanonetsApi {
                     note.getPredictions(jsonObject);
 
                     // upload note to database
-                    Firebase.uploadNote(context, note, id, file);
-
-                    // save photo in storage
-                    Firebase.uploadImage(file, id);
+                    Firebase.uploadNote(context, new ProgressBar(context), note, id, file);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -191,7 +189,7 @@ public class NanonetsApi {
     }
 
     // sends image file to nanonets to predict data
-    public static void predictFile(Context context, String fileName, String apiKey, String modelId, File file) {
+    public static void predictFile(Context context, ProgressBar pbLoading, String fileName, String apiKey, String modelId, File file) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(5, TimeUnit.MINUTES) // connect timeout
                 .writeTimeout(5, TimeUnit.MINUTES) // write timeout
@@ -245,7 +243,7 @@ public class NanonetsApi {
                     note.getPredictions(jsonObject);
 
                     // upload note to database and then photo to storage
-                    Firebase.uploadNote(context, note, id, file);
+                    Firebase.uploadNote(context, pbLoading, note, id, file);
 
 //                    // query file in nanonets database
 //                    queryNote(context, apiKey, modelId, id, file);
