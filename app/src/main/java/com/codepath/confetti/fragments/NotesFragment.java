@@ -59,7 +59,7 @@ public class NotesFragment extends Fragment {
     protected SearchView searchView;
     private ImageView ivSearchToggle;
 
-    private ChipGroup chipGroup;
+    protected ChipGroup chipGroup;
     protected Map<String, Boolean> allChips;
     protected Set<String> currentChips;
 
@@ -210,7 +210,9 @@ public class NotesFragment extends Fragment {
     protected void refreshChips(List<Integer> checkedChipIds, ChipGroup allChipsGroup) {
         Log.i(TAG, "updating chips and currentNotes like based on chips selected");
 
-        // populate parent fragment with all chips selected
+        // reset chipGroup
+        chipGroup.removeAllViews();
+
         // change currentNotes to contain notes with these selected chips
         currentNotes.clear();
         adapter.setNotesFull(currentNotes);
@@ -219,6 +221,15 @@ public class NotesFragment extends Fragment {
         Firebase.getChippedNotes(checkedChipIds, allChipsGroup, adapter, searchView, allNotes, currentNotes, chippedNotes);
 
         // populate parent fragment chip group with all chips selected
-        Chips.populateChipsDeletable();
+        Chips.populateChipsDeletable(getContext(), chipGroup, checkedChipIds, allChipsGroup, adapter, searchView, allNotes, currentNotes, allChips);
+    }
+
+    /**
+     * Refreshs notes list when there are no chips currently selected
+     */
+    protected void refreshNoChips() {
+        currentNotes = new ArrayList<>(allNotes.values());
+        adapter.getFilter().filter(searchView.getQuery());
+        chipGroup.removeAllViews();
     }
 }

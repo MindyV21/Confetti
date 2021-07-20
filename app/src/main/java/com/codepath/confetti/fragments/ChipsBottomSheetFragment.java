@@ -117,8 +117,7 @@ public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
 
         // if no chips selected
         if (checkedChipIds.size() == 0) {
-            parentFragment.currentNotes = new ArrayList<>(parentFragment.allNotes.values());
-            // adapter refresh
+            parentFragment.refreshNoChips();
             return;
         }
 
