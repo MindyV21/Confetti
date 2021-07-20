@@ -1,12 +1,17 @@
 package com.codepath.confetti.fragments;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,7 +21,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
+import com.codepath.confetti.MainActivity;
 import com.codepath.confetti.utlils.Firebase;
 import com.codepath.confetti.R;
 import com.codepath.confetti.adapters.NotesAdapter;
@@ -127,7 +134,8 @@ public class NotesFragment extends Fragment {
         rvNotes.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // init deleting a note by swiping
-
+//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+//        itemTouchHelper.attachToRecyclerView(rvNotes);
 
         searchView = binding.searchView;
         searchView.setQueryHint("Searching for...");
@@ -239,4 +247,36 @@ public class NotesFragment extends Fragment {
         // populate parent fragment chip group with all chips selected
         Chips.populateChipsDeletable(getContext(), chipGroup, checkedChipIds, checkedChipIdsSet, allChipsGroup, adapter, searchView, allNotes, currentNotes, allChips);
     }
+
+    // callback for swipe deleting a note
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull @NotNull RecyclerView recyclerView, @NonNull @NotNull RecyclerView.ViewHolder viewHolder, @NonNull @NotNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull @NotNull RecyclerView.ViewHolder viewHolder, int direction) {
+            int position = viewHolder.getAdapterPosition();
+            Note note = adapter.getNotes().get(position);
+            Log.d(TAG, "delete: " + position);
+        }
+
+        @Override
+        public void onChildDraw(@NonNull @NotNull Canvas c, @NonNull @NotNull RecyclerView recyclerView, @NonNull @NotNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            View itemView = viewHolder.itemView;
+            final ColorDrawable background = new ColorDrawable(Color.RED);
+            background.setBounds(0, itemView.getTop(),   itemView.getLeft() + (int) dX, itemView.getBottom());
+            background.draw(c);
+//
+//            Drawable icon = ContextCompat.getDrawable(getContext(), R.drawable.ic_baseline_delete_24);
+//            int iconHorizontalMargin = 20;
+//            int top = 20;
+//            // compute top and left margin to the view bounds
+//            icon.setBounds(viewHolder.itemView.getRight() - iconHorizontalMargin, top, viewHolder.itemView.getRight() - iconHorizontalMargin, top + icon.getIntrinsicHeight());
+//            icon.draw(c);
+
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
+    };
 }

@@ -2,6 +2,7 @@ package com.codepath.confetti.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,8 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chauthai.swipereveallayout.SwipeRevealLayout;
+import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.codepath.confetti.R;
 import com.codepath.confetti.fragments.NoteDetailsFragment;
 import com.codepath.confetti.models.Note;
@@ -31,6 +34,9 @@ import java.util.TreeSet;
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> implements Filterable {
 
     public static final String TAG = "NotesAdapter";
+
+    // This object helps you save/restore the open/close state of each view
+    private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
 
     private Context context;
     private List<Note> notes;
@@ -47,19 +53,29 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_note, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_note_swipe, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull NotesAdapter.ViewHolder holder, int position) {
         Note note = notes.get(position);
+
+        viewBinderHelper.setOpenOnlyOne(true);
+        // Save/restore the open/close state.
+        viewBinderHelper.bind(holder.swipeRevealLayout, String.valueOf(note.getName()));
+        viewBinderHelper.closeLayout(String.valueOf(note.getName()));
+
         holder.bind(note);
     }
 
     @Override
     public int getItemCount() {
         return notes.size();
+    }
+
+    public List<Note> getNotes() {
+        return notes;
     }
 
     public void setNotesFull(List<Note> notesFull) {
@@ -133,23 +149,37 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
         private TextView tvNoteName;
         private ImageView ivImage;
+        private ImageView ivDelete;
+        private SwipeRevealLayout swipeRevealLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             // connect vars to layout
             tvNoteName = itemView.findViewById(R.id.tvNoteName);
             ivImage = itemView.findViewById(R.id.ivImage);
+            ivDelete = itemView.findViewById(R.id.ivDelete);
+            swipeRevealLayout = itemView.findViewById(R.id.swipeLayout);
 
             // Attach a click listener to the entire row view
             itemView.setOnClickListener(this);
+
+            // listener to delete
+            ivDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.i(TAG, "user swiped on " + tvNoteName.getText().toString());
+                }
+            });
         }
 
         public void bind(Note note) {
-            // bind var
+            // bind main layout info
             Log.i(TAG, note.name);
             tvNoteName.setText(note.name);
             Drawable drawable = AppCompatResources.getDrawable(context, R.drawable.ic_launcher_foreground);
             ivImage.setImageDrawable(drawable);
+
+            // bind swiped layout info
         }
 
         private void goToNote(Note note) {
