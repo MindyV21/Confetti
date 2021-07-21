@@ -30,6 +30,7 @@ import com.codepath.confetti.adapters.NotesAdapter;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
 import com.codepath.confetti.utlils.Chips;
 import com.codepath.confetti.models.Note;
+import com.codepath.confetti.utlils.NanonetsApi;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -187,7 +188,7 @@ public class NotesFragment extends Fragment {
                     Note note = data.getValue(Note.class);
                     note.setId(data.getKey());
                     // retrieve note image from firebase storage
-                    Firebase.getImage(note);
+                    //Firebase.getImage(note);
 
                     currentNotes.add(note);
                     allNotes.put(data.getKey(), note);

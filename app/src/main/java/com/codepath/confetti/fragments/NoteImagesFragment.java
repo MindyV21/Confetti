@@ -2,6 +2,7 @@ package com.codepath.confetti.fragments;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PointF;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,11 +13,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.codepath.confetti.R;
 import com.codepath.confetti.databinding.FragmentNoteImagesBinding;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
 import com.codepath.confetti.models.Note;
+import com.codepath.confetti.utlils.PinView;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
@@ -34,7 +38,7 @@ public class NoteImagesFragment extends Fragment {
 
     private Note note;
 
-    private SubsamplingScaleImageView ssivNote;
+    private PinView ssivNote;
 
     public NoteImagesFragment(Note note) {
         this.note = note;
@@ -83,11 +87,16 @@ public class NoteImagesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentNoteImagesBinding.inflate(getLayoutInflater(), container, false);
-        // layout of fragment is stored in a special property called root
-        View view = binding.getRoot();
-        // Inflate the layout for this fragment
-        return view;
+        try {
+            binding = FragmentNoteImagesBinding.inflate(getLayoutInflater(), container, false);
+            // layout of fragment is stored in a special property called root
+            View view = binding.getRoot();
+            // Inflate the layout for this fragment
+            return view;
+        } catch (Exception e) {
+            Log.e(TAG, "onCreateView", e);
+            throw e;
+        }
     }
 
     @Override
@@ -96,15 +105,16 @@ public class NoteImagesFragment extends Fragment {
 
         // set up image view scrollable
         ssivNote = binding.ssivNote;
-        Bitmap bitmap = BitmapFactory.decodeFile(note.getImageFile().getAbsolutePath());
-        Log.d(TAG, "image height: " + bitmap.getHeight() + "    width: " + bitmap.getWidth());
-
-        ssivNote.setImage(ImageSource.bitmap(bitmap));
-        ssivNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "CLICK CLICK NOTE IMAGE");
-            }
-        });
+//        Bitmap bitmap = BitmapFactory.decodeFile(note.getImageFile().getAbsolutePath());
+//        Log.d(TAG, "image height: " + bitmap.getHeight() + "    width: " + bitmap.getWidth());
+//
+//        ssivNote.setImage(ImageSource.bitmap(bitmap));
+//        ssivNote.setPin(new PointF(1602f, 405f));
+//        ssivNote.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Log.d(TAG, "CLICK CLICK NOTE IMAGE");
+//            }
+//        });
     }
 }

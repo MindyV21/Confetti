@@ -2,7 +2,10 @@ package com.codepath.confetti.utlils;
 
 import android.content.Context;
 import android.graphics.*;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+
+import androidx.appcompat.content.res.AppCompatResources;
 
 import com.codepath.confetti.R;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -20,7 +23,7 @@ public class PinView extends SubsamplingScaleImageView {
 
     public PinView(Context context, AttributeSet attr) {
         super(context, attr);
-        initialise();
+        //initialise();
     }
 
     public void setPin(PointF sPin) {
@@ -31,6 +34,7 @@ public class PinView extends SubsamplingScaleImageView {
 
     private void initialise() {
         float density = getResources().getDisplayMetrics().densityDpi;
+        Drawable drawable = AppCompatResources.getDrawable(getContext(), R.drawable.ic_baseline_person_24);
         pin = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_baseline_person_24);
         float w = (density/420f) * pin.getWidth();
         float h = (density/420f) * pin.getHeight();

@@ -18,11 +18,10 @@
             android:layout_gravity="center_vertical">
 
             <!-- initial note, set up for multiple page pdfs -->
-            <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+            <com.codepath.confetti.utlils.PinView
                 android:id="@+id/ssivNote"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:srcCompat="@tools:sample/avatars"
                 android:clickable="true"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
