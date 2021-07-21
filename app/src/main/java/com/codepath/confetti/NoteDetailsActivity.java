@@ -48,6 +48,7 @@ public class NoteDetailsActivity extends AppCompatActivity {
 
         // set up toolbar
         toolbar = binding.toolbar;
+        toolbar.setTitle(note.getName());
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
