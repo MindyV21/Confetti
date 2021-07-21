@@ -33,6 +33,7 @@ import com.codepath.confetti.models.Note;
 import com.codepath.confetti.utlils.NanonetsApi;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -134,10 +135,6 @@ public class NotesFragment extends Fragment {
         rvNotes.setAdapter(adapter);
         rvNotes.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // init deleting a note by swiping
-//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-//        itemTouchHelper.attachToRecyclerView(rvNotes);
-
         searchView = binding.searchView;
         searchView.setQueryHint("Searching for...");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -171,29 +168,18 @@ public class NotesFragment extends Fragment {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference refNotes = database.getReference("Notes/" + FirebaseAuth.getInstance().getUid() + "/Files");
 
-        // Attach a listener to read the data at our notes reference
-        refNotes.addValueEventListener(new ValueEventListener() {
+        // child added - called once  for each existing child, then again every time a new child added
+        refNotes.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // reset current and all Notes
-                currentNotes.clear();
-                allNotes.clear();
+            public void onChildAdded(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+                Log.i(TAG, snapshot.toString());
+                // create note from firebase database
+                Note note = snapshot.getValue(Note.class);
+                note.setId(snapshot.getKey());
+                currentNotes.add(note);
+                allNotes.put(snapshot.getKey(), note);
 
-                // update notes with changes
-                Log.i(TAG, dataSnapshot.toString());
-                Iterable<DataSnapshot> iterable = dataSnapshot.getChildren();
-                for (DataSnapshot data : iterable) {
-                    Log.i(TAG, data.toString());
-                    // create note from firebase database
-                    Note note = data.getValue(Note.class);
-                    note.setId(data.getKey());
-                    // retrieve note image from firebase storage
-                    //Firebase.getImage(note);
-
-                    currentNotes.add(note);
-                    allNotes.put(data.getKey(), note);
-                }
-                Log.i(TAG, "allNotes: " + allNotes.size());
+                // get image ?
 
                 // update currentNotes taking into account filters and query input
                 Log.d(TAG, "" + chipGroup.getChildCount());
@@ -208,7 +194,36 @@ public class NotesFragment extends Fragment {
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onChildChanged(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull @NotNull DataSnapshot snapshot) {
+                Log.i(TAG, snapshot.toString());
+                String id = snapshot.getKey();
+                // update adapter within adapter ??
+
+                // check if note is in current notes and remove
+                for (int i = 0; i < currentNotes.size(); i++) {
+                    if (id.equals(currentNotes.get(i).getId())) {
+                        currentNotes.remove(i);
+                        return;
+                    }
+                }
+
+                // remove note from allNotes
+                allNotes.remove(id);
+                adapter.setNotesFull(currentNotes);
+            }
+
+            @Override
+            public void onChildMoved(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
                 Log.i(TAG, "The note read failed: " + error.getCode());
             }
         });

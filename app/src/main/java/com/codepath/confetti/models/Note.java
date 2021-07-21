@@ -17,8 +17,9 @@ public class Note {
     public static final String TAG = "NoteModel";
 
     public String name;
-//    public String url;
     public List<Prediction> predictions;
+    public List<String> chipNames;
+
     private File imageFile;
     private String id;
 
@@ -53,6 +54,14 @@ public class Note {
 
     public void setPredictions(List<Prediction> predictions) {
         this.predictions = predictions;
+    }
+
+    public List<String> getChipNames() {
+        return chipNames;
+    }
+
+    public void setChipNames(List<String> chipNames) {
+        this.chipNames = chipNames;
     }
 
     public void setId(String id) {

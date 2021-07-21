@@ -179,10 +179,23 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Log.i(TAG, "deleting note " + tvNoteName.getText().toString());
-                                    Firebase.deleteNote(context, notes.get(getAdapterPosition()).getId());
+                                    String id = notes.get(getAdapterPosition()).getId();
+
+                                    Firebase.deleteNote(context, id);
+
+                                    // remove item from notes
+                                    notes.remove(getAdapterPosition());
+                                    notifyItemRemoved(getAdapterPosition());
+                                    for (int i = 0; i < notesFull.size(); i++) {
+                                        if (id.equals(notesFull.get(i).getId())) {
+                                            notesFull.remove(i);
+                                            return;
+                                        }
+                                    }
 
                                     // TODO: need to delete references to this deleted note in chips database <- to do this need to create a list within note with a list of its chips
                                     // TODO: need to delete photo file from storage
+
                                 }
                             })
 
