@@ -16,6 +16,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.codepath.confetti.databinding.ActivityNoteDetailsBinding;
 import com.codepath.confetti.models.Note;
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
@@ -23,7 +25,7 @@ import org.parceler.Parcels;
 
 public class NoteDetailsActivity extends AppCompatActivity {
 
-    public static final String TAG = "MainActivity";
+    public static final String TAG = "NoteDetailsActivity";
 
     private Note note;
 
@@ -33,7 +35,7 @@ public class NoteDetailsActivity extends AppCompatActivity {
     private Chip chipAdd;
     private ChipGroup chipGroup;
 
-    private ImageView ivNote;
+    private SubsamplingScaleImageView ssivNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,10 +79,12 @@ public class NoteDetailsActivity extends AppCompatActivity {
         });
 
         // set up image view scrollable
-        ivNote = binding.ivNote;
+        ssivNote = binding.ssivNote;
         Bitmap bitmap = BitmapFactory.decodeFile(note.getImageFile().getAbsolutePath());
-        ivNote.setImageBitmap(bitmap);
-        ivNote.setOnClickListener(new View.OnClickListener() {
+        Log.d(TAG, "image height: " + bitmap.getHeight() + "    width: " + bitmap.getWidth());
+
+        ssivNote.setImage(ImageSource.bitmap(bitmap));
+        ssivNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "CLICK CLICK NOTE IMAGE");

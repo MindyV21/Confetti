@@ -73,4 +73,7 @@ dependencies {
     // parceable/serializable
     implementation 'org.parceler:parceler-api:1.1.12'
     annotationProcessor 'org.parceler:parceler:1.1.12'
+
+    // for images
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
 }

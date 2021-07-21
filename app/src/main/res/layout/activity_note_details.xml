@@ -65,8 +65,8 @@
             android:layout_gravity="center_vertical">
 
             <!-- initial note, set up for multiple page pdfs -->
-            <ImageView
-                android:id="@+id/ivNote"
+            <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+                android:id="@+id/ssivNote"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:srcCompat="@tools:sample/avatars"
