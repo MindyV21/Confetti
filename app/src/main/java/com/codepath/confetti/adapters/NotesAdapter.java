@@ -190,7 +190,13 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                             })
 
                             // A null listener allows the button to dismiss the dialog and take no further action.
-                            .setNegativeButton(android.R.string.no, null)
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    // reverse swiped
+                                    viewBinderHelper.closeLayout(String.valueOf(tvNoteName.getText().toString()));
+                                }
+                            })
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
                 }
