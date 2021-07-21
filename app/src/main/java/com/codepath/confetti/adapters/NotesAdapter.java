@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -151,12 +152,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         }
     };
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder{
 
         private TextView tvNoteName;
         private ImageView ivImage;
         private ImageView ivDelete;
+
         private SwipeRevealLayout swipeRevealLayout;
+        private LinearLayout itemMainLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -165,11 +168,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
             ivImage = itemView.findViewById(R.id.ivImage);
             ivDelete = itemView.findViewById(R.id.ivDelete);
             swipeRevealLayout = itemView.findViewById(R.id.swipeLayout);
+            itemMainLayout = itemView.findViewById(R.id.itemMainLayout);
 
-            // Attach a click listener to the entire row view
-            itemView.setOnClickListener(this);
-
-            // listener to delete
+            // listener to delete with swipe option
             ivDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -184,7 +185,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                                     Log.i(TAG, "deleting note " + tvNoteName.getText().toString());
                                     Firebase.deleteNote(context, notes.get(getAdapterPosition()).getId());
 
-                                    // TODO: need to delete references to this deleted note in chips database <- do this by creating a list within note with a list of its chips
+                                    // TODO: need to delete references to this deleted note in chips database <- to do this need to create a list within note with a list of its chips
                                     // TODO: need to delete photo file from storage
                                 }
                             })
@@ -201,6 +202,22 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                             .show();
                 }
             });
+
+            // listener to go to note details
+            itemMainLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.i(TAG, "item main layout clicked! - " + tvNoteName.getText().toString());
+                    // get position
+                    int position = getAdapterPosition();
+                    // make sure valid position
+                    if (position != RecyclerView.NO_POSITION) {
+                        Note note = notes.get(position);
+                        goToNote(note);
+                    }
+                }
+            });
+
         }
 
         public void bind(Note note) {
@@ -220,18 +237,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
             AppCompatActivity activity = (AppCompatActivity) context;
             Fragment fragment = new NoteDetailsFragment(note);
             activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, fragment).addToBackStack(null).commit();
-        }
-
-        @Override
-        public void onClick(View v) {
-            Log.i(TAG, "item clicked! - " + tvNoteName);
-            // get position
-            int position = getAdapterPosition();
-            // make sure valid position
-            if (position != RecyclerView.NO_POSITION) {
-                Note note = notes.get(position);
-                goToNote(note);
-            }
         }
     }
 }
