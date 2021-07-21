@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.NoteImagesFragment">
+
+    <HorizontalScrollView
+        android:id="@+id/hScrollViewImage"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_below="@id/relLayoutTags">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_vertical">
+
+            <!-- initial note, set up for multiple page pdfs -->
+            <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+                android:id="@+id/ssivNote"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:srcCompat="@tools:sample/avatars"
+                android:clickable="true"
+                android:adjustViewBounds="true"
+                android:scaleType="fitStart"
+                android:paddingLeft="16dp"/>
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+</FrameLayout>

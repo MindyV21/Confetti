@@ -8,13 +8,17 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.codepath.confetti.databinding.ActivityNoteDetailsBinding;
+import com.codepath.confetti.fragments.NoteImagesFragment;
 import com.codepath.confetti.models.Note;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -34,8 +38,6 @@ public class NoteDetailsActivity extends AppCompatActivity {
     private ImageView ivTag;
     private Chip chipAdd;
     private ChipGroup chipGroup;
-
-    private SubsamplingScaleImageView ssivNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,17 +80,7 @@ public class NoteDetailsActivity extends AppCompatActivity {
             }
         });
 
-        // set up image view scrollable
-        ssivNote = binding.ssivNote;
-        Bitmap bitmap = BitmapFactory.decodeFile(note.getImageFile().getAbsolutePath());
-        Log.d(TAG, "image height: " + bitmap.getHeight() + "    width: " + bitmap.getWidth());
-
-        ssivNote.setImage(ImageSource.bitmap(bitmap));
-        ssivNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "CLICK CLICK NOTE IMAGE");
-            }
-        });
+        // attach hscroll of note images
+        getSupportFragmentManager().beginTransaction().add(R.id.flNoteImages, new NoteImagesFragment(note)).commit();
     }
 }
