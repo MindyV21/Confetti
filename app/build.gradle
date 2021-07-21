@@ -67,7 +67,10 @@ dependencies {
     // for nanonets
     implementation 'com.squareup.okhttp3:okhttp:4.1.0'
 
-    // swipe
+    // swipe reveal
     implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
 
+    // parceable/serializable
+    implementation 'org.parceler:parceler-api:1.1.12'
+    annotationProcessor 'org.parceler:parceler:1.1.12'
 }

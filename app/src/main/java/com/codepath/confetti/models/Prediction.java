@@ -2,7 +2,9 @@ package com.codepath.confetti.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
+@Parcel
 public class Prediction {
 
     public String label;

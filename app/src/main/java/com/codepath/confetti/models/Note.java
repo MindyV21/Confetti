@@ -5,11 +5,13 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+@Parcel
 public class Note {
 
     public static final String TAG = "NoteModel";
