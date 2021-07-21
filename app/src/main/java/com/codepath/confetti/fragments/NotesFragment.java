@@ -183,8 +183,12 @@ public class NotesFragment extends Fragment {
                 Iterable<DataSnapshot> iterable = dataSnapshot.getChildren();
                 for (DataSnapshot data : iterable) {
                     Log.i(TAG, data.toString());
+                    // create note from firebase database
                     Note note = data.getValue(Note.class);
                     note.setId(data.getKey());
+                    // retrieve note image from firebase storage
+                    Firebase.getImage(note);
+
                     currentNotes.add(note);
                     allNotes.put(data.getKey(), note);
                 }
@@ -196,7 +200,7 @@ public class NotesFragment extends Fragment {
                     adapter.setNotesFull(currentNotes);
                     adapter.getFilter().filter(searchView.getQuery().toString().trim());
                 } else {
-                    // TODO: future listener for when you add a chip to a note
+                    // TODO: future listener for when you add a chip to a note on creation
                     List<Integer> checkedChipIds = chipGroup.getCheckedChipIds();
                     refreshChips(checkedChipIds, chipGroup, false);
                 }

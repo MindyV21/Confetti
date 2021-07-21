@@ -29,17 +29,19 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="20dp">
+
+        <ImageView
+            android:id="@+id/ivImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:srcCompat="@drawable/ic_launcher_foreground"
+            android:scaleType="fitCenter"/>
+
         <TextView
             android:id="@+id/tvNoteName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="test note" />
-
-        <ImageView
-            android:id="@+id/ivImage"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            app:srcCompat="@drawable/ic_launcher_foreground"/>
     </LinearLayout>
 
 </com.chauthai.swipereveallayout.SwipeRevealLayout>

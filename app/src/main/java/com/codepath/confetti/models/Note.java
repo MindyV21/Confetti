@@ -59,4 +59,11 @@ public class Note {
     public String getId() {
         return id;
     }
+
+    public void setImageFile(File imageFile) {
+        this.imageFile = imageFile;
+    }
+    public File getImageFile() {
+        return imageFile;
+    }
 }

@@ -1,8 +1,11 @@
 package com.codepath.confetti.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -16,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
@@ -29,12 +31,6 @@ import com.codepath.confetti.fragments.NoteDetailsFragment;
 import com.codepath.confetti.models.Note;
 import com.codepath.confetti.models.Prediction;
 import com.codepath.confetti.utlils.Firebase;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -179,7 +175,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                 public void onClick(View view) {
                     Log.i(TAG, "user swiped on " + tvNoteName.getText().toString());
                     new AlertDialog.Builder(context)
-                            .setMessage("Delete '" + tvNoteName.getText().toString() + "'?")
+                            .setMessage("Delete note '" + tvNoteName.getText().toString() + "'?")
 
                             // Specifying a listener allows you to take an action before dismissing the dialog.
                             // The dialog is automatically dismissed when a dialog button is clicked.
@@ -187,6 +183,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                                 public void onClick(DialogInterface dialog, int which) {
                                     Log.i(TAG, "deleting note " + tvNoteName.getText().toString());
                                     Firebase.deleteNote(context, notes.get(getAdapterPosition()).getId());
+
+                                    // TODO: need to delete references to this deleted note in chips database <- do this by creating a list within note with a list of its chips
+                                    // TODO: need to delete photo file from storage
                                 }
                             })
 
@@ -204,14 +203,17 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
             tvNoteName.setText(note.name);
             Drawable drawable = AppCompatResources.getDrawable(context, R.drawable.ic_launcher_foreground);
             ivImage.setImageDrawable(drawable);
+            // TODO: need to wait for images to load in before showing
+//            Bitmap bitmap = BitmapFactory.decodeFile(note.getImageFile().getAbsolutePath());
+//            ivImage.setImageBitmap(bitmap);
 
             // bind swiped layout info
         }
 
         private void goToNote(Note note) {
             AppCompatActivity activity = (AppCompatActivity) context;
-            Fragment myFragment = new NoteDetailsFragment(note);
-            activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, myFragment).addToBackStack(null).commit();
+            Fragment fragment = new NoteDetailsFragment(note);
+            activity.getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, fragment).addToBackStack(null).commit();
         }
 
         @Override

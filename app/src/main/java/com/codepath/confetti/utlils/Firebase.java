@@ -22,6 +22,7 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -29,6 +30,7 @@ import com.google.firebase.storage.UploadTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -166,5 +168,32 @@ public class Firebase {
                 }
             }
         });
+    }
+
+    public static void getImage(Note note) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference fileRef = storageRef.child(FirebaseAuth.getInstance().getUid() + "/" + note.getId());
+        Log.d(TAG, fileRef.getPath());
+
+        try {
+            File localFile = File.createTempFile("images", "jpg");
+
+            fileRef.getFile(localFile).addOnCompleteListener(new OnCompleteListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull @NotNull Task<FileDownloadTask.TaskSnapshot> task) {
+                    if (task.isSuccessful()){
+                        // Local temp file has been created
+                        Log.i(TAG, "onSuccess to get note image from firebase");
+                        note.setImageFile(localFile);
+                    } else {
+                        // image file failed to retrieve from firebase
+                        Log.i(TAG, "onFailure to get note image from firebase");
+                    }
+                }
+            });
+        } catch (IOException e) {
+            Log.e(TAG, "failed to get note image from firebase storage", e);
+        }
     }
 }
