@@ -79,5 +79,11 @@ public class NoteDetailsActivity extends AppCompatActivity {
         ivNote = binding.ivNote;
         Bitmap bitmap = BitmapFactory.decodeFile(note.getImageFile().getAbsolutePath());
         ivNote.setImageBitmap(bitmap);
+        ivNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "CLICK CLICK NOTE IMAGE");
+            }
+        });
     }
 }
