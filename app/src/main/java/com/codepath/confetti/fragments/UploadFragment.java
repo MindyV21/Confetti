@@ -27,6 +27,10 @@ import com.codepath.confetti.R;
 import com.codepath.confetti.databinding.FragmentUploadBinding;
 import com.codepath.confetti.models.Note;
 import com.codepath.confetti.models.Prediction;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -153,11 +157,47 @@ public class UploadFragment extends Fragment {
                 Log.i(TAG, "upload photo to nanonets database for prediction!");
                 pbLoading.setVisibility(View.VISIBLE);
 
-                // for testing
+                // TODO: delete - for testing
                 Note note = new Note(fileName);
+
                 List<Prediction> predictions = new ArrayList<>();
                 predictions.add(new Prediction(0, 1, 2, 3, "bread"));
                 note.setPredictions(predictions);
+
+                List<String> chipNames = new ArrayList<>();
+                chipNames.add("hole");
+                chipNames.add("french breads");
+                note.setChipNames(chipNames);
+                // add chips to chip database
+                FirebaseDatabase.getInstance().getReference("Chips")
+                        .child(FirebaseAuth.getInstance().getUid())
+                        .child("hole")
+                        .child("testId")
+                        .setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Log.d(TAG, "onSuccess to add dummy note's chip references from firebase");
+                        } else {
+                            Log.d(TAG, "onFailure to add dummy note's chip references from firebase");
+                        }
+                    }
+                });
+                FirebaseDatabase.getInstance().getReference("Chips")
+                        .child(FirebaseAuth.getInstance().getUid())
+                        .child("french breads")
+                        .child("testId")
+                        .setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Log.d(TAG, "onSuccess to add dummy note's chip references from firebase");
+                        } else {
+                            Log.d(TAG, "onFailure to add dummy note's chip references from firebase");
+                        }
+                    }
+                });
+
                 Firebase.uploadNote(getContext(), pbLoading, note, "testId", photoFile);
 
                 //NanonetsApi.predictFile(getContext(), fileName, getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), photoFile);

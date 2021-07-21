@@ -31,6 +31,8 @@ import com.codepath.confetti.databinding.FragmentNotesBinding;
 import com.codepath.confetti.utlils.Chips;
 import com.codepath.confetti.models.Note;
 import com.codepath.confetti.utlils.NanonetsApi;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;

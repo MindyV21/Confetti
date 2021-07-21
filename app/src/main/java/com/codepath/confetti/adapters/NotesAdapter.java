@@ -179,15 +179,15 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Log.i(TAG, "deleting note " + tvNoteName.getText().toString());
-                                    String id = notes.get(getAdapterPosition()).getId();
+                                    Note note = notes.get(getAdapterPosition());
 
-                                    Firebase.deleteNote(context, id);
+                                    Firebase.deleteNote(context, note);
 
                                     // remove item from notes
                                     notes.remove(getAdapterPosition());
                                     notifyItemRemoved(getAdapterPosition());
                                     for (int i = 0; i < notesFull.size(); i++) {
-                                        if (id.equals(notesFull.get(i).getId())) {
+                                        if (note.getId().equals(notesFull.get(i).getId())) {
                                             notesFull.remove(i);
                                             return;
                                         }

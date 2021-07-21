@@ -148,26 +148,53 @@ public class Firebase {
         }
     }
 
-    public static void deleteNote(Context context, String id) {
+    public static void deleteNote(Context context, Note note) {
         // Continue with delete operation
         FirebaseDatabase.getInstance().getReference("Notes")
                 .child(FirebaseAuth.getInstance().getUid())
                 .child("Files")
-                .child(id)
+                .child(note.getId())
                 .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<Void> task) {
                 if (task.isSuccessful()){
                     // note delete from firebase
-                    Log.i(TAG, "onSuccess to delete note to firebase");
-                    Toast.makeText(context, "Note deleted successfully!", Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "onSuccess to delete note from firebase");
+                    deleteNoteChips(context, note);
                 } else {
                     // note failed to delete from firebase
-                    Log.i(TAG, "onFailure to delete note to firebase");
+                    Log.i(TAG, "onFailure to delete note from firebase");
                     Toast.makeText(context, "Note deletion failed! Try again.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    public static void deleteNoteChips(Context context, Note note) {
+        // loop through chips and delete reference to this note
+        List<String> chipNames = note.getChipNames();
+        Log.d(TAG, "chip names count - " + chipNames.size());
+        for (String chipName : chipNames) {
+            // Continue with delete operation
+            FirebaseDatabase.getInstance().getReference("Chips")
+                    .child(FirebaseAuth.getInstance().getUid())
+                    .child(chipName)
+                    .child(note.getId())
+                    .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull @NotNull Task<Void> task) {
+                    if (task.isSuccessful()){
+                        // note delete from firebase
+                        Log.i(TAG, "onSuccess to delete note's chip references from firebase");
+                        Toast.makeText(context, "Note deleted successfully!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // note failed to delete from firebase
+                        Log.i(TAG, "onFailure to delete note's chip references from firebase");
+                        Toast.makeText(context, "Note deletion failed! Try again.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 
     public static void getImage(Note note) {
