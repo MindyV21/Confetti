@@ -15,11 +15,56 @@
         app:titleTextColor="@android:color/white"
         android:background="?attr/colorPrimary"/>
 
-    <TextView
-        android:id="@+id/tvNoteName"
+    <RelativeLayout
+        android:id="@+id/relLayoutTags"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"
-        tools:text="text" />
+        android:layout_below="@+id/toolbar"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/ivTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_baseline_label_24"
+            android:layout_centerVertical="true"
+            android:padding="5dp"/>
+
+        <HorizontalScrollView
+            android:id="@+id/hScrollViewTags"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_toEndOf="@+id/ivTag">
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleLine="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipAdd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Add tag" />
+
+            </com.google.android.material.chip.ChipGroup>
+        </HorizontalScrollView>
+
+    </RelativeLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/hScrollViewImage"
+        android:layout_height="550dp"
+        android:layout_width="match_parent"
+        android:layout_below="@id/relLayoutTags">
+
+        <ImageView
+            android:id="@+id/ivNote"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            tools:srcCompat="@tools:sample/avatars"
+            android:scaleType="fitStart"/>
+
+    </HorizontalScrollView>
 
 </RelativeLayout>

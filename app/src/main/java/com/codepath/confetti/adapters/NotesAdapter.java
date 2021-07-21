@@ -230,7 +230,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         }
 
         private void goToNote(Note note) {
-
             Intent intent = new Intent(context, NoteDetailsActivity.class);
             intent.putExtra(Note.class.getSimpleName(), Parcels.wrap(note));
             context.startActivity(intent);
