@@ -173,7 +173,7 @@ public class NoteImagesFragment extends Fragment {
                 // add pins to photo
                 for (Prediction prediction : note.predictions) {
                     Log.d(TAG, prediction.text);
-                    ssivNote.setPin(new PointF(prediction.xMin, prediction.yMin), prediction.text);
+                    ssivNote.setPin(new PointF(prediction.xMin - 60f, prediction.yMax + 40f), prediction.text);
                 }
             } catch (Exception e) {
                 Log.e(getClass().getSimpleName(), "Error writing bitmap", e);
