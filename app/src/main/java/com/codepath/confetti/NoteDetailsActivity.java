@@ -3,15 +3,19 @@ package com.codepath.confetti;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.appcompat.content.res.AppCompatResources;
@@ -25,6 +29,7 @@ import com.codepath.confetti.adapters.PredictionSlidePagerAdapter;
 import com.codepath.confetti.databinding.ActivityNoteDetailsBinding;
 import com.codepath.confetti.fragments.NoteImagesFragment;
 import com.codepath.confetti.models.Note;
+import com.codepath.confetti.utlils.Chips;
 import com.codepath.confetti.utlils.ZoomOutPageTransformer;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -84,6 +89,26 @@ public class NoteDetailsActivity extends AppCompatActivity implements NoteImages
         chipAdd = binding.chipAdd;
         chipGroup = binding.chipGroup;
 
+        // add chips associated with note
+        if (note.getChips() != null) {
+            for (String chipName : note.getChips()) {
+                Chip newChip = new Chip(NoteDetailsActivity.this);
+                newChip.setText(chipName);
+                newChip.setChecked(true);
+
+                // listener for popup
+                newChip.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // display popup
+                        displayPopupWindow(NoteDetailsActivity.this, view);
+                    }
+                });
+
+                chipGroup.addView(newChip);
+            }
+        }
+
         Drawable drawable = AppCompatResources.getDrawable(NoteDetailsActivity.this, R.drawable.ic_baseline_label_24);
         ivTag.setImageDrawable(drawable);
         chipAdd.setText("Add tag");
@@ -99,6 +124,27 @@ public class NoteDetailsActivity extends AppCompatActivity implements NoteImages
         noteImagesFragment = new NoteImagesFragment(note);
         getSupportFragmentManager().beginTransaction().add(R.id.flNoteImages, noteImagesFragment).commit();
 
+        // set up prediction info bottom sheet
+        initPredictions(view);
+    }
+
+    private void displayPopupWindow(Context context, View anchorView) {
+        PopupWindow popup = new PopupWindow(context);
+        View layout = getLayoutInflater().inflate(R.layout.popup_content_chip, null);
+        popup.setContentView(layout);
+        // Set content width and height
+        popup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        popup.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        // Closes the popup window when touch outside of it - when looses focus
+        popup.setOutsideTouchable(true);
+        popup.setFocusable(true);
+        // Show anchored to button
+        popup.setBackgroundDrawable(new BitmapDrawable());
+        popup.showAsDropDown(anchorView);
+    }
+
+    // initializes all the predictions into bottom sheet
+    private void initPredictions(View view) {
         mBottomSheetLayout = view.findViewById(R.id.bottom_sheet_layout);
         sheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
         header_Arrow_Image = view.findViewById(R.id.bottom_sheet_arrow);

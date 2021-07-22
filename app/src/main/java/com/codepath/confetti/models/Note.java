@@ -18,7 +18,7 @@ public class Note {
 
     public String name;
     public List<Prediction> predictions;
-    public List<String> chipNames;
+    public List<String> chips;
 
     private File imageFile;
     private String id;
@@ -56,12 +56,12 @@ public class Note {
         this.predictions = predictions;
     }
 
-    public List<String> getChipNames() {
-        return chipNames;
+    public List<String> getChips() {
+        return chips;
     }
 
-    public void setChipNames(List<String> chipNames) {
-        this.chipNames = chipNames;
+    public void setChips(List<String> chips) {
+        this.chips = chips;
     }
 
     public void setId(String id) {

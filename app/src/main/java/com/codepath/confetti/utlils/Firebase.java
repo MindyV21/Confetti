@@ -174,7 +174,7 @@ public class Firebase {
 
     public static void deleteNoteChips(Context context, Note note) {
         // loop through chips and delete reference to this note
-        List<String> chipNames = note.getChipNames();
+        List<String> chipNames = note.getChips();
         Log.d(TAG, "chip names count - " + chipNames.size());
         for (String chipName : chipNames) {
             // Continue with delete operation

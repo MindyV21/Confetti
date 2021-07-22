@@ -168,7 +168,7 @@ public class UploadFragment extends Fragment {
                 chipNames.add("hole");
                 chipNames.add("french breads");
                 chipNames.add("only one");
-                note.setChipNames(chipNames);
+                note.setChips(chipNames);
                 // add chips to chip database
                 FirebaseDatabase.getInstance().getReference("Chips")
                         .child(FirebaseAuth.getInstance().getUid())
