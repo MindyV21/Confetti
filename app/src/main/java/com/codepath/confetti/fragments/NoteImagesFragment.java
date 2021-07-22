@@ -23,6 +23,7 @@ import com.codepath.confetti.R;
 import com.codepath.confetti.databinding.FragmentNoteImagesBinding;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
 import com.codepath.confetti.models.Note;
+import com.codepath.confetti.models.Prediction;
 import com.codepath.confetti.utlils.PinView;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -169,13 +170,11 @@ public class NoteImagesFragment extends Fragment {
                 // testing to see if file actually contains image file
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 ssivNote.setImage(ImageSource.bitmap(takenImage));
-                ssivNote.setPin(getContext(), new PointF(1602f, 405f));
-                ssivNote.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.d(TAG, "CLICK CLICK NOTE IMAGE");
-                    }
-                });
+                // add pins to photo
+                for (Prediction prediction : note.predictions) {
+                    Log.d(TAG, prediction.text);
+                    ssivNote.setPin(new PointF(prediction.xMin, prediction.yMin), prediction.text);
+                }
             } catch (Exception e) {
                 Log.e(getClass().getSimpleName(), "Error writing bitmap", e);
             }

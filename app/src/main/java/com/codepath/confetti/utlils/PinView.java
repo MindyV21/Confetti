@@ -14,13 +14,16 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import com.codepath.confetti.R;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
+import java.util.ArrayList;
+
 public class PinView extends SubsamplingScaleImageView {
 
     public static final String TAG = "PinView";
 
     private final Paint paint = new Paint();
     private final PointF vPin = new PointF();
-    private PointF sPin;
+    private ArrayList<PointF> sPin = new ArrayList<>();
+    private ArrayList<String> pinNames = new ArrayList<>();
     private Bitmap pin;
 
     public PinView(Context context) {
@@ -29,22 +32,40 @@ public class PinView extends SubsamplingScaleImageView {
 
     public PinView(Context context, AttributeSet attr) {
         super(context, attr);
-        initialise(context);
+        initialise();
     }
 
-    public void setPin(Context context, PointF sPin) {
-        this.sPin = sPin;
-        initialise(context);
+    public void setPin(PointF sPin, String name) {
+        this.sPin.add(sPin);
+        pinNames.add(name);
+        initialise();
         invalidate();
     }
 
-    private void initialise(Context context) {
+    public PointF getPin(String name) {
+
+        return sPin.get(pinNames.indexOf(name));
+    }
+
+    public boolean removePin(String name){
+        if (pinNames.contains(name)){
+            sPin.remove(pinNames.indexOf(name));
+            pinNames.remove(name);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public ArrayList<String> getPinNames(){
+        return pinNames;
+    }
+
+    private void initialise() {
         float density = getResources().getDisplayMetrics().densityDpi;
-        pin = getBitmapFromVectorDrawable(context, R.drawable.ic_baseline_arrow_forward_ios_24);
-//        pin = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_baseline_person_24);
+        pin = getBitmapFromVectorDrawable(this.getContext(), R.drawable.ic_baseline_arrow_forward_ios_24);
         float w = (density/420f) * pin.getWidth();
         float h = (density/420f) * pin.getHeight();
-        Log.d(TAG, "pin width: " + w + " height: " + h);
         pin = Bitmap.createScaledBitmap(pin, (int)w, (int)h, true);
     }
 
@@ -54,18 +75,18 @@ public class PinView extends SubsamplingScaleImageView {
 
         // Don't draw pin before image is ready so it doesn't move around during setup.
         if (!isReady()) {
-            Log.d(TAG, "photo not ready!!!");
             return;
         }
 
+        Paint paint = new Paint();
         paint.setAntiAlias(true);
-
-        if (sPin != null && pin != null) {
-            Log.d(TAG, "pin not null");
-            sourceToViewCoord(sPin, vPin);
-            float vX = vPin.x - (pin.getWidth()/2);
-            float vY = vPin.y - pin.getHeight();
-            canvas.drawBitmap(pin, vX, vY, paint);
+        for (PointF point : sPin) {
+            if (point != null && pin != null) {
+                PointF vPin = sourceToViewCoord(point);
+                float vX = vPin.x - (pin.getWidth() / 2);
+                float vY = vPin.y - pin.getHeight();
+                canvas.drawBitmap(pin, vX, vY, paint);
+            }
         }
 
     }
@@ -84,5 +105,4 @@ public class PinView extends SubsamplingScaleImageView {
 
         return bitmap;
     }
-
 }
