@@ -54,6 +54,9 @@ public class Chips {
             newChip.setText(selectedChip.getText().toString());
             newChip.setCloseIconVisible(true);
 
+            // to get list of them back
+            newChip.setChecked(true);
+
             // listener to refilter notes list when item is closed
             newChip.setOnClickListener(new View.OnClickListener() {
                 @Override

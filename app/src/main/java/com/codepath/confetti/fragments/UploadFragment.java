@@ -167,6 +167,7 @@ public class UploadFragment extends Fragment {
                 List<String> chipNames = new ArrayList<>();
                 chipNames.add("hole");
                 chipNames.add("french breads");
+                chipNames.add("only one");
                 note.setChipNames(chipNames);
                 // add chips to chip database
                 FirebaseDatabase.getInstance().getReference("Chips")
@@ -186,6 +187,20 @@ public class UploadFragment extends Fragment {
                 FirebaseDatabase.getInstance().getReference("Chips")
                         .child(FirebaseAuth.getInstance().getUid())
                         .child("french breads")
+                        .child("testId")
+                        .setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Log.d(TAG, "onSuccess to add dummy note's chip references from firebase");
+                        } else {
+                            Log.d(TAG, "onFailure to add dummy note's chip references from firebase");
+                        }
+                    }
+                });
+                FirebaseDatabase.getInstance().getReference("Chips")
+                        .child(FirebaseAuth.getInstance().getUid())
+                        .child("only one")
                         .child("testId")
                         .setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

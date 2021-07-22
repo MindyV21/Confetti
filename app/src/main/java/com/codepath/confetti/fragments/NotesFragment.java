@@ -161,7 +161,8 @@ public class NotesFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "tags!");
-                ChipsBottomSheetFragment tagFragment = new ChipsBottomSheetFragment();
+                Log.d(TAG, "NOTES LIST allChips size - " + allChips.size());
+                ChipsBottomSheetFragment tagFragment = new ChipsBottomSheetFragment(allChips);
                 tagFragment.show(getChildFragmentManager(), tagFragment.getTag());
             }
         });
@@ -191,6 +192,7 @@ public class NotesFragment extends Fragment {
                 } else {
                     // TODO: future listener for when you add a chip to a note on creation
                     List<Integer> checkedChipIds = chipGroup.getCheckedChipIds();
+                    Log.d(TAG, "CHECKED CHIP IDS FOR NOTES LIST " + checkedChipIds.size());
                     refreshChips(checkedChipIds, chipGroup, false);
                 }
             }
@@ -202,7 +204,7 @@ public class NotesFragment extends Fragment {
 
             @Override
             public void onChildRemoved(@NonNull @NotNull DataSnapshot snapshot) {
-                Log.i(TAG, snapshot.toString());
+                Log.i(TAG, "TAG CHILD REMOVEDDD" + snapshot.toString());
                 String id = snapshot.getKey();
                 // update adapter within adapter ??
 
@@ -232,17 +234,32 @@ public class NotesFragment extends Fragment {
 
         // Attach a listener to read the data at our chips reference ONCE
         DatabaseReference refChips = database.getReference("Chips/" + FirebaseAuth.getInstance().getUid());
-        refChips.addListenerForSingleValueEvent(new ValueEventListener() {
+        refChips.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                // populate allChips
+            public void onChildAdded(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
                 Log.i(TAG, snapshot.toString());
-                Iterable<DataSnapshot> iterable = snapshot.getChildren();
-                for (DataSnapshot data : iterable) {
-                    Log.i(TAG, "CHIPS " + data.toString());
-                    // false because on startup no chips are selected
-                    allChips.put(data.getKey(), false);
-                }
+                allChips.put(snapshot.getKey(), false);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull @NotNull DataSnapshot snapshot) {
+                Log.i(TAG, snapshot.toString());
+                allChips.remove(snapshot.getKey());
+
+                // remove from chipGroup ?
+                // update bottom modal sheet
+
+                Log.d(TAG, "allChips size - " + allChips.size());
+            }
+
+            @Override
+            public void onChildMoved(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+
             }
 
             @Override

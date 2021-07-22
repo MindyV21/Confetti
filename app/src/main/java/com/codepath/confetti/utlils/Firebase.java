@@ -99,7 +99,9 @@ public class Firebase {
                     Log.i(TAG, "onSuccess to upload note to firebase");
                     Toast.makeText(context, "Note uploaded successfully!", Toast.LENGTH_SHORT).show();
                     pbLoading.setVisibility(View.INVISIBLE);
-                    Firebase.uploadImage(note, photoFile, id);
+                    // TODO : uncomment, delete predictions one - tired of firebase error
+//                    Firebase.uploadImage(note, photoFile, id);
+                    uploadPredictions(note.getPredictions(), id);
                 } else {
                     // note failed to upload to firebase
                     Log.i(TAG, "onFailure to upload note to firebase");

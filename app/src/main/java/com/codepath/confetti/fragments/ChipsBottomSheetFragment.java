@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +36,8 @@ public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
     private NotesFragment parentFragment;
     private ChipGroup chipGroup;
 
+    protected Map<String, Boolean> allChips;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -45,6 +49,11 @@ public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
 
     public ChipsBottomSheetFragment() {
         // Required empty public constructor
+    }
+
+    public ChipsBottomSheetFragment(Map<String, Boolean> allChips) {
+        this.allChips = allChips;
+        Log.d(TAG, "MODEL SHEET allChips size - " + allChips.size());
     }
 
     /**
@@ -94,7 +103,7 @@ public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
         chipGroup = binding.chipGroup;
 
         // populate fragment with all chips available
-        Chips.populateChipsSelectable(getContext(), chipGroup, parentFragment.allChips);
+        Chips.populateChipsSelectable(getContext(), chipGroup, allChips);
     }
 
     @Override
