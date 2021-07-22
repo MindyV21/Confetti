@@ -193,24 +193,24 @@ public class NoteImagesFragment extends Fragment {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
                 if (ssivNote.isReady() && note.predictions != null) {
-                    PointF tappedCoordinate = ssivNote.viewToSourceCoord(e.getX(), e.getY());
+                    PointF tappedCoordinate = new PointF(e.getX(), e.getY());
                     Log.d(TAG, "tapped coords x: " + tappedCoordinate.x + " y: " + tappedCoordinate.y);
 
-                    int blockWidth = takenImage.getWidth();
-                    int blockHeight = takenImage.getHeight();
+                    // range to hit pin
+                    int blockWidth = 75;
+                    int blockHeight = 75;
 
                     for (Prediction prediction : note.predictions) {
-                        PointF predictionCoordinate = ssivNote.viewToSourceCoord(new PointF(prediction.xMin - 60f, prediction.yMax + 40f));
-                        Log.d(TAG, "prediction coords x: " + tappedCoordinate.x + " y: " + tappedCoordinate.y);
+                        PointF predictionCoordinate = ssivNote.sourceToViewCoord(ssivNote.getPin(prediction));
 
-                        int deeplinkX = (int) (predictionCoordinate.x - (takenImage.getWidth() / 2));
-                        int deeplinkY = (int) (predictionCoordinate.y - takenImage.getHeight());
+                        int predictX = (int) predictionCoordinate.x;
+                        int predictY = (int) predictionCoordinate.y;
 
                         // center coordinate -/+ blockWidth actually sets touchable area to 2x icon size
-                        if (tappedCoordinate.x >= deeplinkX - blockWidth && tappedCoordinate.x <= deeplinkX + blockWidth &&
-                                tappedCoordinate.y >= deeplinkY - blockHeight && tappedCoordinate.y <= deeplinkY + blockHeight) {
+                        if (tappedCoordinate.x >= predictX - blockWidth && tappedCoordinate.x <= predictX + blockWidth &&
+                                tappedCoordinate.y >= predictY - blockHeight && tappedCoordinate.y <= predictY + blockHeight) {
 
-                            Log.d(TAG, "FOUND YOU COORD");
+                            Log.d(TAG, "FOUND YOU COORD " + prediction.text + " prediction coords x: " + predictionCoordinate.x + " y: " + predictionCoordinate.y);
                         }
                     }
                 }
