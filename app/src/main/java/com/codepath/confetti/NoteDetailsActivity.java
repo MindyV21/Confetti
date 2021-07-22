@@ -18,7 +18,10 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.codepath.confetti.adapters.PredictionSlidePagerAdapter;
 import com.codepath.confetti.databinding.ActivityNoteDetailsBinding;
 import com.codepath.confetti.fragments.NoteImagesFragment;
 import com.codepath.confetti.models.Note;
@@ -45,6 +48,9 @@ public class NoteDetailsActivity extends AppCompatActivity {
     private LinearLayout mBottomSheetLayout;
     private BottomSheetBehavior sheetBehavior;
     private ImageView header_Arrow_Image;
+
+    private ViewPager2 viewPager;
+    private FragmentStateAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,5 +124,22 @@ public class NoteDetailsActivity extends AppCompatActivity {
                 header_Arrow_Image.setRotation(slideOffset * 180);
             }
         });
+
+        // Instantiate a ViewPager2 and a PagerAdapter.
+        viewPager = findViewById(R.id.pagerPredictions);
+        pagerAdapter = new PredictionSlidePagerAdapter(this, note.predictions);
+        viewPager.setAdapter(pagerAdapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (viewPager.getCurrentItem() == 0) {
+            // If the user is currently looking at the first step, allow the system to handle the
+            // Back button. This calls finish() on this activity and pops the back stack.
+            super.onBackPressed();
+        } else {
+            // Otherwise, select the previous step.
+            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+        }
     }
 }
