@@ -25,6 +25,7 @@ import com.codepath.confetti.adapters.PredictionSlidePagerAdapter;
 import com.codepath.confetti.databinding.ActivityNoteDetailsBinding;
 import com.codepath.confetti.fragments.NoteImagesFragment;
 import com.codepath.confetti.models.Note;
+import com.codepath.confetti.utlils.ZoomOutPageTransformer;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -129,6 +130,7 @@ public class NoteDetailsActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.pagerPredictions);
         pagerAdapter = new PredictionSlidePagerAdapter(this, note.predictions);
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setPageTransformer(new ZoomOutPageTransformer());
     }
 
     @Override
