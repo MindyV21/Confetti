@@ -169,7 +169,7 @@ public class NoteImagesFragment extends Fragment {
                 // testing to see if file actually contains image file
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 ssivNote.setImage(ImageSource.bitmap(takenImage));
-                //ssivNote.setPin(new PointF(1602f, 405f));
+                ssivNote.setPin(getContext(), new PointF(1602f, 405f));
                 ssivNote.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
