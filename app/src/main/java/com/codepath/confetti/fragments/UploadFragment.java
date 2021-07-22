@@ -261,9 +261,4 @@ public class UploadFragment extends Fragment {
             }
         }
     }
-
-    // TODO: hardcoded for testing purposes becuase i mess up code
-    private void saveNote() {
-        NanonetsApi.queryNote(getContext(), getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), "d110063c-e67b-11eb-af1e-9a1974bea1bf", photoFile);
-    }
 }

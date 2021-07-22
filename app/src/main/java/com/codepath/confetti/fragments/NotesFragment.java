@@ -204,7 +204,7 @@ public class NotesFragment extends Fragment {
 
             @Override
             public void onChildRemoved(@NonNull @NotNull DataSnapshot snapshot) {
-                Log.i(TAG, "TAG CHILD REMOVEDDD" + snapshot.toString());
+                Log.i(TAG, "CHIPPED CHILD REMOVEDDD" + snapshot.toString());
                 String id = snapshot.getKey();
                 // update adapter within adapter ??
 
