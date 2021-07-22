@@ -3,6 +3,7 @@ package com.codepath.confetti.fragments;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,7 +14,9 @@ import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -50,6 +53,7 @@ public class NoteImagesFragment extends Fragment {
 
     private Note note;
 
+    private Bitmap takenImage;
     private PinView ssivNote;
 
     public NoteImagesFragment(Note note) {
@@ -168,16 +172,57 @@ public class NoteImagesFragment extends Fragment {
                 os.close();
 
                 // testing to see if file actually contains image file
-                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 ssivNote.setImage(ImageSource.bitmap(takenImage));
-                // add pins to photo
-                for (Prediction prediction : note.predictions) {
-                    Log.d(TAG, prediction.text);
-                    ssivNote.setPin(new PointF(prediction.xMin - 60f, prediction.yMax + 40f), prediction.text);
-                }
+                createPins();
             } catch (Exception e) {
                 Log.e(getClass().getSimpleName(), "Error writing bitmap", e);
             }
         }
+    }
+
+    public void createPins() {
+        // add pins to photo
+        for (Prediction prediction : note.predictions) {
+            Log.d(TAG, prediction.text);
+            ssivNote.setPin(new PointF(prediction.xMin - 60f, prediction.yMax + 40f), prediction);
+        }
+
+        // handle touch events
+        final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                if (ssivNote.isReady() && note.predictions != null) {
+                    PointF tappedCoordinate = ssivNote.viewToSourceCoord(e.getX(), e.getY());
+                    Log.d(TAG, "tapped coords x: " + tappedCoordinate.x + " y: " + tappedCoordinate.y);
+
+                    int blockWidth = takenImage.getWidth();
+                    int blockHeight = takenImage.getHeight();
+
+                    for (Prediction prediction : note.predictions) {
+                        PointF predictionCoordinate = ssivNote.viewToSourceCoord(new PointF(prediction.xMin - 60f, prediction.yMax + 40f));
+                        Log.d(TAG, "prediction coords x: " + tappedCoordinate.x + " y: " + tappedCoordinate.y);
+
+                        int deeplinkX = (int) (predictionCoordinate.x - (takenImage.getWidth() / 2));
+                        int deeplinkY = (int) (predictionCoordinate.y - takenImage.getHeight());
+
+                        // center coordinate -/+ blockWidth actually sets touchable area to 2x icon size
+                        if (tappedCoordinate.x >= deeplinkX - blockWidth && tappedCoordinate.x <= deeplinkX + blockWidth &&
+                                tappedCoordinate.y >= deeplinkY - blockHeight && tappedCoordinate.y <= deeplinkY + blockHeight) {
+
+                            Log.d(TAG, "FOUND YOU COORD");
+                        }
+                    }
+                }
+                return true;
+            }
+        });
+
+        ssivNote.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return gestureDetector.onTouchEvent(motionEvent);
+            }
+        });
     }
 }

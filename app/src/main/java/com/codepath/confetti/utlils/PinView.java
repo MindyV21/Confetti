@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.codepath.confetti.R;
+import com.codepath.confetti.models.Prediction;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class PinView extends SubsamplingScaleImageView {
     private final Paint paint = new Paint();
     private final PointF vPin = new PointF();
     private ArrayList<PointF> sPin = new ArrayList<>();
-    private ArrayList<String> pinNames = new ArrayList<>();
+    private ArrayList<Prediction> pins = new ArrayList<>();
     private Bitmap pin;
 
     public PinView(Context context) {
@@ -35,30 +36,29 @@ public class PinView extends SubsamplingScaleImageView {
         initialise();
     }
 
-    public void setPin(PointF sPin, String name) {
+    public void setPin(PointF sPin, Prediction prediction) {
         this.sPin.add(sPin);
-        pinNames.add(name);
+        pins.add(prediction);
         initialise();
         invalidate();
     }
 
-    public PointF getPin(String name) {
-
-        return sPin.get(pinNames.indexOf(name));
+    public PointF getPin(Prediction prediction) {
+        return sPin.get(pins.indexOf(prediction));
     }
 
-    public boolean removePin(String name){
-        if (pinNames.contains(name)){
-            sPin.remove(pinNames.indexOf(name));
-            pinNames.remove(name);
+    public boolean removePin(Prediction prediction){
+        if (pins.contains(prediction)){
+            sPin.remove(pins.indexOf(prediction));
+            pins.remove(prediction);
             return true;
         } else {
             return false;
         }
     }
 
-    public ArrayList<String> getPinNames(){
-        return pinNames;
+    public ArrayList<Prediction> getPinNames(){
+        return pins;
     }
 
     private void initialise() {
