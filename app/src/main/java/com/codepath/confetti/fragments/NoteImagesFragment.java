@@ -1,5 +1,6 @@
 package com.codepath.confetti.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -58,6 +59,8 @@ public class NoteImagesFragment extends Fragment {
 
     private Bitmap takenImage;
     private PinView ssivNote;
+
+    private OnItemSelectedListener listener;
 
     public NoteImagesFragment(Note note) {
         this.note = note;
@@ -138,6 +141,25 @@ public class NoteImagesFragment extends Fragment {
         onUploadPhoto();
     }
 
+    // Define the events that the fragment will use to communicate
+    public interface OnItemSelectedListener {
+        // This can be any number of events to be sent to the activity
+        public void onRssItemSelected(int index);
+    }
+
+    // Store the listener (activity) that will have events fired once the fragment is attached
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnItemSelectedListener) {
+            listener = (OnItemSelectedListener) context;
+        } else {
+            throw new ClassCastException(context.toString()
+                    + " must implement NoteImagesFragment.OnItemSelectedListener");
+        }
+    }
+
+    // TODO: delete upload photo stuff
     public final static int PICK_PHOTO_CODE = 1046;
     private Bitmap selectedImage;
     File photoFile;
@@ -203,10 +225,12 @@ public class NoteImagesFragment extends Fragment {
                     int blockWidth = 75;
                     int blockHeight = 75;
 
-                    // arraylist of touched pins
-                    ArrayList<Prediction> tappedPredictions = new ArrayList<>();
+                    int tappedPredictionIndex = -1;
 
-                    for (Prediction prediction : note.predictions) {
+                    // check if a pin is tapped
+                    int i = 0;
+                    while(i < note.getPredictions().size() && tappedPredictionIndex == -1) {
+                        Prediction prediction = note.getPredictions().get(i);
                         PointF predictionCoordinate = ssivNote.sourceToViewCoord(ssivNote.getPin(prediction));
 
                         int predictX = (int) predictionCoordinate.x;
@@ -217,14 +241,18 @@ public class NoteImagesFragment extends Fragment {
                                 tappedCoordinate.y >= predictY - blockHeight && tappedCoordinate.y <= predictY + blockHeight) {
 
                             Log.d(TAG, "---FOUND COORD " + prediction.text + " prediction coords x: " + predictionCoordinate.x + " y: " + predictionCoordinate.y);
-                            tappedPredictions.add(prediction);
+                            tappedPredictionIndex = i;
                         }
+
+                        i++;
                     }
 
-                    // check if any pins where clicked, then open prediction info bottom modal sheet
-                    if (tappedPredictions.size() != 0) {
-
+                    // if pin is tapped, open bottom sheet and scroll to that item
+                    if (tappedPredictionIndex != -1) {
+                        Log.d(TAG, "scroll to prediction " + note.getPredictions().get(tappedPredictionIndex));
+                        listener.onRssItemSelected(tappedPredictionIndex);
                     }
+
                 }
                 return true;
             }

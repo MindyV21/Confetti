@@ -34,7 +34,7 @@ import com.google.android.material.chip.ChipGroup;
 
 import org.parceler.Parcels;
 
-public class NoteDetailsActivity extends AppCompatActivity {
+public class NoteDetailsActivity extends AppCompatActivity implements NoteImagesFragment.OnItemSelectedListener{
 
     public static final String TAG = "NoteDetailsActivity";
 
@@ -46,6 +46,7 @@ public class NoteDetailsActivity extends AppCompatActivity {
     private Chip chipAdd;
     private ChipGroup chipGroup;
 
+    private NoteImagesFragment noteImagesFragment;
     private LinearLayout mBottomSheetLayout;
     private BottomSheetBehavior sheetBehavior;
     private ImageView header_Arrow_Image;
@@ -95,7 +96,8 @@ public class NoteDetailsActivity extends AppCompatActivity {
         });
 
         // attach hscroll of note images
-        getSupportFragmentManager().beginTransaction().add(R.id.flNoteImages, new NoteImagesFragment(note)).commit();
+        noteImagesFragment = new NoteImagesFragment(note);
+        getSupportFragmentManager().beginTransaction().add(R.id.flNoteImages, noteImagesFragment).commit();
 
         mBottomSheetLayout = view.findViewById(R.id.bottom_sheet_layout);
         sheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
@@ -133,6 +135,7 @@ public class NoteDetailsActivity extends AppCompatActivity {
         viewPager.setPageTransformer(new ZoomOutPageTransformer());
     }
 
+    // for viewPager
     @Override
     public void onBackPressed() {
         if (viewPager.getCurrentItem() == 0) {
@@ -143,5 +146,13 @@ public class NoteDetailsActivity extends AppCompatActivity {
             // Otherwise, select the previous step.
             viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
         }
+    }
+
+    // action to take in the activity when pin in fragment is tapped
+    @Override
+    public void onRssItemSelected(int index) {
+        Log.d(TAG, "scrolling to index " + index);
+        viewPager.setCurrentItem(index, true);
+        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 }
