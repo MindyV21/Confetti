@@ -1,5 +1,6 @@
 package com.codepath.confetti;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.content.res.AppCompatResources;
@@ -22,6 +24,7 @@ import com.codepath.confetti.fragments.NoteImagesFragment;
 import com.codepath.confetti.models.Note;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
@@ -38,6 +41,10 @@ public class NoteDetailsActivity extends AppCompatActivity {
     private ImageView ivTag;
     private Chip chipAdd;
     private ChipGroup chipGroup;
+
+    private LinearLayout mBottomSheetLayout;
+    private BottomSheetBehavior sheetBehavior;
+    private ImageView header_Arrow_Image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,5 +89,34 @@ public class NoteDetailsActivity extends AppCompatActivity {
 
         // attach hscroll of note images
         getSupportFragmentManager().beginTransaction().add(R.id.flNoteImages, new NoteImagesFragment(note)).commit();
+
+        mBottomSheetLayout = view.findViewById(R.id.bottom_sheet_layout);
+        sheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
+        header_Arrow_Image = view.findViewById(R.id.bottom_sheet_arrow);
+
+        // listener to expand / collapse dialog
+        header_Arrow_Image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED){
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                } else {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+
+            }
+        });
+
+        // listen to bottom sheet behavior
+        sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+            }
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                header_Arrow_Image.setRotation(slideOffset * 180);
+            }
+        });
     }
 }

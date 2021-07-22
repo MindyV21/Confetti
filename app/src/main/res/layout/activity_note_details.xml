@@ -58,4 +58,10 @@
         android:layout_height="500dp"
         android:layout_below="@id/relLayoutTags"/>
 
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <include layout="@layout/bottom_sheet_predictions" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 </RelativeLayout>

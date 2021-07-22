@@ -20,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.codepath.confetti.R;
@@ -30,6 +31,7 @@ import com.codepath.confetti.models.Prediction;
 import com.codepath.confetti.utlils.PinView;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -38,6 +40,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -200,6 +203,9 @@ public class NoteImagesFragment extends Fragment {
                     int blockWidth = 75;
                     int blockHeight = 75;
 
+                    // arraylist of touched pins
+                    ArrayList<Prediction> tappedPredictions = new ArrayList<>();
+
                     for (Prediction prediction : note.predictions) {
                         PointF predictionCoordinate = ssivNote.sourceToViewCoord(ssivNote.getPin(prediction));
 
@@ -210,8 +216,14 @@ public class NoteImagesFragment extends Fragment {
                         if (tappedCoordinate.x >= predictX - blockWidth && tappedCoordinate.x <= predictX + blockWidth &&
                                 tappedCoordinate.y >= predictY - blockHeight && tappedCoordinate.y <= predictY + blockHeight) {
 
-                            Log.d(TAG, "FOUND YOU COORD " + prediction.text + " prediction coords x: " + predictionCoordinate.x + " y: " + predictionCoordinate.y);
+                            Log.d(TAG, "---FOUND COORD " + prediction.text + " prediction coords x: " + predictionCoordinate.x + " y: " + predictionCoordinate.y);
+                            tappedPredictions.add(prediction);
                         }
+                    }
+
+                    // check if any pins where clicked, then open prediction info bottom modal sheet
+                    if (tappedPredictions.size() != 0) {
+
                     }
                 }
                 return true;
