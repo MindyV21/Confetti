@@ -169,6 +169,7 @@ public class NotesFragment extends Fragment {
         });
 
         // Get a reference to our notes
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference refNotes = database.getReference("Notes/" + FirebaseAuth.getInstance().getUid() + "/Files");
 
@@ -283,7 +284,9 @@ public class NotesFragment extends Fragment {
         Set<String> chippedNotes = new TreeSet<>();
         Firebase.getChippedNotes(checkedChipIdsSet, allChipsGroup, adapter, searchView, allNotes, currentNotes, chippedNotes);
 
-        // populate parent fragment chip group with all chips selected
-        Chips.populateChipsDeletable(getContext(), chipGroup, checkedChipIds, checkedChipIdsSet, allChipsGroup, adapter, searchView, allNotes, currentNotes, allChips);
+        if (resetChips) {
+            // populate parent fragment chip group with all chips selected
+            Chips.populateChipsDeletable(getContext(), chipGroup, checkedChipIds, checkedChipIdsSet, allChipsGroup, adapter, searchView, allNotes, currentNotes, allChips);
+        }
     }
 }

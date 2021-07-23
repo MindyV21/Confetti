@@ -101,7 +101,7 @@ public class NoteDetailsActivity extends AppCompatActivity implements NoteImages
                     @Override
                     public void onClick(View view) {
                         // display popup
-                        displayPopupWindow(NoteDetailsActivity.this, view);
+                        displayChipPopupWindow(NoteDetailsActivity.this, view);
                     }
                 });
 
@@ -128,7 +128,7 @@ public class NoteDetailsActivity extends AppCompatActivity implements NoteImages
         initPredictions(view);
     }
 
-    private void displayPopupWindow(Context context, View anchorView) {
+    private void displayChipPopupWindow(Context context, View anchorView) {
         PopupWindow popup = new PopupWindow(context);
         View layout = getLayoutInflater().inflate(R.layout.popup_content_chip, null);
         popup.setContentView(layout);
