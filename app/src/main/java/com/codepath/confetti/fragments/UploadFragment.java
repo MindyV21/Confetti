@@ -137,11 +137,6 @@ public class UploadFragment extends Fragment {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: hardcoded part
-//                if (true) {
-//                    saveNote();
-//                    return;
-//                };
                 // make sure there is a file name
                 String fileName = etFileName.getText().toString().trim();
                 if (etFileName == null || fileName.equals("")) {
@@ -213,7 +208,7 @@ public class UploadFragment extends Fragment {
                     }
                 });
 
-                Firebase.uploadNote(getContext(), pbLoading, note, "testId", photoFile);
+                Firebase.uploadNoteInfo(getContext(), pbLoading, note, "testId", photoFile);
 
                 //NanonetsApi.predictFile(getContext(), fileName, getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), photoFile);
             }

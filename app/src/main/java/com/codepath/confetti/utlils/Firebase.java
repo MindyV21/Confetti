@@ -41,29 +41,7 @@ public class Firebase {
 
     public static final String TAG = "Firebase";
 
-    public static void uploadPredictions(List<Prediction> predictions, String id) {
-        for (Prediction prediction : predictions) {
-            if (prediction.label.equals("Topic")){
-                FirebaseDatabase.getInstance().getReference("Topics")
-                        .child(FirebaseAuth.getInstance().getUid())
-                        .child(prediction.text)
-                        .child(id)
-                        .setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            Log.i(TAG, "onSuccess to upload predictions to firebase");
-                        } else {
-                            // note failed to upload to firebase
-                            Log.i(TAG, "onFailure to upload predictions to firebase");
-                        }
-                    }
-                });
-            }
-        }
-    }
-
-    public static void uploadImage(Note note, File photoFile, String id) {
+    public static void uploadImage(Context context, ProgressBar pbLoading, Note note, String id, File photoFile) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         StorageReference fileRef = storageRef.child(FirebaseAuth.getInstance().getUid() + "/" + id);
@@ -82,7 +60,7 @@ public class Firebase {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                 Log.i(TAG, "OnSuccess upload photo to firebase storage");
-                uploadPredictions(note.getPredictions(), id);
+                uploadNote(context, pbLoading, note, id, photoFile);
             }
         });
     }
@@ -101,9 +79,6 @@ public class Firebase {
                     Log.i(TAG, "onSuccess to upload note to firebase");
                     Toast.makeText(context, "Note uploaded successfully!", Toast.LENGTH_SHORT).show();
                     pbLoading.setVisibility(View.INVISIBLE);
-                    // TODO : uncomment, delete predictions one - tired of firebase error
-//                    Firebase.uploadImage(note, photoFile, id);
-                    uploadPredictions(note.getPredictions(), id);
                 } else {
                     // note failed to upload to firebase
                     Log.i(TAG, "onFailure to upload note to firebase");
@@ -112,6 +87,10 @@ public class Firebase {
                 }
             }
         });
+    }
+
+    public static void uploadNoteInfo(Context context, ProgressBar pbLoading, Note note, String id, File photoFile) {
+        uploadImage(context, pbLoading, note, id, photoFile);
     }
 
     public static void getChippedNotes(Set<Integer> checkedChipIdsSet, ChipGroup allChipsGroup,
@@ -164,7 +143,7 @@ public class Firebase {
                 if (task.isSuccessful()){
                     // note delete from firebase
                     Log.i(TAG, "onSuccess to delete note from firebase");
-                    deleteNoteChips(context, note);
+                    deletePhotoFile(context, note);
                 } else {
                     // note failed to delete from firebase
                     Log.i(TAG, "onFailure to delete note from firebase");
@@ -191,7 +170,6 @@ public class Firebase {
                         // note delete from firebase
                         Log.i(TAG, "onSuccess to delete note's chip references from firebase");
                         Toast.makeText(context, "Note deleted successfully!", Toast.LENGTH_SHORT).show();
-                        // deletePhotoFile(context, note);
                     } else {
                         // note failed to delete from firebase
                         Log.i(TAG, "onFailure to delete note's chip references from firebase");
@@ -215,6 +193,7 @@ public class Firebase {
                     // Local temp file has been created
                     Log.i(TAG, "onSuccess to delete note image from firebase");
                     Toast.makeText(context, "Note deleted successfully!", Toast.LENGTH_SHORT).show();
+                    deleteNoteChips(context, note);
                 } else {
                     // image file failed to retrieve from firebase
                     Log.i(TAG, "onFailure to delete note image from firebase");
