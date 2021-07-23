@@ -42,6 +42,7 @@ import com.google.android.material.chip.ChipGroup;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NoteDetailsActivity extends AppCompatActivity implements NoteImagesFragment.OnItemSelectedListener, AddChipDialogFragment.AddChipDialogListener {
@@ -253,6 +254,11 @@ public class NoteDetailsActivity extends AppCompatActivity implements NoteImages
         Log.d(TAG, "adding chip to note");
         // populate in hscroll
         createNewChip(inputText);
+
+        // check for if note currently has no chips
+        if (note.getChips() == null) {
+            note.setChips(new ArrayList<>());
+        }
 
         // add chip manually to note's chip list
         note.getChips().add(inputText);
