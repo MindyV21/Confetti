@@ -193,7 +193,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                                         }
                                     }
 
-                                    // TODO: need to delete references to this deleted note in chips database <- to do this need to create a list within note with a list of its chips
                                     // TODO: need to delete photo file from storage
 
                                 }

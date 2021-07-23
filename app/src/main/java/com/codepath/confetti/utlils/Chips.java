@@ -2,6 +2,7 @@ package com.codepath.confetti.utlils;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
@@ -58,6 +59,7 @@ public class Chips {
             newChip.setCloseIconVisible(true);
 
             // to get list of them back
+            newChip.setCheckable(true);
             newChip.setChecked(true);
 
             // listener to refilter notes list when item is closed
@@ -68,8 +70,11 @@ public class Chips {
                     currentNotes.clear();
                     adapter.setNotesFull(currentNotes);
 
-                    // set chip to unselected
-                    allChips.put(selectedChip.getText().toString(), false);
+                    // set chip to unselected IF IT IS STILL IN ALLCHIPS
+                    if (allChips.containsKey(selectedChip.getText().toString())) {
+                        allChips.put(selectedChip.getText().toString(), false);
+                    }
+
                     // remove chip from scroll view
                     chipGroup.removeView(newChip);
                     // remove id from checkedChipIds

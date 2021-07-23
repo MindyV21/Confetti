@@ -33,6 +33,7 @@ import com.codepath.confetti.models.Note;
 import com.codepath.confetti.utlils.NanonetsApi;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -175,7 +176,7 @@ public class NotesFragment extends Fragment {
         refNotes.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
-                Log.i(TAG, snapshot.toString());
+                Log.i(TAG, "note added" + snapshot.toString());
                 // create note from firebase database
                 Note note = snapshot.getValue(Note.class);
                 note.setId(snapshot.getKey());
@@ -204,7 +205,7 @@ public class NotesFragment extends Fragment {
 
             @Override
             public void onChildRemoved(@NonNull @NotNull DataSnapshot snapshot) {
-                Log.i(TAG, "CHIPPED CHILD REMOVEDDD" + snapshot.toString());
+                Log.i(TAG, "note removed " + snapshot.toString());
                 String id = snapshot.getKey();
                 // update adapter within adapter ??
 
@@ -237,7 +238,7 @@ public class NotesFragment extends Fragment {
         refChips.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
-                Log.i(TAG, snapshot.toString());
+                Log.i(TAG, "chip added " + snapshot.toString());
                 allChips.put(snapshot.getKey(), false);
             }
 
@@ -248,13 +249,11 @@ public class NotesFragment extends Fragment {
 
             @Override
             public void onChildRemoved(@NonNull @NotNull DataSnapshot snapshot) {
-                Log.i(TAG, snapshot.toString());
-                allChips.remove(snapshot.getKey());
+                Log.i(TAG, "chip removed " + snapshot.toString());
+                String chipName = snapshot.getKey();
 
-                // remove from chipGroup ?
-                // update bottom modal sheet
-
-                Log.d(TAG, "allChips size - " + allChips.size());
+                // remove chip from list of all chips
+                allChips.remove(chipName);
             }
 
             @Override
