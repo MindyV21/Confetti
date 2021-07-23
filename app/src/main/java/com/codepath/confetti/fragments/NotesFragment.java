@@ -205,6 +205,7 @@ public class NotesFragment extends Fragment {
                 Log.i(TAG, "note changed " + snapshot.toString());
                 Note note = snapshot.getValue(Note.class);
                 note.setId(snapshot.getKey());
+                note.setImageFile(allNotes.get(snapshot.getKey()).getImageFile());
                 // update allNotes
                 allNotes.put(snapshot.getKey(), note);
 
