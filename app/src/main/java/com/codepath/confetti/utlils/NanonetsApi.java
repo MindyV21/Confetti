@@ -236,7 +236,7 @@ public class NanonetsApi {
                     note.getPredictions(jsonObject);
 
                     // upload note to database and then photo to storage
-                    Firebase.uploadNote(context, pbLoading, note, id, file);
+                    Firebase.uploadNoteInfo(context, pbLoading, note, id, file);
 
 //                    // query file in nanonets database
 //                    queryNote(context, apiKey, modelId, id, file);
