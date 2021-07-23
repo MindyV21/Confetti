@@ -189,6 +189,7 @@ public class Firebase {
                         // note delete from firebase
                         Log.i(TAG, "onSuccess to delete note's chip references from firebase");
                         Toast.makeText(context, "Note deleted successfully!", Toast.LENGTH_SHORT).show();
+                        // deletePhotoFile(context, note);
                     } else {
                         // note failed to delete from firebase
                         Log.i(TAG, "onFailure to delete note's chip references from firebase");
@@ -197,6 +198,28 @@ public class Firebase {
                 }
             });
         }
+    }
+
+    public static void deletePhotoFile(Context context, Note note) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference fileRef = storageRef.child(FirebaseAuth.getInstance().getUid() + "/" + note.getId());
+        Log.d(TAG, fileRef.getPath());
+
+        fileRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    // Local temp file has been created
+                    Log.i(TAG, "onSuccess to delete note image from firebase");
+                    Toast.makeText(context, "Note deleted successfully!", Toast.LENGTH_SHORT).show();
+                } else {
+                    // image file failed to retrieve from firebase
+                    Log.i(TAG, "onFailure to delete note image from firebase");
+                    Toast.makeText(context, "Note deletion failed! Try again.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public static void getImage(Note note) {
