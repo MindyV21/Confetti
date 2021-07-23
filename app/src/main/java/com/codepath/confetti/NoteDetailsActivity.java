@@ -21,12 +21,14 @@ import android.widget.TextView;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.codepath.confetti.adapters.PredictionSlidePagerAdapter;
 import com.codepath.confetti.databinding.ActivityNoteDetailsBinding;
+import com.codepath.confetti.fragments.AddChipDialogFragment;
 import com.codepath.confetti.fragments.NoteImagesFragment;
 import com.codepath.confetti.models.Note;
 import com.codepath.confetti.utlils.Chips;
@@ -42,7 +44,7 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-public class NoteDetailsActivity extends AppCompatActivity implements NoteImagesFragment.OnItemSelectedListener{
+public class NoteDetailsActivity extends AppCompatActivity implements NoteImagesFragment.OnItemSelectedListener, AddChipDialogFragment.AddChipDialogListener {
 
     public static final String TAG = "NoteDetailsActivity";
 
@@ -95,20 +97,7 @@ public class NoteDetailsActivity extends AppCompatActivity implements NoteImages
         // add chips associated with note
         if (note.getChips() != null) {
             for (String chipName : note.getChips()) {
-                Chip newChip = new Chip(NoteDetailsActivity.this);
-                newChip.setText(chipName);
-                newChip.setChecked(true);
-
-                // listener for popup
-                newChip.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // display popup
-                        displayChipPopupWindow(NoteDetailsActivity.this, view);
-                    }
-                });
-
-                chipGroup.addView(newChip);
+                createNewChip(chipName);
             }
         }
 
@@ -120,7 +109,7 @@ public class NoteDetailsActivity extends AppCompatActivity implements NoteImages
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "create a new tag!");
-
+                showAddChipDialog();
             }
         });
 
@@ -130,6 +119,29 @@ public class NoteDetailsActivity extends AppCompatActivity implements NoteImages
 
         // set up prediction info bottom sheet
         initPredictions(view);
+    }
+
+    private void createNewChip(String chipName) {
+        Chip newChip = new Chip(NoteDetailsActivity.this);
+        newChip.setText(chipName);
+        newChip.setChecked(true);
+
+        // listener for popup
+        newChip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // display popup
+                displayChipPopupWindow(NoteDetailsActivity.this, view);
+            }
+        });
+
+        chipGroup.addView(newChip);
+    }
+
+    private void showAddChipDialog() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        AddChipDialogFragment addChipDialogFragment = AddChipDialogFragment.newInstance("test");
+        addChipDialogFragment.show(fragmentManager, "fragment_add_chip");
     }
 
     // popup window to delete chip from notes
@@ -233,5 +245,19 @@ public class NoteDetailsActivity extends AppCompatActivity implements NoteImages
         Log.d(TAG, "scrolling to index " + index);
         viewPager.setCurrentItem(index, true);
         sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+
+    // updates activity with new tag and updates notes / chips database
+    @Override
+    public void onFinishAddChipDialog(String inputText) {
+        Log.d(TAG, "adding chip to note");
+        // populate in hscroll
+        createNewChip(inputText);
+
+        // add chip manually to note's chip list
+        note.getChips().add(inputText);
+
+        // update notes + chips database
+        Firebase.addChipRef(NoteDetailsActivity.this, note, inputText);
     }
 }

@@ -274,6 +274,29 @@ public class Firebase {
         });
     }
 
+    // add note reference within chip database
+    public static void addChipRef(Context context, Note note, String chipName) {
+        // Continue with delete operation
+        FirebaseDatabase.getInstance().getReference("Chips")
+                .child(FirebaseAuth.getInstance().getUid())
+                .child(chipName)
+                .child(note.getId())
+                .setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    // note ref add to firebase
+                    Log.i(TAG, "onSuccess to add note ref in chip database from firebase");
+                    updateNoteChips(context, note);
+                } else {
+                    // note ref failed to add to firebase
+                    Log.i(TAG, "onFailure to add note ref in chip database from firebase");
+                    Toast.makeText(context, "Chip add failed! Try again.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
     public static void updateNoteChips(Context context, Note note) {
         // update note's chip list
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Notes")

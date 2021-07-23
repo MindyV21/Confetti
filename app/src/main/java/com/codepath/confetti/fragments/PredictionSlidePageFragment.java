@@ -45,6 +45,5 @@ public class PredictionSlidePageFragment extends Fragment {
 
         tvText = binding.tvText;
         tvText.setText(prediction.text);
-
     }
 }
