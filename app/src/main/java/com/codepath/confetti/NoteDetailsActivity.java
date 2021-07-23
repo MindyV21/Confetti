@@ -112,6 +112,7 @@ public class NoteDetailsActivity extends AppCompatActivity implements NoteImages
             }
         }
 
+        // add a new chip function
         Drawable drawable = AppCompatResources.getDrawable(NoteDetailsActivity.this, R.drawable.ic_baseline_label_24);
         ivTag.setImageDrawable(drawable);
         chipAdd.setText("Add tag");
@@ -119,7 +120,7 @@ public class NoteDetailsActivity extends AppCompatActivity implements NoteImages
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "create a new tag!");
-                // user types in tag name and it is added to chip group
+
             }
         });
 

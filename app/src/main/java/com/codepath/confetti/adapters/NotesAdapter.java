@@ -120,14 +120,16 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                     } else {
                         // filter through predictions list
                         List<Prediction> predictions = note.getPredictions();
-                        for (Prediction prediction : predictions) {
-                            if (prediction.text.toLowerCase().contains(filterPattern)) {
-                                // checks if note has already been added before
-                                if (!filteredSet.contains(note.getName())) {
-                                    Log.i(TAG, "ADDED (by keyword) " + note.getName());
-                                    filteredList.add(note);
+                        if (predictions != null) {
+                            for (Prediction prediction : predictions) {
+                                if (prediction.text.toLowerCase().contains(filterPattern)) {
+                                    // checks if note has already been added before
+                                    if (!filteredSet.contains(note.getName())) {
+                                        Log.i(TAG, "ADDED (by keyword) " + note.getName());
+                                        filteredList.add(note);
+                                    }
+                                    filteredSet.add(note.getName());
                                 }
-                                filteredSet.add(note.getName());
                             }
                         }
                     }
