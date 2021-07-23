@@ -182,10 +182,11 @@ public class NotesFragment extends Fragment {
                 Note note = snapshot.getValue(Note.class);
                 note.setId(snapshot.getKey());
 
+                // get image
+                Firebase.getImage(note);
+
                 currentNotes.add(note);
                 allNotes.put(snapshot.getKey(), note);
-
-                // get image ?
 
                 // update currentNotes taking into account filters and query input
                 Log.d(TAG, "" + chipGroup.getChildCount());

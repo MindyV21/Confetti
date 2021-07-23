@@ -240,6 +240,7 @@ public class Firebase {
                         // Local temp file has been created
                         Log.i(TAG, "onSuccess to get note image from firebase");
                         note.setImageFile(localFile);
+                        note.setPhotoLoaded(true);
                     } else {
                         // image file failed to retrieve from firebase
                         Log.i(TAG, "onFailure to get note image from firebase");

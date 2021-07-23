@@ -22,6 +22,7 @@ public class Note {
 
     private File imageFile;
     private String id;
+    private boolean photoLoaded;
 
     public Note() {};
 
@@ -76,5 +77,13 @@ public class Note {
     }
     public File getImageFile() {
         return imageFile;
+    }
+
+    public boolean isPhotoLoaded() {
+        return photoLoaded;
+    }
+
+    public void setPhotoLoaded(boolean photoLoaded) {
+        this.photoLoaded = photoLoaded;
     }
 }

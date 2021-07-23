@@ -14,6 +14,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
@@ -223,7 +224,13 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                     // make sure valid position
                     if (position != RecyclerView.NO_POSITION) {
                         Note note = notes.get(position);
-                        goToNote(note);
+
+                        // check that there's a photo
+                        if (note.isPhotoLoaded()) {
+                            goToNote(note);
+                        } else {
+                            Toast.makeText(context, "Loading note. Please wait.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             });
@@ -236,11 +243,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
             tvNoteName.setText(note.name);
             Drawable drawable = AppCompatResources.getDrawable(context, R.drawable.ic_launcher_foreground);
             ivImage.setImageDrawable(drawable);
-            // TODO: need to wait for images to load in before showing
-//            Bitmap bitmap = BitmapFactory.decodeFile(note.getImageFile().getAbsolutePath());
-//            ivImage.setImageBitmap(bitmap);
-
-            // bind swiped layout info
         }
 
         private void goToNote(Note note) {
