@@ -181,6 +181,7 @@ public class NotesFragment extends Fragment {
                 // create note from firebase database
                 Note note = snapshot.getValue(Note.class);
                 note.setId(snapshot.getKey());
+
                 currentNotes.add(note);
                 allNotes.put(snapshot.getKey(), note);
 
@@ -202,8 +203,28 @@ public class NotesFragment extends Fragment {
             @Override
             public void onChildChanged(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
                 Log.i(TAG, "note changed " + snapshot.toString());
-                // retrieve note from database and update ?
-                // update allNotes and currentNotes
+                Note note = snapshot.getValue(Note.class);
+                note.setId(snapshot.getKey());
+                // update allNotes
+                allNotes.put(snapshot.getKey(), note);
+
+                // update currentNotes
+                // check if note is in current notes and refresh currentNotes
+                for (int i = 0; i < currentNotes.size(); i++) {
+                    if (note.getId().equals(currentNotes.get(i).getId())) {
+                        currentNotes.set(i, note);
+                        if (chipGroup.getChildCount() == 0) {
+                            Log.d(TAG, "refresh notes list");
+                            adapter.setNotesFull(currentNotes);
+                            adapter.getFilter().filter(searchView.getQuery().toString().trim());
+                        } else {
+                            Log.d(TAG, "refresh notes list with chips");
+                            List<Integer> checkedChipIds = chipGroup.getCheckedChipIds();
+                            refreshChips(checkedChipIds, chipGroup, false);
+                        }
+                        return;
+                    }
+                }
             }
 
             @Override
@@ -232,7 +253,7 @@ public class NotesFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                Log.i(TAG, "The note read failed: " + error.getCode());
+                Log.i(TAG, "The notes read failed: " + error.getCode());
             }
         });
 

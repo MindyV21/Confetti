@@ -165,6 +165,7 @@ public class NoteDetailsActivity extends AppCompatActivity implements NoteImages
                         chipNames.remove(index);
                         foundChip = true;
                     }
+                    index++;
                 }
 
                 // remove chip in firebase from note AND chip databases
@@ -207,10 +208,7 @@ public class NoteDetailsActivity extends AppCompatActivity implements NoteImages
 
         // Instantiate a ViewPager2 and a PagerAdapter.
         viewPager = findViewById(R.id.pagerPredictions);
-        // check if there are even predictions
-        if (note.getPredictions() != null) {
-            pagerAdapter = new PredictionSlidePagerAdapter(this, note.getPredictions());
-        }
+        pagerAdapter = new PredictionSlidePagerAdapter(this, note.getPredictions());
         viewPager.setAdapter(pagerAdapter);
         viewPager.setPageTransformer(new ZoomOutPageTransformer());
     }
