@@ -201,7 +201,9 @@ public class NotesFragment extends Fragment {
 
             @Override
             public void onChildChanged(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
-
+                Log.i(TAG, "note changed " + snapshot.toString());
+                // retrieve note from database and update ?
+                // update allNotes and currentNotes
             }
 
             @Override
@@ -245,7 +247,7 @@ public class NotesFragment extends Fragment {
 
             @Override
             public void onChildChanged(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
-
+                Log.i(TAG, "chip changed " + snapshot.toString());
             }
 
             @Override

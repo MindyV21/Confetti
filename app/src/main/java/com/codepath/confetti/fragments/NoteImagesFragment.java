@@ -199,7 +199,9 @@ public class NoteImagesFragment extends Fragment {
                 // testing to see if file actually contains image file
                 takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 ssivNote.setImage(ImageSource.bitmap(takenImage));
-                createPins();
+                if (note.predictions != null) {
+                    createPins();
+                }
             } catch (Exception e) {
                 Log.e(getClass().getSimpleName(), "Error writing bitmap", e);
             }

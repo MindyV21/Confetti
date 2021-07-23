@@ -21,6 +21,7 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -31,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -247,5 +249,51 @@ public class Firebase {
         } catch (IOException e) {
             Log.e(TAG, "failed to get note image from firebase storage", e);
         }
+    }
+
+    // removes note reference within chip database
+    public static void deleteChipRef(Context context, Note note, String chipName) {
+        // Continue with delete operation
+        FirebaseDatabase.getInstance().getReference("Chips")
+                .child(FirebaseAuth.getInstance().getUid())
+                .child(chipName)
+                .child(note.getId())
+                .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    // note delete from firebase
+                    Log.i(TAG, "onSuccess to delete note ref in chip database from firebase");
+                    updateNoteChips(context, note);
+                } else {
+                    // note failed to delete from firebase
+                    Log.i(TAG, "onFailure to delete note ref in chip database from firebase");
+                    Toast.makeText(context, "Chip deletion failed! Try again.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public static void updateNoteChips(Context context, Note note) {
+        // update note's chip list
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Notes")
+                .child(FirebaseAuth.getInstance().getUid())
+                .child("Files")
+                .child(note.getId());
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/chips", note.getChips());
+        mDatabase.updateChildren(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    // note delete from firebase
+                    Log.i(TAG, "onSuccess to chip in note database from firebase");
+                } else {
+                    // note failed to delete from firebase
+                    Log.i(TAG, "onFailure to delete chip in note database from firebase");
+                    Toast.makeText(context, "Chip deletion failed! Try again.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

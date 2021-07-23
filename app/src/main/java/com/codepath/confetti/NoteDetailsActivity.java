@@ -30,6 +30,7 @@ import com.codepath.confetti.databinding.ActivityNoteDetailsBinding;
 import com.codepath.confetti.fragments.NoteImagesFragment;
 import com.codepath.confetti.models.Note;
 import com.codepath.confetti.utlils.Chips;
+import com.codepath.confetti.utlils.Firebase;
 import com.codepath.confetti.utlils.ZoomOutPageTransformer;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -38,6 +39,8 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import org.parceler.Parcels;
+
+import java.util.List;
 
 public class NoteDetailsActivity extends AppCompatActivity implements NoteImagesFragment.OnItemSelectedListener{
 
@@ -128,6 +131,7 @@ public class NoteDetailsActivity extends AppCompatActivity implements NoteImages
         initPredictions(view);
     }
 
+    // popup window to delete chip from notes
     private void displayChipPopupWindow(Context context, View anchorView) {
         PopupWindow popup = new PopupWindow(context);
         View layout = getLayoutInflater().inflate(R.layout.popup_content_chip, null);
@@ -141,6 +145,33 @@ public class NoteDetailsActivity extends AppCompatActivity implements NoteImages
         // Show anchored to button
         popup.setBackgroundDrawable(new BitmapDrawable());
         popup.showAsDropDown(anchorView);
+
+        // click listener to delete chip
+        TextView tvDeleteChip = layout.findViewById(R.id.tvDeleteChip);
+        tvDeleteChip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "deleting chip");
+                popup.dismiss();
+                chipGroup.removeView(anchorView);
+
+                // remove chip from note chips
+                List<String> chipNames = note.getChips();
+                String chipName = ((Chip) anchorView).getText().toString();
+                int index = 0;
+                boolean foundChip = false;
+                while(index < chipNames.size() && !foundChip) {
+                    if (chipName.equals(chipNames.get(index))) {
+                        chipNames.remove(index);
+                        foundChip = true;
+                    }
+                }
+
+                // remove chip in firebase from note AND chip databases
+                Log.d(TAG, "updating note chips in firebase");
+                Firebase.deleteChipRef(context, note, chipName);
+            }
+        });
     }
 
     // initializes all the predictions into bottom sheet
@@ -176,7 +207,10 @@ public class NoteDetailsActivity extends AppCompatActivity implements NoteImages
 
         // Instantiate a ViewPager2 and a PagerAdapter.
         viewPager = findViewById(R.id.pagerPredictions);
-        pagerAdapter = new PredictionSlidePagerAdapter(this, note.predictions);
+        // check if there are even predictions
+        if (note.getPredictions() != null) {
+            pagerAdapter = new PredictionSlidePagerAdapter(this, note.getPredictions());
+        }
         viewPager.setAdapter(pagerAdapter);
         viewPager.setPageTransformer(new ZoomOutPageTransformer());
     }
