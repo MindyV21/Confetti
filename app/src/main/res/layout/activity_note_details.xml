@@ -85,7 +85,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:visibility="invisible"
-            android:background="#5E5E5E"
             app:layout_behavior="com.google.android.material.transformation.FabTransformationSheetBehavior">
 
             <RelativeLayout
@@ -100,11 +99,11 @@
                     android:clickable="true"
                     android:layout_alignParentEnd="true"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <include
+                    layout="@layout/fragment_create_prediction"
                     android:layout_below="@+id/ivCancel"
-                    android:text="hello" />
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"/>
             </RelativeLayout>
         </com.google.android.material.circularreveal.CircularRevealFrameLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -45,6 +45,7 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.circularreveal.CircularRevealFrameLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 
 import org.parceler.Parcels;
 
@@ -69,6 +70,7 @@ public class NoteDetailsActivity extends AppCompatActivity
 
     private FloatingActionButton fabCreatePrediction;
     private CircularRevealFrameLayout sheetCreatePrediction;
+    private TabLayout tabLayoutCreatePrediction;
     private ImageView ivCancel;
 
     private LinearLayout mBottomSheetLayout;
@@ -136,6 +138,7 @@ public class NoteDetailsActivity extends AppCompatActivity
         fabCreatePrediction = binding.fabCreatePrediction;
         sheetCreatePrediction = binding.sheetCreatePrediction;
         ivCancel = binding.ivCancel;
+        tabLayoutCreatePrediction = view.findViewById(R.id.tabLayoutCreatePrediction);
         mBottomSheetLayout = view.findViewById(R.id.bottom_sheet_layout);
         sheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
         header_Arrow_Image = view.findViewById(R.id.bottom_sheet_arrow);
@@ -212,6 +215,7 @@ public class NoteDetailsActivity extends AppCompatActivity
 
     // initializes all the prediction features
     private void initPredictions() {
+        // to exit creating a prediction
         ivCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -224,6 +228,7 @@ public class NoteDetailsActivity extends AppCompatActivity
             }
         });
 
+        // to start creating a prediction
         fabCreatePrediction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -233,6 +238,24 @@ public class NoteDetailsActivity extends AppCompatActivity
                 // hide chip and predictions layout
                 relLayoutTags.setVisibility(View.GONE);
                 mBottomSheetLayout.setVisibility(View.GONE);
+            }
+        });
+
+        // tab selection changes
+        tabLayoutCreatePrediction.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
 
