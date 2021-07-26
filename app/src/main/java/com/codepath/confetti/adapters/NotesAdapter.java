@@ -184,6 +184,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                                     Log.i(TAG, "deleting note " + tvNoteName.getText().toString());
                                     Note note = notes.get(getAdapterPosition());
 
+                                    // deletes note -> image file -> note ref in chips
                                     Firebase.deleteNote(context, note);
 
                                     // remove item from notes
@@ -195,9 +196,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                                             return;
                                         }
                                     }
-
-                                    // TODO: need to delete photo file from storage
-
                                 }
                             })
 

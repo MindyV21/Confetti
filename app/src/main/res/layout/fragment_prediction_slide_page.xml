@@ -6,8 +6,11 @@
     android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardPrediction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground">
         app:cardBackgroundColor="#E6E6E6"
         app:cardCornerRadius="8dp"
         app:cardElevation="8dp">
