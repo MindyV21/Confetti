@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/contentPredictions"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -9,20 +10,41 @@
         android:id="@+id/cardPrediction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:foreground="?android:attr/selectableItemBackground">
         app:cardBackgroundColor="#E6E6E6"
         app:cardCornerRadius="8dp"
         app:cardElevation="8dp">
 
-        <TextView
-            android:id="@+id/tvText"
-            style="?android:textAppearanceMedium"
-            android:padding="16dp"
-            android:lineSpacingMultiplier="1.2"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="hello" />
+            android:layout_height="match_parent"
+            android:layout_margin="10dp">
+
+            <ImageView
+                android:id="@+id/ivDeletePrediction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_baseline_cancel_24"
+                android:clickable="true"
+                android:layout_alignParentEnd="true"/>
+
+            <TextView
+                android:id="@+id/tvLabel"
+                style="?android:textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ivDeletePrediction"
+                tools:text="Topic" />
+
+            <TextView
+                android:id="@+id/tvText"
+                style="?android:textAppearanceMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvLabel"
+                android:lineSpacingMultiplier="1.2"
+                tools:text="hello" />
+
+        </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
 

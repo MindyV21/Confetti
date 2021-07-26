@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,11 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
-import com.codepath.confetti.R;
 import com.codepath.confetti.databinding.FragmentPredictionSlidePageBinding;
-import com.codepath.confetti.models.Note;
 import com.codepath.confetti.models.Prediction;
-import com.codepath.confetti.utlils.Firebase;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -29,8 +27,10 @@ public class PredictionSlidePageFragment extends Fragment {
 
     private Prediction prediction;
 
-    private TextView tvText;
     private CardView cardPrediction;
+    private ImageView ivDeletePrediction;
+    private TextView tvLabel;
+    private TextView tvText;
 
     public PredictionSlidePageFragment(Prediction prediction) {
         this.prediction = prediction;
@@ -50,13 +50,20 @@ public class PredictionSlidePageFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        tvText = binding.tvText;
-        tvText.setText(prediction.text);
-
         cardPrediction = binding.cardPrediction;
-        cardPrediction.setOnLongClickListener(new View.OnLongClickListener() {
+        ivDeletePrediction = binding.ivDeletePrediction;
+        tvLabel = binding.tvLabel;
+        tvText = binding.tvText;
+
+        tvLabel.setText(prediction.label);
+        if (prediction.label.equals("Topic")) {
+            tvText.setText(prediction.text);
+        }
+
+        // to delete a prediction
+        ivDeletePrediction.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View view) {
+            public void onClick(View view) {
                 Log.i(TAG, "long click");
                 new AlertDialog.Builder(getContext())
                         .setMessage("Delete keyword '" + prediction.text + "'?")
@@ -67,6 +74,8 @@ public class PredictionSlidePageFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 Log.i(TAG, "deleting prediction " + prediction.text);
 
+                                // update predictions in notes database
+                                // redraw pins on canvas <- child listener for predictions updated?
                             }
                         })
 
@@ -79,7 +88,6 @@ public class PredictionSlidePageFragment extends Fragment {
                         })
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
-                return false;
             }
         });
     }
