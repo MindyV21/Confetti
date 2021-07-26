@@ -31,6 +31,7 @@ import com.codepath.confetti.databinding.ActivityNoteDetailsBinding;
 import com.codepath.confetti.fragments.AddChipDialogFragment;
 import com.codepath.confetti.fragments.NoteImagesFragment;
 import com.codepath.confetti.models.Note;
+import com.codepath.confetti.models.Prediction;
 import com.codepath.confetti.utlils.Chips;
 import com.codepath.confetti.utlils.Firebase;
 import com.codepath.confetti.utlils.ZoomOutPageTransformer;
@@ -45,7 +46,8 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NoteDetailsActivity extends AppCompatActivity implements NoteImagesFragment.OnItemSelectedListener, AddChipDialogFragment.AddChipDialogListener {
+public class NoteDetailsActivity extends AppCompatActivity
+        implements NoteImagesFragment.OnItemSelectedListener, AddChipDialogFragment.AddChipDialogListener, PredictionSlidePagerAdapter.UpdatePredictions {
 
     public static final String TAG = "NoteDetailsActivity";
 
@@ -222,7 +224,7 @@ public class NoteDetailsActivity extends AppCompatActivity implements NoteImages
 
         // Instantiate a ViewPager2 and a PagerAdapter.
         viewPager = findViewById(R.id.pagerPredictions);
-        pagerAdapter = new PredictionSlidePagerAdapter(this, note.getPredictions());
+        pagerAdapter = new PredictionSlidePagerAdapter(this, note);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setPageTransformer(new ZoomOutPageTransformer());
     }
@@ -242,7 +244,7 @@ public class NoteDetailsActivity extends AppCompatActivity implements NoteImages
 
     // action to take in the activity when pin in fragment is tapped
     @Override
-    public void onRssItemSelected(int index) {
+    public void onPinItemSelected(int index) {
         Log.d(TAG, "scrolling to index " + index);
         viewPager.setCurrentItem(index, true);
         sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -265,5 +267,11 @@ public class NoteDetailsActivity extends AppCompatActivity implements NoteImages
 
         // update notes + chips database
         Firebase.addChipRef(NoteDetailsActivity.this, note, inputText);
+    }
+
+    // removes a pin from note image
+    @Override
+    public void removePinFromImage(Prediction prediction) {
+        noteImagesFragment.removePin(prediction);
     }
 }

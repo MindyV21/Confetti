@@ -51,6 +51,8 @@ public class PinView extends SubsamplingScaleImageView {
         if (pins.contains(prediction)){
             sPin.remove(pins.indexOf(prediction));
             pins.remove(prediction);
+            initialise();
+            invalidate();
             return true;
         } else {
             return false;

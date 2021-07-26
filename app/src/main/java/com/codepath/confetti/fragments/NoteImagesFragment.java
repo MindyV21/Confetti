@@ -142,7 +142,7 @@ public class NoteImagesFragment extends Fragment {
     // Define the events that the fragment will use to communicate
     public interface OnItemSelectedListener {
         // This can be any number of events to be sent to the activity
-        public void onRssItemSelected(int index);
+        public void onPinItemSelected(int index);
     }
 
     // Store the listener (activity) that will have events fired once the fragment is attached
@@ -155,6 +155,10 @@ public class NoteImagesFragment extends Fragment {
             throw new ClassCastException(context.toString()
                     + " must implement NoteImagesFragment.OnItemSelectedListener");
         }
+    }
+
+    public void removePin(Prediction prediction) {
+        Log.d(TAG, "removing prediction pin: " + ssivNote.removePin(prediction));
     }
 
     // TODO: delete upload photo stuff
@@ -250,7 +254,7 @@ public class NoteImagesFragment extends Fragment {
                     // if pin is tapped, open bottom sheet and scroll to that item
                     if (tappedPredictionIndex != -1) {
                         Log.d(TAG, "scroll to prediction " + note.getPredictions().get(tappedPredictionIndex));
-                        listener.onRssItemSelected(tappedPredictionIndex);
+                        listener.onPinItemSelected(tappedPredictionIndex);
                     }
 
                 }
