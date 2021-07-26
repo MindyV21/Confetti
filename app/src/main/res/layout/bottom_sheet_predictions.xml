@@ -7,6 +7,7 @@
     android:background="@color/white"
     app:behavior_hideable="false"
     app:behavior_peekHeight="62dp"
+    app:layout_insetEdge="bottom"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <LinearLayout

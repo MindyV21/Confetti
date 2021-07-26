@@ -40,6 +40,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.parceler.Parcels;
 
@@ -60,6 +61,8 @@ public class NoteDetailsActivity extends AppCompatActivity
     private ChipGroup chipGroup;
 
     private NoteImagesFragment noteImagesFragment;
+
+    private FloatingActionButton fabCreatePrediction;
     private LinearLayout mBottomSheetLayout;
     private BottomSheetBehavior sheetBehavior;
     private ImageView header_Arrow_Image;
@@ -121,6 +124,7 @@ public class NoteDetailsActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction().add(R.id.flNoteImages, noteImagesFragment).commit();
 
         // set up prediction info bottom sheet
+        fabCreatePrediction = binding.fabCreatePrediction;
         initPredictions(view);
     }
 
@@ -215,6 +219,12 @@ public class NoteDetailsActivity extends AppCompatActivity
         sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                // hide fab when sliding, fab shown when sheet collapsed completely
+                if (BottomSheetBehavior.STATE_DRAGGING == newState || BottomSheetBehavior.STATE_EXPANDED == newState) {
+                    fabCreatePrediction.animate().scaleX(0).scaleY(0).setDuration(300).start();
+                } else if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
+                    fabCreatePrediction.animate().scaleX(1).scaleY(1).setDuration(300).start();
+                }
             }
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
