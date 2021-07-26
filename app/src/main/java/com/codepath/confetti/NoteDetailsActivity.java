@@ -3,6 +3,8 @@ package com.codepath.confetti;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.content.res.AppCompatResources;
@@ -40,6 +43,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.circularreveal.CircularRevealFrameLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.parceler.Parcels;
@@ -56,6 +60,7 @@ public class NoteDetailsActivity extends AppCompatActivity
 
     private Toolbar toolbar;
 
+    private RelativeLayout relLayoutTags;
     private ImageView ivTag;
     private Chip chipAdd;
     private ChipGroup chipGroup;
@@ -63,6 +68,9 @@ public class NoteDetailsActivity extends AppCompatActivity
     private NoteImagesFragment noteImagesFragment;
 
     private FloatingActionButton fabCreatePrediction;
+    private CircularRevealFrameLayout sheetCreatePrediction;
+    private ImageView ivCancel;
+
     private LinearLayout mBottomSheetLayout;
     private BottomSheetBehavior sheetBehavior;
     private ImageView header_Arrow_Image;
@@ -96,6 +104,7 @@ public class NoteDetailsActivity extends AppCompatActivity
         });
 
         // set up chipping
+        relLayoutTags = binding.relLayoutTags;
         ivTag = binding.ivTag;
         chipAdd = binding.chipAdd;
         chipGroup = binding.chipGroup;
@@ -125,7 +134,13 @@ public class NoteDetailsActivity extends AppCompatActivity
 
         // set up prediction info bottom sheet
         fabCreatePrediction = binding.fabCreatePrediction;
-        initPredictions(view);
+        sheetCreatePrediction = binding.sheetCreatePrediction;
+        ivCancel = binding.ivCancel;
+        mBottomSheetLayout = view.findViewById(R.id.bottom_sheet_layout);
+        sheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
+        header_Arrow_Image = view.findViewById(R.id.bottom_sheet_arrow);
+
+        initPredictions();
     }
 
     private void createNewChip(String chipName) {
@@ -195,11 +210,31 @@ public class NoteDetailsActivity extends AppCompatActivity
         });
     }
 
-    // initializes all the predictions into bottom sheet
-    private void initPredictions(View view) {
-        mBottomSheetLayout = view.findViewById(R.id.bottom_sheet_layout);
-        sheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
-        header_Arrow_Image = view.findViewById(R.id.bottom_sheet_arrow);
+    // initializes all the prediction features
+    private void initPredictions() {
+        ivCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // exit out of create prediction view
+                fabCreatePrediction.setExpanded(false);
+
+                // show chips and prediction views
+                relLayoutTags.setVisibility(View.VISIBLE);
+                mBottomSheetLayout.setVisibility(View.VISIBLE);
+            }
+        });
+
+        fabCreatePrediction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // expand create predictions menu
+                fabCreatePrediction.setExpanded(true);
+
+                // hide chip and predictions layout
+                relLayoutTags.setVisibility(View.GONE);
+                mBottomSheetLayout.setVisibility(View.GONE);
+            }
+        });
 
         // listener to expand / collapse dialog
         header_Arrow_Image.setOnClickListener(new View.OnClickListener() {

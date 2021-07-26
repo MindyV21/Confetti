@@ -76,7 +76,37 @@
             android:layout_margin="15dp"
             app:layout_dodgeInsetEdges="bottom"
             android:layout_gravity="top"
+            app:fabSize="mini"
             android:backgroundTint="?attr/colorPrimary"/>
+
+        <com.google.android.material.circularreveal.CircularRevealFrameLayout
+            android:id="@+id/sheetCreatePrediction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:visibility="invisible"
+            android:background="#5E5E5E"
+            app:layout_behavior="com.google.android.material.transformation.FabTransformationSheetBehavior">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/ivCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_baseline_cancel_24"
+                    android:clickable="true"
+                    android:layout_alignParentEnd="true"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ivCancel"
+                    android:text="hello" />
+            </RelativeLayout>
+        </com.google.android.material.circularreveal.CircularRevealFrameLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </RelativeLayout>
