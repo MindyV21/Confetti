@@ -289,12 +289,35 @@ public class Firebase {
             @Override
             public void onComplete(@NonNull @NotNull Task<Void> task) {
                 if (task.isSuccessful()){
-                    // note delete from firebase
-                    Log.i(TAG, "onSuccess to chip in note database from firebase");
+                    // update chips
+                    Log.i(TAG, "onSuccess to update chips in note database from firebase");
                 } else {
-                    // note failed to delete from firebase
-                    Log.i(TAG, "onFailure to delete chip in note database from firebase");
-                    Toast.makeText(context, "Chip deletion failed! Try again.", Toast.LENGTH_SHORT).show();
+                    // update chips failed
+                    Log.i(TAG, "onFailure to update chips in note database from firebase");
+                    Toast.makeText(context, "Chip update failed! Try again.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public static void updateNotePredictions(Context context, Note note) {
+        // update note's predictions
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Notes")
+                .child(FirebaseAuth.getInstance().getUid())
+                .child("Files")
+                .child(note.getId());
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/predictions", note.getPredictions());
+        mDatabase.updateChildren(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    // update predictions
+                    Log.i(TAG, "onSuccess to update predictions in note database from firebase");
+                } else {
+                    // update predictions failed
+                    Log.i(TAG, "onFailure to update predictions in note database from firebase");
+                    Toast.makeText(context, "Prediction update failed! Try again.", Toast.LENGTH_SHORT).show();
                 }
             }
         });

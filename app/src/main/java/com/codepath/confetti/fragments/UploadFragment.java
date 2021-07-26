@@ -156,7 +156,7 @@ public class UploadFragment extends Fragment {
                 Note note = new Note(fileName);
 
                 List<Prediction> predictions = new ArrayList<>();
-                predictions.add(new Prediction(0, 1, 2, 3, "bread"));
+                predictions.add(new Prediction(404, 1, 1000, 3, "bread"));
                 note.setPredictions(predictions);
 
                 List<String> chipNames = new ArrayList<>();

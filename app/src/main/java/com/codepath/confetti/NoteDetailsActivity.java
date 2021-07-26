@@ -63,7 +63,7 @@ public class NoteDetailsActivity extends AppCompatActivity implements NoteImages
     private ImageView header_Arrow_Image;
 
     private ViewPager2 viewPager;
-    private FragmentStateAdapter pagerAdapter;
+    private PredictionSlidePagerAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
