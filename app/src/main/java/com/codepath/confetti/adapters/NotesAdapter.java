@@ -123,7 +123,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                         List<Prediction> predictions = note.getPredictions();
                         if (predictions != null) {
                             for (Prediction prediction : predictions) {
-                                if (prediction.text.toLowerCase().contains(filterPattern)) {
+                                if (prediction.label.equals("Topic") && prediction.text.toLowerCase().contains(filterPattern)) {
                                     // checks if note has already been added before
                                     if (!filteredSet.contains(note.getName())) {
                                         Log.i(TAG, "ADDED (by keyword) " + note.getName());
@@ -225,12 +225,13 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                     if (position != RecyclerView.NO_POSITION) {
                         Note note = notes.get(position);
 
-                        // check that there's a photo
-                        if (note.isPhotoLoaded()) {
-                            goToNote(note);
-                        } else {
-                            Toast.makeText(context, "Loading note. Please wait.", Toast.LENGTH_SHORT).show();
-                        }
+                        goToNote(note);
+//                        // check that there's a photo
+//                        if (note.isPhotoLoaded()) {
+//                            goToNote(note);
+//                        } else {
+//                            Toast.makeText(context, "Loading note. Please wait.", Toast.LENGTH_SHORT).show();
+//                        }
                     }
                 }
             });

@@ -128,15 +128,15 @@ public class NoteImagesFragment extends Fragment {
         // set up image view scrollable
         ssivNote = binding.ssivNote;
 
-        // testing to see if file actually contains image file
-        takenImage = BitmapFactory.decodeFile(note.getImageFile().getAbsolutePath());
-        ssivNote.setImage(ImageSource.bitmap(takenImage));
-        if (note.predictions != null) {
-            createPins();
-        }
+//        // testing to see if file actually contains image file
+//        takenImage = BitmapFactory.decodeFile(note.getImageFile().getAbsolutePath());
+//        ssivNote.setImage(ImageSource.bitmap(takenImage));
+//        if (note.predictions != null) {
+//            createPins();
+//        }
 
 
-//        onUploadPhoto();
+        onUploadPhoto();
     }
 
     // Define the events that the fragment will use to communicate

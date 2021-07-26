@@ -182,8 +182,8 @@ public class NotesFragment extends Fragment {
                 Note note = snapshot.getValue(Note.class);
                 note.setId(snapshot.getKey());
 
-                // get image
-                Firebase.getImage(note);
+//                // get image
+//                Firebase.getImage(note);
 
                 currentNotes.add(note);
                 allNotes.put(snapshot.getKey(), note);
