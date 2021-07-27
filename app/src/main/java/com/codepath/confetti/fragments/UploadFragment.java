@@ -211,7 +211,7 @@ public class UploadFragment extends Fragment {
 
                 Firebase.uploadNoteInfo(getContext(), pbLoading, note, "testId", photoFile);
 
-                //NanonetsApi.predictFile(getContext(), fileName, getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), photoFile);
+                //NanonetsApi.predictFile(getContext(), pbLoading, fileName, getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), photoFile);
             }
         });
 
