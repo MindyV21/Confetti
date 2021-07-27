@@ -137,7 +137,7 @@ public class NoteDetailsActivity extends AppCompatActivity
         // set up prediction info bottom sheet
         fabCreatePrediction = binding.fabCreatePrediction;
         sheetCreatePrediction = binding.sheetCreatePrediction;
-        ivCancel = binding.ivCancel;
+        ivCancel = view.findViewById(R.id.ivCancel);
         tabLayoutCreatePrediction = view.findViewById(R.id.tabLayoutCreatePrediction);
         mBottomSheetLayout = view.findViewById(R.id.bottom_sheet_layout);
         sheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
@@ -241,7 +241,7 @@ public class NoteDetailsActivity extends AppCompatActivity
             }
         });
 
-        // tab selection changes
+        // tab selection changes - hide/show option to name keyword
         tabLayoutCreatePrediction.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

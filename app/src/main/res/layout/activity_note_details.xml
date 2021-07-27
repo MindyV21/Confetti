@@ -85,26 +85,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:visibility="invisible"
+            android:layout_margin="15dp"
             app:layout_behavior="com.google.android.material.transformation.FabTransformationSheetBehavior">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/ivCancel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_baseline_cancel_24"
-                    android:clickable="true"
-                    android:layout_alignParentEnd="true"/>
-
-                <include
-                    layout="@layout/fragment_create_prediction"
-                    android:layout_below="@+id/ivCancel"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"/>
-            </RelativeLayout>
+            <include
+                layout="@layout/fragment_create_prediction"
+                android:layout_below="@+id/ivCancel"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"/>
         </com.google.android.material.circularreveal.CircularRevealFrameLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
