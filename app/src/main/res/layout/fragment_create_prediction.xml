@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardPrediction"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     app:cardBackgroundColor="#E6E6E6"
     app:cardCornerRadius="8dp"
     app:cardElevation="8dp">
@@ -23,11 +23,20 @@
             android:clickable="true"
             tools:srcCompat="@drawable/ic_baseline_cancel_24" />
 
+        <com.codepath.confetti.utlils.PinView
+            android:id="@+id/ssivCreatePrediction"
+            android:layout_width="wrap_content"
+            android:layout_height="500dp"
+            android:clickable="true"
+            android:adjustViewBounds="true"
+            android:scaleType="fitStart"
+            android:layout_below="@id/ivCancel"/>
+
         <com.google.android.material.tabs.TabLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/tabLayoutCreatePrediction"
-            android:layout_below="@+id/ivCancel">
+            android:layout_below="@+id/ssivCreatePrediction">
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
@@ -43,7 +52,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_below="@+id/tabLayoutCreatePrediction"
             android:layout_margin="20dp">
             <EditText

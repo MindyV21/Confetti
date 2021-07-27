@@ -87,11 +87,12 @@
             android:visibility="invisible"
             android:layout_margin="15dp"
             app:layout_behavior="com.google.android.material.transformation.FabTransformationSheetBehavior">
-            <include
-                layout="@layout/fragment_create_prediction"
-                android:layout_below="@+id/ivCancel"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"/>
+
+            <FrameLayout
+                android:id="@+id/flCreatePrediction"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
         </com.google.android.material.circularreveal.CircularRevealFrameLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

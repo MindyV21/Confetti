@@ -32,6 +32,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.codepath.confetti.adapters.PredictionSlidePagerAdapter;
 import com.codepath.confetti.databinding.ActivityNoteDetailsBinding;
 import com.codepath.confetti.fragments.AddChipDialogFragment;
+import com.codepath.confetti.fragments.CreatePredictionFragment;
 import com.codepath.confetti.fragments.NoteImagesFragment;
 import com.codepath.confetti.models.Note;
 import com.codepath.confetti.models.Prediction;
@@ -53,7 +54,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NoteDetailsActivity extends AppCompatActivity
-        implements NoteImagesFragment.OnItemSelectedListener, AddChipDialogFragment.AddChipDialogListener, PredictionSlidePagerAdapter.UpdatePredictions {
+        implements NoteImagesFragment.OnItemSelectedListener, AddChipDialogFragment.AddChipDialogListener, PredictionSlidePagerAdapter.UpdatePredictions,
+        CreatePredictionFragment.CreatePredictionListener {
 
     public static final String TAG = "NoteDetailsActivity";
 
@@ -68,10 +70,9 @@ public class NoteDetailsActivity extends AppCompatActivity
 
     private NoteImagesFragment noteImagesFragment;
 
+    private CreatePredictionFragment createPredictionFragment;
     private FloatingActionButton fabCreatePrediction;
     private CircularRevealFrameLayout sheetCreatePrediction;
-    private TabLayout tabLayoutCreatePrediction;
-    private ImageView ivCancel;
 
     private LinearLayout mBottomSheetLayout;
     private BottomSheetBehavior sheetBehavior;
@@ -135,10 +136,10 @@ public class NoteDetailsActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction().add(R.id.flNoteImages, noteImagesFragment).commit();
 
         // set up prediction info bottom sheet
+        createPredictionFragment = new CreatePredictionFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.flCreatePrediction, createPredictionFragment).commit();
         fabCreatePrediction = binding.fabCreatePrediction;
         sheetCreatePrediction = binding.sheetCreatePrediction;
-        ivCancel = view.findViewById(R.id.ivCancel);
-        tabLayoutCreatePrediction = view.findViewById(R.id.tabLayoutCreatePrediction);
         mBottomSheetLayout = view.findViewById(R.id.bottom_sheet_layout);
         sheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
         header_Arrow_Image = view.findViewById(R.id.bottom_sheet_arrow);
@@ -215,19 +216,6 @@ public class NoteDetailsActivity extends AppCompatActivity
 
     // initializes all the prediction features
     private void initPredictions() {
-        // to exit creating a prediction
-        ivCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // exit out of create prediction view
-                fabCreatePrediction.setExpanded(false);
-
-                // show chips and prediction views
-                relLayoutTags.setVisibility(View.VISIBLE);
-                mBottomSheetLayout.setVisibility(View.VISIBLE);
-            }
-        });
-
         // to start creating a prediction
         fabCreatePrediction.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,26 +224,7 @@ public class NoteDetailsActivity extends AppCompatActivity
                 fabCreatePrediction.setExpanded(true);
 
                 // hide chip and predictions layout
-                relLayoutTags.setVisibility(View.GONE);
                 mBottomSheetLayout.setVisibility(View.GONE);
-            }
-        });
-
-        // tab selection changes - hide/show option to name keyword
-        tabLayoutCreatePrediction.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
             }
         });
 
@@ -341,5 +310,15 @@ public class NoteDetailsActivity extends AppCompatActivity
     @Override
     public void removePinFromImage(Prediction prediction) {
         noteImagesFragment.removePin(prediction);
+    }
+
+    // when create prediction layout is closed
+    @Override
+    public void onCancelCreatePrediction() {
+        // exit out of create prediction view
+        fabCreatePrediction.setExpanded(false);
+
+        // show chips and prediction views
+        mBottomSheetLayout.setVisibility(View.VISIBLE);
     }
 }
