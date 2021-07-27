@@ -3,4 +3,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="nanonets_all_notes_url">https://app.nanonets.com/api/v2/Inferences/Model/{{model_id}}/ImageLevelInferences?start_day_interval={start_day}&amp;current_batch_day={end_day}</string>
     <string name="nanonets_note_url">https://app.nanonets.com/api/v2/Inferences/Model/{%s}/ImageLevelInferences/{{id}}</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

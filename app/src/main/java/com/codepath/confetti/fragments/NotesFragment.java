@@ -52,6 +52,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import pl.droidsonroids.gif.GifImageView;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link NotesFragment#newInstance} factory method to
@@ -60,6 +62,8 @@ import java.util.TreeSet;
 public class NotesFragment extends Fragment {
 
     public static final String TAG = "NotesFragment";
+
+    private GifImageView nellieConfetti;
 
     private FragmentNotesBinding binding;
     protected NotesAdapter adapter;
@@ -128,6 +132,8 @@ public class NotesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        nellieConfetti = binding.nellieConfetti;
+
         currentNotes = new ArrayList<>();
         allNotes = new TreeMap<>();
         allChips = new TreeMap<>();
@@ -176,6 +182,8 @@ public class NotesFragment extends Fragment {
         refNotes.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+                nellieConfetti.setVisibility(View.GONE);
+
                 Log.i(TAG, "note added" + snapshot.toString());
                 // create note from firebase database
                 Note note = snapshot.getValue(Note.class);
@@ -245,6 +253,10 @@ public class NotesFragment extends Fragment {
                 // remove note from allNotes
                 allNotes.remove(id);
                 adapter.setNotesFull(currentNotes);
+
+                if (allNotes.isEmpty()) {
+                    nellieConfetti.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override

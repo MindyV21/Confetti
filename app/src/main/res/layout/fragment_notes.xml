@@ -51,6 +51,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/hScrollViewTags"/>
+
+        <ImageView
+            android:id="@+id/ivNoNotes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/nellieConfetti"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/confetti"/>
     </RelativeLayout>
 
 </FrameLayout>

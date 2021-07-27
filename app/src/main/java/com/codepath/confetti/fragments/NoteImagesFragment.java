@@ -171,6 +171,9 @@ public class NoteImagesFragment extends Fragment {
     }
 
     // TODO: delete upload photo stuff
+    public Bitmap getImage() {
+        return takenImage;
+    }
     public final static int PICK_PHOTO_CODE = 1046;
     private Bitmap selectedImage;
     File photoFile;

@@ -12,6 +12,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -34,6 +36,7 @@ import com.codepath.confetti.databinding.ActivityNoteDetailsBinding;
 import com.codepath.confetti.fragments.AddChipDialogFragment;
 import com.codepath.confetti.fragments.CreatePredictionFragment;
 import com.codepath.confetti.fragments.NoteImagesFragment;
+import com.codepath.confetti.fragments.SettingsBottomSheetFragment;
 import com.codepath.confetti.models.Note;
 import com.codepath.confetti.models.Prediction;
 import com.codepath.confetti.utlils.Chips;
@@ -48,6 +51,7 @@ import com.google.android.material.circularreveal.CircularRevealFrameLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
+import org.jetbrains.annotations.NotNull;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
@@ -264,6 +268,27 @@ public class NoteDetailsActivity extends AppCompatActivity
         pagerAdapter = new PredictionSlidePagerAdapter(this, note);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setPageTransformer(new ZoomOutPageTransformer());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_note_details_toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
+        if (item.getItemId() == R.id.action_fullscreen) {
+            Log.i(TAG, "fullscreen");
+
+            // TODO: make image fullscreen
+
+
+            // to consume menu item
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     // for viewPager
