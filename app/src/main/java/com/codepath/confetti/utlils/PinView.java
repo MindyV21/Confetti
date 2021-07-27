@@ -44,6 +44,7 @@ public class PinView extends SubsamplingScaleImageView {
     }
 
     public PointF getPin(Prediction prediction) {
+        if (sPin.size() == 0) return null;
         return sPin.get(pins.indexOf(prediction));
     }
 

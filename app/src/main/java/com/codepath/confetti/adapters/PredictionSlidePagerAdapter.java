@@ -42,6 +42,12 @@ public class PredictionSlidePagerAdapter extends RecyclerView.Adapter<Prediction
         }
     }
 
+    public void setPredictions(Note note) {
+        this.note = note;
+        predictions = note.getPredictions();
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @NotNull
     @Override

@@ -158,7 +158,15 @@ public class NoteImagesFragment extends Fragment {
     }
 
     public void removePin(Prediction prediction) {
-        Log.d(TAG, "removing prediction pin: " + ssivNote.removePin(prediction));
+        Log.d(TAG, "removing prediction pin");
+        ssivNote.removePin(prediction);
+    }
+
+    public void addPin() {
+        Log.d(TAG, "adding prediction pin");
+        Prediction prediction = note.getPredictions().get(note.getPredictions().size() - 1);
+        ssivNote.setPin(new PointF(prediction.xMin + getContext().getResources().getInteger(R.integer.xMinOffset),
+                prediction.yMax + getContext().getResources().getInteger(R.integer.yMaxOffset)), prediction);
     }
 
     // TODO: delete upload photo stuff

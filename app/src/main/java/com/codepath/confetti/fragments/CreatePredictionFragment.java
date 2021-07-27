@@ -29,6 +29,7 @@ import com.codepath.confetti.R;
 import com.codepath.confetti.databinding.FragmentCreatePredictionBinding;
 import com.codepath.confetti.models.Note;
 import com.codepath.confetti.models.Prediction;
+import com.codepath.confetti.utlils.Firebase;
 import com.codepath.confetti.utlils.PinView;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.google.android.material.tabs.TabLayout;
@@ -41,6 +42,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -91,6 +93,8 @@ public class CreatePredictionFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        newPrediction = new Prediction();
+
         ivCancel = binding.ivCancel;
         ssivCreatePrediction = binding.ssivCreatePrediction;
         tabLayoutCreatePrediction = binding.tabLayoutCreatePrediction;
@@ -138,6 +142,53 @@ public class CreatePredictionFragment extends Fragment {
 
         // set up image for touch
         initImage();
+
+        // create a new prediction !
+        btnCreatePrediction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick btn create prediction !");
+                String label = tabLayoutCreatePrediction.getSelectedTabPosition() == 0 ?
+                        "Topic" :
+                        "Example";
+                Boolean firstPrediction = false;
+
+                // check if pin is placed
+                if (ssivCreatePrediction.getPin(newPrediction) == null) {
+                    Toast.makeText(getContext(), "Place a pin!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                // check keyword is filled out if a topic
+                if (tabLayoutCreatePrediction.getSelectedTabPosition() == 0 && etText.getText().toString().trim().equals("")) {
+                    Toast.makeText(getContext(), "Define a keyword!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // set newPrediction info
+                newPrediction.label = label;
+                newPrediction.text = etText.getText().toString().trim();
+                newPrediction.xMin = (int) ssivCreatePrediction.getPin(newPrediction).x - getContext().getResources().getInteger(R.integer.xMinOffset);
+                newPrediction.yMax = (int) ssivCreatePrediction.getPin(newPrediction).y - getContext().getResources().getInteger(R.integer.yMaxOffset);
+
+                // place prediction in note
+                if (note.getPredictions() == null) {
+                    note.setPredictions(new ArrayList<>());
+                    firstPrediction = true;
+                }
+                note.getPredictions().add(newPrediction);
+                // update canvas
+                CreatePredictionListener listener = (CreatePredictionListener) getActivity();
+                listener.addPinToImage(firstPrediction);
+
+                // update note database in firebase
+                Firebase.updateNotePredictions(getContext(), note);
+
+                // reset view
+                etText.setText("");
+                ssivCreatePrediction.removeAllPins();
+                newPrediction = new Prediction();
+            }
+        });
     }
 
     private void initImage() {
@@ -150,7 +201,7 @@ public class CreatePredictionFragment extends Fragment {
 
                     PointF tappedCoordinate = ssivCreatePrediction
                             .viewToSourceCoord(
-                                    new PointF(e.getX()+ getContext().getResources().getInteger(R.integer.xMinOffset),
+                                    new PointF(e.getX() + getContext().getResources().getInteger(R.integer.xMinOffset),
                                             e.getY() + getContext().getResources().getInteger(R.integer.yMaxOffset)));
                     Log.d(TAG, "tapped coords x: " + tappedCoordinate.x + " y: " + tappedCoordinate.y);
 
@@ -172,6 +223,7 @@ public class CreatePredictionFragment extends Fragment {
     // Defines the listener interface
     public interface CreatePredictionListener {
         public void onCancelCreatePrediction();
+        public void addPinToImage(Boolean firstPrediction);
     }
 
     // TODO: TBD upload photo testing stuff

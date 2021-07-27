@@ -321,4 +321,15 @@ public class NoteDetailsActivity extends AppCompatActivity
         // show chips and prediction views
         mBottomSheetLayout.setVisibility(View.VISIBLE);
     }
+
+    // adds a pin to note image
+    @Override
+    public void addPinToImage(Boolean firstPrediction) {
+        noteImagesFragment.addPin();
+        if (firstPrediction) {
+            pagerAdapter.setPredictions(note);
+        } else {
+            pagerAdapter.notifyItemInserted(note.getPredictions().size() - 1);
+        }
+    }
 }
