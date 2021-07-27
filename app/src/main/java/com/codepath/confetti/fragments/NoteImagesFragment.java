@@ -127,6 +127,7 @@ public class NoteImagesFragment extends Fragment {
 
         // set up image view scrollable
         ssivNote = binding.ssivNote;
+        ssivNote.setZoomEnabled(false);
 
 //        // testing to see if file actually contains image file
 //        takenImage = BitmapFactory.decodeFile(note.getImageFile().getAbsolutePath());

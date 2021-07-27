@@ -101,6 +101,8 @@ public class CreatePredictionFragment extends Fragment {
         etText = binding.etText;
         btnCreatePrediction = binding.btnCreatePrediction;
 
+        ssivCreatePrediction.setZoomEnabled(false);
+
         // loading in image file
 //        takenImage = BitmapFactory.decodeFile(note.getImageFile().getAbsolutePath());
 //        ssivCreatePrediction.setImage(ImageSource.bitmap(takenImage));

@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="62dp"
+    app:behavior_peekHeight="30dp"
     app:layout_insetEdge="bottom"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
@@ -20,20 +20,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:fontFamily="serif"
-            android:padding="24dp"
-            android:textSize="18sp"
-            android:text="Keywords"
-            android:textColor="@android:color/white" />
-
         <ImageView
             android:id="@+id/bottom_sheet_arrow"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_gravity="center"
             android:layout_weight="1"
             app:srcCompat="@drawable/ic_baseline_keyboard_arrow_up_24" />

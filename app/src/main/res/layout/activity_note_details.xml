@@ -57,8 +57,10 @@
     <FrameLayout
         android:id="@+id/flNoteImages"
         android:layout_width="wrap_content"
-        android:layout_height="500dp"
-        android:layout_below="@id/relLayoutTags"/>
+        android:layout_height="match_parent"
+        android:layout_below="@id/relLayoutTags"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"/>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
