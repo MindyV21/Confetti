@@ -2,6 +2,7 @@ package com.codepath.confetti;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -24,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     public static final String TAG = "MainActivity";
 
+    private Toolbar toolbar;
+
     final FragmentManager fragmentManager = getSupportFragmentManager();
     private BottomNavigationView bottomNavigationView;
 
@@ -37,6 +40,11 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         Log.i(TAG, "" + mAuth.getCurrentUser());
 
+        // set up toolbar
+        toolbar = binding.toolbar;
+        toolbar.setTitle(getString(R.string.app_name));
+
+        // set up bottom navigation
         bottomNavigationView = binding.bottomNavigation;
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
