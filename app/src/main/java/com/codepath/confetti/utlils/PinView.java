@@ -59,6 +59,13 @@ public class PinView extends SubsamplingScaleImageView {
         }
     }
 
+    public void removeAllPins() {
+        sPin.clear();
+        pins.clear();
+        initialise();
+        invalidate();
+    }
+
     public ArrayList<Prediction> getPinNames(){
         return pins;
     }

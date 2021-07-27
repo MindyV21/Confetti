@@ -214,7 +214,8 @@ public class NoteImagesFragment extends Fragment {
         // add pins to photo
         for (Prediction prediction : note.predictions) {
             Log.d(TAG, prediction.text);
-            ssivNote.setPin(new PointF(prediction.xMin - 60f, prediction.yMax + 40f), prediction);
+            ssivNote.setPin(new PointF(prediction.xMin + getContext().getResources().getInteger(R.integer.xMinOffset),
+                    prediction.yMax + getContext().getResources().getInteger(R.integer.yMaxOffset)), prediction);
         }
 
         // handle touch events

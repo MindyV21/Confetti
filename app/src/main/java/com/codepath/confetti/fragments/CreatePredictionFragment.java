@@ -3,18 +3,22 @@ package com.codepath.confetti.fragments;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +28,7 @@ import androidx.fragment.app.Fragment;
 import com.codepath.confetti.R;
 import com.codepath.confetti.databinding.FragmentCreatePredictionBinding;
 import com.codepath.confetti.models.Note;
+import com.codepath.confetti.models.Prediction;
 import com.codepath.confetti.utlils.PinView;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.google.android.material.tabs.TabLayout;
@@ -46,11 +51,11 @@ public class CreatePredictionFragment extends Fragment {
 
     private Bitmap takenImage;
     private Note note;
+    private Prediction newPrediction;
 
     private ImageView ivCancel;
     private PinView ssivCreatePrediction;
     private TabLayout tabLayoutCreatePrediction;
-    private ImageButton ibPin;
     private EditText etText;
     private Button btnCreatePrediction;
 
@@ -89,7 +94,6 @@ public class CreatePredictionFragment extends Fragment {
         ivCancel = binding.ivCancel;
         ssivCreatePrediction = binding.ssivCreatePrediction;
         tabLayoutCreatePrediction = binding.tabLayoutCreatePrediction;
-        ibPin = binding.ibPin;
         etText = binding.etText;
         btnCreatePrediction = binding.btnCreatePrediction;
 
@@ -114,16 +118,50 @@ public class CreatePredictionFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 Log.d(TAG, "tab selected " + tab.getText().toString());
+                if (tab.getText().toString().equals("Example")) {
+                    etText.setVisibility(View.GONE);
+                }
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                if (tab.getText().toString().equals("Example")) {
+                    etText.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
 
+            }
+        });
+
+        // set up image for touch
+        initImage();
+    }
+
+    private void initImage() {
+        // handle touch events
+        final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                if (ssivCreatePrediction.isReady()) {
+                    ssivCreatePrediction.removeAllPins();
+
+                    PointF tappedCoordinate = ssivCreatePrediction.viewToSourceCoord(new PointF(e.getX(), e.getY()));
+                    Log.d(TAG, "tapped coords x: " + tappedCoordinate.x + " y: " + tappedCoordinate.y);
+
+                    // set pin
+                    ssivCreatePrediction.setPin(new PointF(tappedCoordinate.x, tappedCoordinate.y), newPrediction);
+                }
+                return true;
+            }
+        });
+
+        ssivCreatePrediction.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return gestureDetector.onTouchEvent(motionEvent);
             }
         });
     }
