@@ -148,7 +148,10 @@ public class CreatePredictionFragment extends Fragment {
                 if (ssivCreatePrediction.isReady()) {
                     ssivCreatePrediction.removeAllPins();
 
-                    PointF tappedCoordinate = ssivCreatePrediction.viewToSourceCoord(new PointF(e.getX(), e.getY()));
+                    PointF tappedCoordinate = ssivCreatePrediction
+                            .viewToSourceCoord(
+                                    new PointF(e.getX()+ getContext().getResources().getInteger(R.integer.xMinOffset),
+                                            e.getY() + getContext().getResources().getInteger(R.integer.yMaxOffset)));
                     Log.d(TAG, "tapped coords x: " + tappedCoordinate.x + " y: " + tappedCoordinate.y);
 
                     // set pin
