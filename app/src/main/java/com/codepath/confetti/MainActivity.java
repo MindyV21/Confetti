@@ -8,17 +8,18 @@ import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.codepath.confetti.databinding.ActivityMainBinding;
-import com.codepath.confetti.databinding.ActivitySignUpBinding;
 import com.codepath.confetti.fragments.NotesFragment;
-import com.codepath.confetti.fragments.SettingsFragment;
+import com.codepath.confetti.fragments.SettingsBottomSheetFragment;
 import com.codepath.confetti.fragments.UploadFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+
+import org.jetbrains.annotations.NotNull;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         // set up toolbar
         toolbar = binding.toolbar;
         toolbar.setTitle(getString(R.string.app_name));
+        setSupportActionBar(toolbar);
 
         // set up bottom navigation
         bottomNavigationView = binding.bottomNavigation;
@@ -51,15 +53,12 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment fragment;
                 switch (item.getItemId()) {
-                    case R.id.action_settings:
-                        switchFragments("settings", "upload", "notes");
-                        break;
                     case R.id.action_upload:
-                        switchFragments("upload", "settings", "notes");
+                        switchFragments("upload", "notes");
                         break;
                     case R.id.action_home:
                     default:
-                        switchFragments("notes", "upload", "settings");
+                        switchFragments("notes", "upload");
                         break;
                 }
                 return true;
@@ -70,30 +69,45 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.action_home);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main_toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
+        if (item.getItemId() == R.id.action_settings) {
+            Log.i(TAG, "settingsss");
+
+            SettingsBottomSheetFragment tagFragment = new SettingsBottomSheetFragment();
+            tagFragment.show(getSupportFragmentManager(), tagFragment.getTag());
+
+            // to consume menu item
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     // hides not seen fragments, shows current fragment
-    private void switchFragments(String currentTag, String hiddenTagOne, String hiddenTagTwo) {
+    private void switchFragments(String currentTag, String hiddenTag) {
         if(fragmentManager.findFragmentByTag(currentTag) != null) {
             //if the fragment exists, show it.
             fragmentManager.beginTransaction().show(fragmentManager.findFragmentByTag(currentTag)).commit();
         } else {
             //if the fragment does not exist, add it to fragment manager.
             Fragment fragment;
-            if (currentTag.equals("settings"))
-                fragment = new SettingsFragment();
-            else if (currentTag.equals("upload"))
+            if (currentTag.equals("upload"))
                 fragment = new UploadFragment();
             else
                 fragment = new NotesFragment();
 
             fragmentManager.beginTransaction().add(R.id.flContainer, fragment, currentTag).commit();
         }
-        if(fragmentManager.findFragmentByTag(hiddenTagOne) != null){
+        if(fragmentManager.findFragmentByTag(hiddenTag) != null){
             //if the other fragment is visible, hide it.
-            fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag(hiddenTagOne)).commit();
-        }
-        if(fragmentManager.findFragmentByTag(hiddenTagTwo) != null){
-            //if the other fragment is visible, hide it.
-            fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag(hiddenTagTwo)).commit();
+            fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag(hiddenTag)).commit();
         }
     }
 }

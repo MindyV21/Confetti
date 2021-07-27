@@ -169,7 +169,6 @@ public class NotesFragment extends Fragment {
         });
 
         // Get a reference to our notes
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference refNotes = database.getReference("Notes/" + FirebaseAuth.getInstance().getUid() + "/Files");
 
