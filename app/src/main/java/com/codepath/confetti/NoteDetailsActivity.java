@@ -136,7 +136,7 @@ public class NoteDetailsActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction().add(R.id.flNoteImages, noteImagesFragment).commit();
 
         // set up prediction info bottom sheet
-        createPredictionFragment = new CreatePredictionFragment();
+        createPredictionFragment = CreatePredictionFragment.newInstance(note);
         getSupportFragmentManager().beginTransaction().add(R.id.flCreatePrediction, createPredictionFragment).commit();
         fabCreatePrediction = binding.fabCreatePrediction;
         sheetCreatePrediction = binding.sheetCreatePrediction;

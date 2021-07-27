@@ -10,63 +10,80 @@
     app:cardCornerRadius="8dp"
     app:cardElevation="8dp">
 
-    <RelativeLayout
-        android:layout_height="wrap_content"
+    <ScrollView
         android:layout_width="match_parent"
-        android:background="@color/white">
-
-        <ImageView
-            android:id="@+id/ivCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:clickable="true"
-            tools:srcCompat="@drawable/ic_baseline_cancel_24" />
-
-        <com.codepath.confetti.utlils.PinView
-            android:id="@+id/ssivCreatePrediction"
-            android:layout_width="wrap_content"
-            android:layout_height="500dp"
-            android:clickable="true"
-            android:adjustViewBounds="true"
-            android:scaleType="fitStart"
-            android:layout_below="@id/ivCancel"/>
-
-        <com.google.android.material.tabs.TabLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tabLayoutCreatePrediction"
-            android:layout_below="@+id/ssivCreatePrediction">
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Topic"/>
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Example"/>
-
-        </com.google.android.material.tabs.TabLayout>
+        android:layout_height="match_parent">
 
         <RelativeLayout
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/tabLayoutCreatePrediction"
-            android:layout_margin="20dp">
-            <EditText
-                android:id="@+id/etText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Enter keyword..."/>
-            <Button
-                android:id="@+id/btnCreatePrediction"
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/ivCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/etText"
-                android:text="Create Prediction"/>
+                android:layout_alignParentEnd="true"
+                android:clickable="true"
+                tools:srcCompat="@drawable/ic_baseline_cancel_24" />
+
+            <com.codepath.confetti.utlils.PinView
+                android:id="@+id/ssivCreatePrediction"
+                android:layout_width="wrap_content"
+                android:layout_height="500dp"
+                android:clickable="true"
+                android:adjustViewBounds="true"
+                android:scaleType="fitStart"
+                android:layout_below="@id/ivCancel"/>
+
+            <com.google.android.material.tabs.TabLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tabLayoutCreatePrediction"
+                android:layout_below="@+id/ssivCreatePrediction">
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Topic"/>
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Example"/>
+
+            </com.google.android.material.tabs.TabLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/tabLayoutCreatePrediction"
+                android:layout_margin="20dp">
+
+                <ImageButton
+                    android:id="@+id/ibPin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_baseline_push_pin_24"
+                    android:layout_centerHorizontal="true"
+                    android:clickable="true"
+                    android:scaleType="fitCenter"/>
+                <EditText
+                    android:id="@+id/etText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter keyword..."
+                    android:layout_below="@id/ibPin"
+                    android:singleLine="true"
+                    />
+                <Button
+                    android:id="@+id/btnCreatePrediction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/etText"
+                    android:text="Create Prediction"/>
+            </RelativeLayout>
         </RelativeLayout>
-    </RelativeLayout>
+    </ScrollView>
 </androidx.cardview.widget.CardView>
