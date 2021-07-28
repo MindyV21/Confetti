@@ -1,6 +1,7 @@
 package com.codepath.confetti.utlils;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +21,17 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class Chips {
+
+    // populate chips just for show
+    public static void populateChips(Context context, ChipGroup chipGroup, List<String> chipNames) {
+        for (String chipName : chipNames) {
+            Chip newChip = new Chip(context);
+            newChip.setText(chipName);
+            newChip.setEnabled(false);
+
+            chipGroup.addView(newChip);
+        }
+    }
 
     // create chips that are selectable
     public static void populateChipsSelectable(Context context, ChipGroup chipGroup, Map<String, Boolean> allChips) {
@@ -46,6 +58,7 @@ public class Chips {
         }
     }
 
+    // populate chips that are deletable
     public static void populateChipsDeletable(Context context, ChipGroup chipGroup, List<Integer> checkedChipIds, Set<Integer> checkedChipIdsSet,
                                               ChipGroup allChipsGroup, NotesAdapter adapter, SearchView searchView,
                                               Map<String, Note> allNotes, List<Note> currentNotes, Map<String, Boolean> allChips) {

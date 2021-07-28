@@ -26,7 +26,9 @@ import com.codepath.confetti.NoteDetailsActivity;
 import com.codepath.confetti.R;
 import com.codepath.confetti.models.Note;
 import com.codepath.confetti.models.Prediction;
+import com.codepath.confetti.utlils.Chips;
 import com.codepath.confetti.utlils.Firebase;
+import com.google.android.material.chip.ChipGroup;
 
 import org.parceler.Parcels;
 
@@ -155,6 +157,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
         private TextView tvNoteName;
         private ImageView ivImage;
+        private ChipGroup chipGroup;
         private ImageView ivDelete;
 
         private SwipeRevealLayout swipeRevealLayout;
@@ -165,6 +168,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
             // connect vars to layout
             tvNoteName = itemView.findViewById(R.id.tvNoteName);
             ivImage = itemView.findViewById(R.id.ivImage);
+            chipGroup = itemView.findViewById(R.id.chipGroup);
             ivDelete = itemView.findViewById(R.id.ivDelete);
             swipeRevealLayout = itemView.findViewById(R.id.swipeLayout);
             itemMainLayout = itemView.findViewById(R.id.itemMainLayout);
@@ -240,8 +244,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
             // bind main layout info
             Log.i(TAG, note.name);
             tvNoteName.setText(note.name);
-            Drawable drawable = AppCompatResources.getDrawable(context, R.drawable.ic_launcher_foreground);
+            Drawable drawable = AppCompatResources.getDrawable(context, R.drawable.file_document);
             ivImage.setImageDrawable(drawable);
+            if (note.getChips() != null) {
+                Chips.populateChips(context, chipGroup, note.getChips());
+            }
         }
 
         private void goToNote(Note note) {

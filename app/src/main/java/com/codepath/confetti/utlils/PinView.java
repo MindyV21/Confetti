@@ -73,7 +73,7 @@ public class PinView extends SubsamplingScaleImageView {
 
     private void initialise() {
         float density = getResources().getDisplayMetrics().densityDpi;
-        pin = getBitmapFromVectorDrawable(this.getContext(), R.drawable.ic_baseline_arrow_forward_ios_24);
+        pin = getBitmapFromVectorDrawable(this.getContext(), R.drawable.arrow_right_drop_circle);
         float w = (density/420f) * pin.getWidth();
         float h = (density/420f) * pin.getHeight();
         pin = Bitmap.createScaledBitmap(pin, (int)w, (int)h, true);
