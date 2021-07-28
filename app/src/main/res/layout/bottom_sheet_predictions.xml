@@ -29,6 +29,12 @@
             app:srcCompat="@drawable/ic_baseline_keyboard_arrow_up_24" />
     </LinearLayout>
 
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/nellieConfetti"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/confetti"/>
+
     <androidx.viewpager2.widget.ViewPager2
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/pagerPredictions"

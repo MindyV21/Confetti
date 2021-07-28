@@ -57,11 +57,14 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.droidsonroids.gif.GifImageView;
+
 public class NoteDetailsActivity extends AppCompatActivity
         implements NoteImagesFragment.OnItemSelectedListener, AddChipDialogFragment.AddChipDialogListener, PredictionSlidePagerAdapter.UpdatePredictions,
         CreatePredictionFragment.CreatePredictionListener {
 
     public static final String TAG = "NoteDetailsActivity";
+    private GifImageView nellieConfetti;
 
     private Note note;
 
@@ -140,6 +143,13 @@ public class NoteDetailsActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction().add(R.id.flNoteImages, noteImagesFragment).commit();
 
         // set up prediction info bottom sheet
+        nellieConfetti = view.findViewById(R.id.nellieConfetti);
+        if (note.getPredictions() == null || note.getPredictions().size() == 0) {
+            nellieConfetti.setVisibility(View.VISIBLE);
+        } else {
+            nellieConfetti.setVisibility(View.GONE);
+        }
+
         createPredictionFragment = CreatePredictionFragment.newInstance(note);
         getSupportFragmentManager().beginTransaction().add(R.id.flCreatePrediction, createPredictionFragment).commit();
         fabCreatePrediction = binding.fabCreatePrediction;
@@ -335,6 +345,9 @@ public class NoteDetailsActivity extends AppCompatActivity
     @Override
     public void removePinFromImage(Prediction prediction) {
         noteImagesFragment.removePin(prediction);
+        if (note.getPredictions().size() == 0) {
+            nellieConfetti.setVisibility(View.VISIBLE);
+        }
     }
 
     // when create prediction layout is closed
@@ -356,5 +369,7 @@ public class NoteDetailsActivity extends AppCompatActivity
         } else {
             pagerAdapter.notifyItemInserted(note.getPredictions().size() - 1);
         }
+
+        nellieConfetti.setVisibility(View.GONE);
     }
 }

@@ -42,6 +42,7 @@ public class Firebase {
 
     public static final String TAG = "Firebase";
 
+    // upload a note image to firebase database
     public static void uploadImage(Context context, ProgressBar pbLoading, Note note, String id, File photoFile) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
@@ -315,7 +316,6 @@ public class Firebase {
                 if (task.isSuccessful()){
                     // update predictions
                     Log.i(TAG, "onSuccess to update predictions in note database from firebase");
-                    Toast.makeText(context, "Pin created successfully!", Toast.LENGTH_SHORT).show();
                 } else {
                     // update predictions failed
                     Log.i(TAG, "onFailure to update predictions in note database from firebase");
