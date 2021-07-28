@@ -145,7 +145,7 @@ public class NotesFragment extends Fragment {
         rvNotes.setLayoutManager(new LinearLayoutManager(getContext()));
 
         searchView = binding.searchView;
-        searchView.setQueryHint("Searching for...");
+        searchView.setQueryHint(getString(R.string.search_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

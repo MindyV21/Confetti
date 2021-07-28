@@ -30,6 +30,7 @@ public class Chips {
 
         // icon
         newChip.setChipIconTintResource(R.color.shrine_pink_900);
+        newChip.setCheckedIconTintResource(R.color.shrine_pink_900);
     }
 
     // populate chips just for show

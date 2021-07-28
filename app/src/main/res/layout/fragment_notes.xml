@@ -4,36 +4,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.NotesFragment">
+    tools:context=".fragments.NotesFragment"
+    android:padding="10dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/relLayoutSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <SearchView
                 android:id="@+id/searchView"
-                android:layout_width="375dp"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"/>
 
             <ImageView
                 android:id="@+id/ivSearchToggle"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 tools:srcCompat="@drawable/ic_baseline_label_24"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/searchView"
-                android:clickable="true"/>
-        </RelativeLayout>
+                android:clickable="true"
+                android:layout_weight="1"/>
+        </LinearLayout>
 
         <HorizontalScrollView
             android:id="@+id/hScrollViewTags"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_below="@id/relLayoutSearch">
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chipGroup"

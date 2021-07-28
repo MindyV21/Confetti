@@ -247,6 +247,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
             Drawable drawable = AppCompatResources.getDrawable(context, R.drawable.file_document);
             ivImage.setImageDrawable(drawable);
             if (note.getChips() != null) {
+                chipGroup.removeAllViews();
                 Chips.populateChips(context, chipGroup, note.getChips());
             }
         }
