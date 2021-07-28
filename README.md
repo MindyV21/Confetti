@@ -168,6 +168,7 @@ convertedDoc | File | originally handwritten converted to a scannable pdf docume
 
 ### Creating a note, and modifying chips / pins
 <img src='gif/createNote.gif' title='Create Note Walkthrough' width='' alt='Create Note Walkthrough' />
+Note to self: There are incomplete title names for some notes at times due to the emulator having issues.
 
 ### Basic filtering with chips
 <img src='gif/filtering.gif' title='Filtering Walkthrough' width='' alt='Filtering Walkthrough' />
