@@ -397,6 +397,16 @@ public class NoteDetailsActivity extends AppCompatActivity
             if (actionBar != null) {
                 getSupportActionBar().show();
             }
+
+            // show status bar
+            int flags = View.SYSTEM_UI_FLAG_VISIBLE;
+
+            Activity activity = NoteDetailsActivity.this;
+            if (activity != null
+                    && activity.getWindow() != null) {
+                activity.getWindow().getDecorView().setSystemUiVisibility(flags);
+            }
+
             mControlsViewChips.setVisibility(View.VISIBLE);
             mControlsPredictions.setVisibility(View.VISIBLE);
         }

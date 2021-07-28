@@ -60,6 +60,7 @@ public class NoteImagesFragment extends Fragment {
     private Bitmap takenImage;
     private PinView ssivNote;
     private ImageView ivExitFullscreen;
+    private Boolean isFullscreen;
 
     private OnItemSelectedListener listener;
 
@@ -131,6 +132,7 @@ public class NoteImagesFragment extends Fragment {
         ssivNote.setZoomEnabled(false);
 
         // fullscreen stuff
+        isFullscreen = false;
         ivExitFullscreen = binding.ivExitFullscreen;
         ivExitFullscreen.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,6 +142,7 @@ public class NoteImagesFragment extends Fragment {
                 // re place pins
                 createPins();
 
+                isFullscreen = false;
                 ivExitFullscreen.setVisibility(View.GONE);
                 listener.onExitFullscreen();
             }
@@ -157,6 +160,7 @@ public class NoteImagesFragment extends Fragment {
     }
 
     public void enableFullscreen() {
+        isFullscreen = true;
         ivExitFullscreen.setVisibility(View.VISIBLE);
 
         // clear canvas
@@ -258,6 +262,9 @@ public class NoteImagesFragment extends Fragment {
         final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
+                // disable prediction tap events in fullscreen
+                if (isFullscreen) return true;
+
                 if (ssivNote.isReady() && note.predictions != null) {
                     PointF tappedCoordinate = new PointF(e.getX(), e.getY());
                     Log.d(TAG, "tapped coords x: " + tappedCoordinate.x + " y: " + tappedCoordinate.y);
