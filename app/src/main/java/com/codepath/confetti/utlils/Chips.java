@@ -1,12 +1,8 @@
 package com.codepath.confetti.utlils;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
+import android.content.res.ColorStateList;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.PopupWindow;
 import android.widget.SearchView;
 
 import com.codepath.confetti.R;
@@ -14,6 +10,7 @@ import com.codepath.confetti.adapters.NotesAdapter;
 import com.codepath.confetti.models.Note;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.shape.ShapeAppearanceModel;
 
 import java.util.List;
 import java.util.Map;
@@ -22,12 +19,27 @@ import java.util.TreeSet;
 
 public class Chips {
 
+    // sets the default appearance for chips
+    public static void setChipAppearance(Chip newChip) {
+        newChip.setChipBackgroundColorResource(R.color.white);
+
+        newChip.setChipStrokeWidth(Conversion.convertDptoFloat(2.0f));
+        newChip.setChipStrokeColorResource(R.color.stroke_tint);
+
+        newChip.setChipCornerRadius(Conversion.convertDptoFloat(5.0f));
+
+        // icon
+        newChip.setChipIconTintResource(R.color.shrine_pink_900);
+    }
+
     // populate chips just for show
     public static void populateChips(Context context, ChipGroup chipGroup, List<String> chipNames) {
         for (String chipName : chipNames) {
             Chip newChip = new Chip(context);
             newChip.setText(chipName);
             newChip.setEnabled(false);
+
+            setChipAppearance(newChip);
 
             chipGroup.addView(newChip);
         }
@@ -39,6 +51,7 @@ public class Chips {
             Chip newChip = new Chip(context);
             newChip.setText(chip.getKey());
             newChip.setCheckable(true);
+            setChipAppearance(newChip);
 
             // checks if chip has been previously selected
             if (chip.getValue()) {
@@ -70,6 +83,8 @@ public class Chips {
             Chip newChip = new Chip(context);
             newChip.setText(selectedChip.getText().toString());
             newChip.setCloseIconVisible(true);
+            newChip.setCheckedIconVisible(false);
+            setChipAppearance(newChip);
 
             // to get list of them back
             newChip.setCheckable(true);
