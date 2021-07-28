@@ -167,12 +167,12 @@ convertedDoc | File | originally handwritten converted to a scannable pdf docume
 ## Beta Walkthroughs
 
 ### Creating a note, and modifying chips / pins
-<img src='createNote.gif' title='Create Note Walkthrough' width='' alt='Create Note Walkthrough' />
+<img src='gif/createNote.gif' title='Create Note Walkthrough' width='' alt='Create Note Walkthrough' />
 
 ### Basic filtering with chips
-<img src='filtering.gif' title='Filtering Walkthrough' width='' alt='Filtering Walkthrough' />
+<img src='gif/filtering.gif' title='Filtering Walkthrough' width='' alt='Filtering Walkthrough' />
 
 ### Searching for note based on associated keywords/phrases
-<img src='searchKeyword.gif' title='Search Walkthrough' width='' alt='Search Walkthrough' />
+<img src='gif/searchKeyword.gif' title='Search Walkthrough' width='' alt='Search Walkthrough' />
 
 GIF created with [LICECap](https://www.cockos.com/licecap/).
