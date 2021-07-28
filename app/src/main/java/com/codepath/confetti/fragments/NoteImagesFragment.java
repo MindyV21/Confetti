@@ -59,6 +59,7 @@ public class NoteImagesFragment extends Fragment {
 
     private Bitmap takenImage;
     private PinView ssivNote;
+    private ImageView ivExitFullscreen;
 
     private OnItemSelectedListener listener;
 
@@ -129,6 +130,21 @@ public class NoteImagesFragment extends Fragment {
         ssivNote = binding.ssivNote;
         ssivNote.setZoomEnabled(false);
 
+        // fullscreen stuff
+        ivExitFullscreen = binding.ivExitFullscreen;
+        ivExitFullscreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "exit fullscreen !");
+
+                // re place pins
+                createPins();
+
+                ivExitFullscreen.setVisibility(View.GONE);
+                listener.onExitFullscreen();
+            }
+        });
+
 //        // testing to see if file actually contains image file
 //        takenImage = BitmapFactory.decodeFile(note.getImageFile().getAbsolutePath());
 //        ssivNote.setImage(ImageSource.bitmap(takenImage));
@@ -140,10 +156,18 @@ public class NoteImagesFragment extends Fragment {
         onUploadPhoto();
     }
 
+    public void enableFullscreen() {
+        ivExitFullscreen.setVisibility(View.VISIBLE);
+
+        // clear canvas
+        ssivNote.removeAllPins();
+    }
+
     // Define the events that the fragment will use to communicate
     public interface OnItemSelectedListener {
         // This can be any number of events to be sent to the activity
         public void onPinItemSelected(int index);
+        public void onExitFullscreen();
     }
 
     // Store the listener (activity) that will have events fired once the fragment is attached
