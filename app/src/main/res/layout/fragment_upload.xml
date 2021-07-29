@@ -14,15 +14,34 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_above="@+id/btnUploadGallery"/>
+            android:layout_above="@+id/layoutPhotoButtons"/>
 
-        <Button
-            android:id="@+id/btnUploadGallery"
+        <LinearLayout
+            android:id="@+id/layoutPhotoButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Upload from Photo Library"
             android:layout_above="@id/ivPreview"
-            android:layout_centerHorizontal="true"/>
+            android:orientation="horizontal"
+            android:layout_centerHorizontal="true">
+
+            <ImageButton
+                android:id="@+id/btnUploadGallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_baseline_insert_photo_24"
+                android:backgroundTint="?attr/colorPrimary"/>
+
+            <ImageButton
+                android:id="@+id/btnTakePhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/btnUploadGallery"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_baseline_camera_alt_24"
+                android:backgroundTint="?attr/colorPrimary"/>
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/ivPreview"
