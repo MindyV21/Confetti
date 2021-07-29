@@ -163,3 +163,17 @@ convertedDoc | File | originally handwritten converted to a scannable pdf docume
   * AI specifically trained for notes, or special to each user
 * Evernote same idea https://evernote.com/features/search-handwriting
 * mlkit text recognition? 
+
+## Beta Walkthroughs
+
+### Creating a note, and modifying chips / pins
+<img src='gif/createNote.gif' title='Create Note Walkthrough' width='' alt='Create Note Walkthrough' />
+Note to self: There are incomplete title names for some notes at times due to the emulator having issues.
+
+### Basic filtering with chips
+<img src='gif/filtering.gif' title='Filtering Walkthrough' width='' alt='Filtering Walkthrough' />
+
+### Searching for note based on associated keywords/phrases
+<img src='gif/searchKeyword.gif' title='Search Walkthrough' width='' alt='Search Walkthrough' />
+
+GIF created with [LICECap](https://www.cockos.com/licecap/).
