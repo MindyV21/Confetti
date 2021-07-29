@@ -63,5 +63,11 @@
                 android:layout_height="wrap_content"/>
 
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/pbLoading"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
     </LinearLayout>
 </com.chauthai.swipereveallayout.SwipeRevealLayout>
