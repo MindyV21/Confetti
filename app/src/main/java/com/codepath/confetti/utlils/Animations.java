@@ -1,0 +1,63 @@
+package com.codepath.confetti.utlils;
+
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.util.Log;
+import android.view.View;
+
+/**
+ * Util class for UI animations
+ */
+public class Animations {
+
+    public static final String TAG = "Animations";
+
+    /**
+     * Slides view off screen downward
+     * @param view
+     */
+    public static void slideDown(View view, int offset) {
+        Log.d(TAG, "slide down");
+        // Prepare the View for the animation
+        view.setVisibility(View.VISIBLE);
+
+        // Start the animation
+        view.animate()
+                .translationY(view.getHeight() + offset);
+    }
+
+    /**
+     * Slides view back onto screen upward
+     * @param view
+     */
+    public static void reverseSlideDown(View view) {
+        Log.d(TAG, "reverse slide down");
+        view.animate()
+                .translationY(0);
+    }
+
+    /**
+     * Slides view off screen upward
+     * @param view
+     */
+    public static void slideUp(View view, int offset) {
+        Log.d(TAG, "slide up");
+        // Prepare the View for the animation
+        view.setVisibility(View.VISIBLE);
+
+        // Start the animation
+        view.animate()
+                .translationY(-(view.getHeight() + offset));
+    }
+
+    /**
+     * Slides view back onto screen downward
+     * @param view
+     */
+    public static void reverseSlideUp(View view) {
+        Log.d(TAG, "reverse slide up");
+        view.animate()
+                .translationY(0);
+    }
+
+}

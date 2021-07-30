@@ -7,50 +7,57 @@
     android:fitsSystemWindows="true"
     tools:context=".NoteDetailsActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:minHeight="?attr/actionBarSize"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:titleTextColor="@android:color/white"
-        android:background="?attr/colorPrimary"/>
-
     <RelativeLayout
-        android:id="@+id/relLayoutTags"
+        android:id="@+id/relLayoutHeader"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:padding="5dp">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/ivTag"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:minHeight="?attr/actionBarSize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:titleTextColor="@android:color/white"
+            android:background="?attr/colorPrimary"/>
+
+        <RelativeLayout
+            android:id="@+id/relLayoutTags"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_baseline_label_24"
-            android:layout_centerVertical="true"
-            android:padding="5dp"/>
+            android:layout_below="@+id/toolbar"
+            android:padding="5dp">
 
-        <HorizontalScrollView
-            android:id="@+id/hScrollViewTags"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_toEndOf="@+id/ivTag">
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroup"
+            <ImageView
+                android:id="@+id/ivTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:animateLayoutChanges="true"
-                app:singleLine="true">
+                app:srcCompat="@drawable/ic_baseline_label_24"
+                android:layout_centerVertical="true"
+                android:padding="5dp"/>
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipAdd"
+            <HorizontalScrollView
+                android:id="@+id/hScrollViewTags"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_toEndOf="@+id/ivTag">
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:chipIcon="@drawable/ic_baseline_add_24"
-                    android:text="Add tag"/>
+                    android:animateLayoutChanges="true"
+                    app:singleLine="true">
 
-            </com.google.android.material.chip.ChipGroup>
-        </HorizontalScrollView>
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipAdd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:chipIcon="@drawable/ic_baseline_add_24"
+                        android:text="Add tag"/>
+
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
@@ -58,7 +65,7 @@
         android:id="@+id/flNoteImages"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_below="@id/relLayoutTags"
+        android:layout_below="@id/relLayoutHeader"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"/>
 

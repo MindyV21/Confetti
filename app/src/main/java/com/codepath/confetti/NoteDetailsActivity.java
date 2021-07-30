@@ -4,13 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -21,7 +17,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -30,10 +25,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.codepath.confetti.adapters.PredictionSlidePagerAdapter;
@@ -41,20 +33,17 @@ import com.codepath.confetti.databinding.ActivityNoteDetailsBinding;
 import com.codepath.confetti.fragments.AddChipDialogFragment;
 import com.codepath.confetti.fragments.CreatePredictionFragment;
 import com.codepath.confetti.fragments.NoteImagesFragment;
-import com.codepath.confetti.fragments.SettingsBottomSheetFragment;
 import com.codepath.confetti.models.Note;
 import com.codepath.confetti.models.Prediction;
+import com.codepath.confetti.utlils.Animations;
 import com.codepath.confetti.utlils.Chips;
 import com.codepath.confetti.utlils.Firebase;
 import com.codepath.confetti.utlils.ZoomOutPageTransformer;
-import com.davemorrissey.labs.subscaleview.ImageSource;
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.circularreveal.CircularRevealFrameLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
 
 import org.jetbrains.annotations.NotNull;
 import org.parceler.Parcels;
@@ -77,7 +66,7 @@ public class NoteDetailsActivity extends AppCompatActivity
     // fullscreen
     private boolean mVisible;
     private View mContentView;
-    private View mControlsViewChips;
+    private View mControlsViewHeader;
     private View mControlsPredictions;
     private static final boolean AUTO_HIDE = true;
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
@@ -189,7 +178,7 @@ public class NoteDetailsActivity extends AppCompatActivity
     private void initFullscreen() {
         mVisible = true;
         mContentView = binding.flNoteImages;
-        mControlsViewChips = binding.relLayoutTags;
+        mControlsViewHeader = binding.relLayoutHeader;
         mControlsPredictions = binding.coordinatorLayoutPredictions;
     }
 
@@ -303,7 +292,7 @@ public class NoteDetailsActivity extends AppCompatActivity
                 fabCreatePrediction.setExpanded(true);
 
                 // hide chip and predictions layout
-                mBottomSheetLayout.setVisibility(View.GONE);
+                Animations.slideDown((View) mBottomSheetLayout, 0);
             }
         });
 
@@ -357,25 +346,18 @@ public class NoteDetailsActivity extends AppCompatActivity
     }
 
     /**
-     * Hides UI when entering fullscreen mode
+     * Hide UI when entering fullscreen mode setup
      */
     private void hide() {
-        // Hide UI first
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
-        mControlsViewChips.setVisibility(View.GONE);
-        mControlsPredictions.setVisibility(View.GONE);
         mVisible = false;
 
-        // Schedule a runnable to remove the status and navigation bar after a delay
+        // Schedule a runnable to remove UI after a delay
         mHideHandler.removeCallbacks(mShowPart2Runnable);
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
     }
 
     /**
-     * Shows UI when entering fullscreen mode
+     * Show UI when entering fullscreen mode setup
      */
     private void show() {
         // Show the system bar
@@ -386,10 +368,6 @@ public class NoteDetailsActivity extends AppCompatActivity
         // Schedule a runnable to display UI elements after a delay
         mHideHandler.removeCallbacks(mHidePart2Runnable);
         mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.show();
-        }
     }
 
     /**
@@ -402,7 +380,7 @@ public class NoteDetailsActivity extends AppCompatActivity
     }
 
     /**
-     * Hide runnable for UI
+     * Hide runnable for UI part 1
      */
     private final Runnable mHideRunnable = new Runnable() {
         @Override
@@ -412,7 +390,7 @@ public class NoteDetailsActivity extends AppCompatActivity
     };
 
     /**
-     * Hide runnable for status and nav bar, and action bar
+     * Hide runnable for UI part 2
      */
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -435,26 +413,18 @@ public class NoteDetailsActivity extends AppCompatActivity
                     && activity.getWindow() != null) {
                 activity.getWindow().getDecorView().setSystemUiVisibility(flags);
             }
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.hide();
-            }
 
+            Animations.slideUp((View) mControlsViewHeader, 0);
+            Animations.slideDown((View) mControlsPredictions, 0);
         }
     };
 
     /**
-     * Show runnable for UI
+     * Show runnable for UI part 2
      */
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
-            // Delayed display of UI elements
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                getSupportActionBar().show();
-            }
-
             // show status bar
             int flags = View.SYSTEM_UI_FLAG_VISIBLE;
 
@@ -464,8 +434,8 @@ public class NoteDetailsActivity extends AppCompatActivity
                 activity.getWindow().getDecorView().setSystemUiVisibility(flags);
             }
 
-            mControlsViewChips.setVisibility(View.VISIBLE);
-            mControlsPredictions.setVisibility(View.VISIBLE);
+            Animations.reverseSlideUp((View) mControlsViewHeader);
+            Animations.reverseSlideDown((View) mControlsPredictions);
         }
     };
 
@@ -580,7 +550,7 @@ public class NoteDetailsActivity extends AppCompatActivity
         fabCreatePrediction.setExpanded(false);
 
         // show chips and prediction views
-        mBottomSheetLayout.setVisibility(View.VISIBLE);
+        Animations.reverseSlideDown((View) mBottomSheetLayout);
     }
 
     /**

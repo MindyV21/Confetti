@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:clickable="true"
-            android:visibility="gone"
+            android:visibility="invisible"
             app:srcCompat="@drawable/ic_baseline_fullscreen_exit_24" />
 
         <com.codepath.confetti.models.PinView

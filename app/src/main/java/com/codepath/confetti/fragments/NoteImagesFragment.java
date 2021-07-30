@@ -122,7 +122,7 @@ public class NoteImagesFragment extends Fragment {
                 // reset views to when it is not fullscreen
                 createPins();
                 isFullscreen = false;
-                ivExitFullscreen.setVisibility(View.GONE);
+                ivExitFullscreen.setVisibility(View.INVISIBLE);
                 listener.onExitFullscreen();
             }
         });
