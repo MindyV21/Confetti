@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -50,12 +51,7 @@ public class NoteImagesFragment extends Fragment {
 
     private Bitmap takenImage;
     private PinView ssivNote;
-    private ImageView ivExitFullscreen;
     private Boolean isFullscreen;
-
-    public NoteImagesFragment(Note note) {
-        this.note = note;
-    }
 
     // the fragment initialization parameters
     private static final String NOTE = "note";
@@ -113,19 +109,6 @@ public class NoteImagesFragment extends Fragment {
 
         // fullscreen logic
         isFullscreen = false;
-        ivExitFullscreen = binding.ivExitFullscreen;
-        ivExitFullscreen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "exit fullscreen !");
-
-                // reset views to when it is not fullscreen
-                createPins();
-                isFullscreen = false;
-                ivExitFullscreen.setVisibility(View.INVISIBLE);
-                listener.onExitFullscreen();
-            }
-        });
 
 //        // testing to see if file actually contains image file
 //        takenImage = BitmapFactory.decodeFile(note.getImageFile().getAbsolutePath());
@@ -143,7 +126,6 @@ public class NoteImagesFragment extends Fragment {
      */
     public void enableFullscreen() {
         isFullscreen = true;
-        ivExitFullscreen.setVisibility(View.VISIBLE);
 
         // clear canvas
         ssivNote.removeAllPins();
@@ -260,8 +242,16 @@ public class NoteImagesFragment extends Fragment {
         final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
-                // disable prediction tap events in fullscreen
-                if (isFullscreen) return true;
+                // in fullscreen mode, tap event exits fullscreen
+                if (isFullscreen) {
+                    Log.d(TAG, "exit fullscreen !");
+
+                    // reset views to when it is not fullscreen
+                    listener.onExitFullscreen();
+                    createPins();
+                    isFullscreen = false;
+                    return true;
+                }
 
                 if (ssivNote.isReady() && note.predictions != null) {
                     PointF tappedCoordinate = new PointF(e.getX(), e.getY());
