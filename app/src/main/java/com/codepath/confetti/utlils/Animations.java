@@ -39,15 +39,10 @@ public class Animations {
      */
     public static void reverseSlideDown(View view) {
         Log.d(TAG, "reverse slide down");
+        view.setVisibility(View.VISIBLE);
         view.animate()
                 .translationY(0)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        view.setVisibility(View.VISIBLE);
-                    }
-                });
+                .setListener(null);
     }
 
     /**
@@ -77,15 +72,10 @@ public class Animations {
      */
     public static void reverseSlideUp(View view) {
         Log.d(TAG, "reverse slide up");
+        view.setVisibility(View.VISIBLE);
         view.animate()
                 .translationY(0)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        view.setVisibility(View.VISIBLE);
-                    }
-                });
+                .setListener(null);
     }
 
 }
