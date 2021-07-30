@@ -23,7 +23,14 @@ public class Animations {
 
         // Start the animation
         view.animate()
-                .translationY(view.getHeight() + offset);
+                .translationY(view.getHeight() + offset)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        view.setVisibility(View.GONE);
+                    }
+                });
     }
 
     /**
@@ -33,7 +40,14 @@ public class Animations {
     public static void reverseSlideDown(View view) {
         Log.d(TAG, "reverse slide down");
         view.animate()
-                .translationY(0);
+                .translationY(0)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        view.setVisibility(View.VISIBLE);
+                    }
+                });
     }
 
     /**
@@ -47,7 +61,14 @@ public class Animations {
 
         // Start the animation
         view.animate()
-                .translationY(-(view.getHeight() + offset));
+                .translationY(-(view.getHeight() + offset))
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        view.setVisibility(View.GONE);
+                    }
+                });
     }
 
     /**
@@ -57,7 +78,14 @@ public class Animations {
     public static void reverseSlideUp(View view) {
         Log.d(TAG, "reverse slide up");
         view.animate()
-                .translationY(0);
+                .translationY(0)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        view.setVisibility(View.VISIBLE);
+                    }
+                });
     }
 
 }
