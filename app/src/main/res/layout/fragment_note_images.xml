@@ -18,7 +18,7 @@
             android:visibility="gone"
             app:srcCompat="@drawable/ic_baseline_fullscreen_exit_24" />
 
-        <com.codepath.confetti.utlils.PinView
+        <com.codepath.confetti.models.PinView
             android:layout_below="@id/ivExitFullscreen"
             android:id="@+id/ssivNote"
             android:layout_width="match_parent"

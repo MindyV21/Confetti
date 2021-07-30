@@ -6,6 +6,10 @@
 
     <string name="app_name">Confetti</string>
 
+    <!--fragment tags-->
+    <string name="notes_fragment">notes</string>
+    <string name="upload_fragment">upload</string>
+
     <!--urls-->
     <string name="nanonets_all_notes_url">https://app.nanonets.com/api/v2/Inferences/Model/{{model_id}}/ImageLevelInferences?start_day_interval={start_day}&amp;current_batch_day={end_day}</string>
     <string name="nanonets_note_url">https://app.nanonets.com/api/v2/Inferences/Model/{%s}/ImageLevelInferences/{{id}}</string>

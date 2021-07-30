@@ -11,15 +11,20 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class storing data for a note
+ */
 @Parcel
 public class Note {
 
     public static final String TAG = "NoteModel";
 
+    // stored in Firebase
     public String name;
     public List<Prediction> predictions;
     public List<String> chips;
 
+    // for in app functionality
     private File imageFile;
     private String id;
     private boolean photoLoaded;
@@ -31,6 +36,11 @@ public class Note {
         this.name = name;
     }
 
+    /**
+     * Retrieves the predictions for a note object
+     * @param jsonObject
+     * @throws JSONException
+     */
     public void getPredictions(JSONObject jsonObject) throws JSONException {
         predictions = new ArrayList<>();
         JSONArray prediction = jsonObject.getJSONArray("result").getJSONObject(0).getJSONArray("prediction");

@@ -21,6 +21,9 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Activity for viewing and creating notes
+ */
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
@@ -54,11 +57,11 @@ public class MainActivity extends AppCompatActivity {
                 Fragment fragment;
                 switch (item.getItemId()) {
                     case R.id.action_upload:
-                        switchFragments("upload", "notes");
+                        switchFragments(getString(R.string.upload_fragment), getString(R.string.notes_fragment));
                         break;
                     case R.id.action_home:
                     default:
-                        switchFragments("notes", "upload");
+                        switchFragments(getString(R.string.notes_fragment), getString(R.string.upload_fragment));
                         break;
                 }
                 return true;
@@ -90,7 +93,11 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // hides not seen fragments, shows current fragment
+    /**
+     * Hides not seen fragments, shows current fragment
+     * @param currentTag fragment tag for current fragment
+     * @param hiddenTag fragment tag for hidden fragment
+     */
     private void switchFragments(String currentTag, String hiddenTag) {
         if(fragmentManager.findFragmentByTag(currentTag) != null) {
             //if the fragment exists, show it.
@@ -98,13 +105,15 @@ public class MainActivity extends AppCompatActivity {
         } else {
             //if the fragment does not exist, add it to fragment manager.
             Fragment fragment;
-            if (currentTag.equals("upload"))
+            if (currentTag.equals(getString(R.string.upload_fragment)))
                 fragment = new UploadFragment();
             else
                 fragment = new NotesFragment();
 
             fragmentManager.beginTransaction().add(R.id.flContainer, fragment, currentTag).commit();
         }
+
+        // hides other fragment
         if(fragmentManager.findFragmentByTag(hiddenTag) != null){
             //if the other fragment is visible, hide it.
             fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag(hiddenTag)).commit();

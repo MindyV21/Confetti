@@ -24,11 +24,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
+/**
+ * Activity for sign up
+ */
 public class SignUpActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
     public static final String TAG = "SignUpActivity";
     public static final int VALID = 1;
+    public static final int INVALID = 0;
 
     private ImageView ivProfile;
     private EditText etFullName;
@@ -72,11 +76,18 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Intent to go to a user's account
+     */
     private void goToMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
     }
 
+    /**
+     * Checks input for password fields
+     * @return VALID if valid password, INVALID otherwise
+     */
     private int checkPasswordsInput() {
         String password = etPassword.getText().toString().trim();
         String confirmPassword = etConfirmPassword.getText().toString().trim();
@@ -85,33 +96,37 @@ public class SignUpActivity extends AppCompatActivity {
             Log.i(TAG, "Password is empty");
             etPassword.setError("Password is required!");
             etPassword.requestFocus();
-            return 0;
+            return INVALID;
         }
 
         if (confirmPassword.isEmpty()) {
             Log.i(TAG, "Confirm Password is empty");
             etConfirmPassword.setError("Confirm password is required!");
             etConfirmPassword.requestFocus();
-            return 0;
+            return INVALID;
         }
 
         if (password.length() < 8) {
             Log.i(TAG, "Password length < 8");
             etPassword.setError("Password length must be greater than 8!");
             etPassword.requestFocus();
-            return 0;
+            return INVALID;
         }
 
         if (!password.equals(confirmPassword)) {
             Log.i(TAG, "Password != Confirm password");
             etConfirmPassword.setError("Passwords do not match!");
             etConfirmPassword.requestFocus();
-            return 0;
+            return INVALID;
         }
 
         return VALID;
     }
 
+    /**
+     * Checks input for name fields
+     * @return VALID if valid password, INVALID otherwise
+     */
     private int checkNameInput() {
         String fullName = etFullName.getText().toString().trim();
 
@@ -119,12 +134,16 @@ public class SignUpActivity extends AppCompatActivity {
             Log.i(TAG, "Full Name is empty");
             etFullName.setError("Full name is required!");
             etFullName.requestFocus();
-            return 0;
+            return INVALID;
         }
 
         return VALID;
     }
 
+    /**
+     * Checks input for email fields
+     * @return VALID if valid password, INVALID otherwise
+     */
     private int checkEmailInput() {
         String email = etEmail.getText().toString().trim();
 
@@ -132,19 +151,22 @@ public class SignUpActivity extends AppCompatActivity {
             Log.i(TAG, "Email is empty");
             etEmail.setError("Email is required!");
             etEmail.requestFocus();
-            return 0;
+            return INVALID;
         }
 
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             Log.i(TAG, "Email is invalid");
             etEmail.setError("Please provide valid email!");
             etEmail.requestFocus();
-            return 0;
+            return INVALID;
         }
 
         return VALID;
     }
 
+    /**
+     * Set up app, checks if a user is logged in
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -155,17 +177,23 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Registers a user with firebase
+     */
     public void registerUser() {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
         String fullName = etFullName.getText().toString().trim();
 
+        // registers user in firebase auth
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             User user = new User(fullName, email);
+
+                            // creates a user object in firebase users database
                             FirebaseDatabase.getInstance().getReference("Users")
                                     .child(FirebaseAuth.getInstance().getUid())
                                     .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -195,6 +223,9 @@ public class SignUpActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Clears input fields
+     */
     private void clearFields(){
         etFullName.setText("");
         etEmail.setText("");

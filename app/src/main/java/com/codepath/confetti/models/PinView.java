@@ -1,4 +1,4 @@
-package com.codepath.confetti.utlils;
+package com.codepath.confetti.models;
 
 import android.content.Context;
 import android.graphics.*;
@@ -13,10 +13,14 @@ import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.codepath.confetti.R;
 import com.codepath.confetti.models.Prediction;
+import com.codepath.confetti.utlils.Conversion;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 import java.util.ArrayList;
 
+/**
+ * Class to store data for predictions on a note image file
+ */
 public class PinView extends SubsamplingScaleImageView {
 
     public static final String TAG = "PinView";
@@ -36,6 +40,11 @@ public class PinView extends SubsamplingScaleImageView {
         initialise();
     }
 
+    /**
+     * Set a pin on the image file
+     * @param sPin
+     * @param prediction
+     */
     public void setPin(PointF sPin, Prediction prediction) {
         this.sPin.add(sPin);
         pins.add(prediction);
@@ -43,11 +52,21 @@ public class PinView extends SubsamplingScaleImageView {
         invalidate();
     }
 
+    /**
+     * Gets the coordinates for a specified pin
+     * @param prediction
+     * @return
+     */
     public PointF getPin(Prediction prediction) {
         if (sPin.size() == 0) return null;
         return sPin.get(pins.indexOf(prediction));
     }
 
+    /**
+     * Removes pin from the image file
+     * @param prediction
+     * @return
+     */
     public boolean removePin(Prediction prediction){
         if (pins.contains(prediction)){
             sPin.remove(pins.indexOf(prediction));
@@ -60,6 +79,9 @@ public class PinView extends SubsamplingScaleImageView {
         }
     }
 
+    /**
+     * Removes all pins from canvas
+     */
     public void removeAllPins() {
         sPin.clear();
         pins.clear();
@@ -67,18 +89,29 @@ public class PinView extends SubsamplingScaleImageView {
         invalidate();
     }
 
-    public ArrayList<Prediction> getPinNames(){
+    /**
+     * Retrieve all pin predictions
+     * @return
+     */
+    public ArrayList<Prediction> getPinPredictions(){
         return pins;
     }
 
+    /**
+     * init pin properties
+     */
     private void initialise() {
         float density = getResources().getDisplayMetrics().densityDpi;
-        pin = getBitmapFromVectorDrawable(this.getContext(), R.drawable.arrow_right_drop_circle);
+        pin = Conversion.getBitmapFromVectorDrawable(this.getContext(), R.drawable.arrow_right_drop_circle);
         float w = (density/420f) * pin.getWidth();
         float h = (density/420f) * pin.getHeight();
         pin = Bitmap.createScaledBitmap(pin, (int)w, (int)h, true);
     }
 
+    /**
+     * Draws pins onto the image file (canvas)
+     * @param canvas
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -99,20 +132,5 @@ public class PinView extends SubsamplingScaleImageView {
             }
         }
 
-    }
-
-    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
-        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            drawable = (DrawableCompat.wrap(drawable)).mutate();
-        }
-
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
     }
 }

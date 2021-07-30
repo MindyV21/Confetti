@@ -28,7 +28,7 @@
                 android:clickable="true"
                 tools:srcCompat="@drawable/ic_baseline_cancel_24" />
 
-            <com.codepath.confetti.utlils.PinView
+            <com.codepath.confetti.models.PinView
                 android:id="@+id/ssivCreatePrediction"
                 android:layout_width="wrap_content"
                 android:layout_height="500dp"

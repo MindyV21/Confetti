@@ -64,6 +64,9 @@ import java.util.List;
 
 import pl.droidsonroids.gif.GifImageView;
 
+/**
+ * Activity for a specific note details
+ */
 public class NoteDetailsActivity extends AppCompatActivity
         implements NoteImagesFragment.OnItemSelectedListener, AddChipDialogFragment.AddChipDialogListener, PredictionSlidePagerAdapter.UpdatePredictions,
         CreatePredictionFragment.CreatePredictionListener {
@@ -81,19 +84,20 @@ public class NoteDetailsActivity extends AppCompatActivity
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
 
-    private GifImageView nellieConfetti;
-
     private Note note;
 
     private Toolbar toolbar;
 
+    // chips
     private RelativeLayout relLayoutTags;
     private ImageView ivTag;
     private Chip chipAdd;
     private ChipGroup chipGroup;
 
+    // note image file
     private NoteImagesFragment noteImagesFragment;
 
+    // predictions
     private CreatePredictionFragment createPredictionFragment;
     private FloatingActionButton fabCreatePrediction;
     private CircularRevealFrameLayout sheetCreatePrediction;
@@ -104,6 +108,9 @@ public class NoteDetailsActivity extends AppCompatActivity
 
     private ViewPager2 viewPager;
     private PredictionSlidePagerAdapter pagerAdapter;
+
+    // loading ui
+    private GifImageView nellieConfetti;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,21 +123,21 @@ public class NoteDetailsActivity extends AppCompatActivity
         note = (Note) Parcels.unwrap(getIntent().getParcelableExtra(Note.class.getSimpleName()));
         Log.d(TAG, String.format("Showing details for '%s", note.getName()));
 
-        // set up toolbar
-        toolbar = binding.toolbar;
-        toolbar.setTitle(note.getName());
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // return to main activity
-                finish();
-            }
-        });
+        // attach fragment of note images
+        noteImagesFragment = NoteImagesFragment.newInstance(note);
+        getSupportFragmentManager().beginTransaction().add(R.id.flNoteImages, noteImagesFragment).commit();
 
-        // set up chipping
+        // init listeners, bind data, etc.
+        initToolbar();
+        initChips();
+        initPredictions(view);
+        initFullscreen();
+    }
+
+    /**
+     * Init chips in horizontal scroll view
+     */
+    private void initChips() {
         relLayoutTags = binding.relLayoutTags;
         ivTag = binding.ivTag;
         chipAdd = binding.chipAdd;
@@ -156,32 +163,29 @@ public class NoteDetailsActivity extends AppCompatActivity
                 showAddChipDialog();
             }
         });
-
-        // attach hscroll of note images
-        noteImagesFragment = NoteImagesFragment.newInstance(note);
-        getSupportFragmentManager().beginTransaction().add(R.id.flNoteImages, noteImagesFragment).commit();
-
-        // set up prediction info bottom sheet
-        nellieConfetti = view.findViewById(R.id.nellieConfetti);
-        if (note.getPredictions() == null || note.getPredictions().size() == 0) {
-            nellieConfetti.setVisibility(View.VISIBLE);
-        } else {
-            nellieConfetti.setVisibility(View.GONE);
-        }
-
-        createPredictionFragment = CreatePredictionFragment.newInstance(note);
-        getSupportFragmentManager().beginTransaction().add(R.id.flCreatePrediction, createPredictionFragment).commit();
-        fabCreatePrediction = binding.fabCreatePrediction;
-        sheetCreatePrediction = binding.sheetCreatePrediction;
-        mBottomSheetLayout = view.findViewById(R.id.bottom_sheet_layout);
-        sheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
-        header_Arrow_Image = view.findViewById(R.id.bottom_sheet_arrow);
-
-        initPredictions();
-
-        initFullscreen();
     }
 
+    /**
+     * Init toolbar
+     */
+    private void initToolbar() {
+        toolbar = binding.toolbar;
+        toolbar.setTitle(note.getName());
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // return to main activity
+                finish();
+            }
+        });
+    }
+
+    /**
+     * Init fullscreen
+     */
     private void initFullscreen() {
         mVisible = true;
         mContentView = binding.flNoteImages;
@@ -189,6 +193,10 @@ public class NoteDetailsActivity extends AppCompatActivity
         mControlsPredictions = binding.coordinatorLayoutPredictions;
     }
 
+    /**
+     * Creates a new chip view to be places in chip group
+     * @param chipName
+     */
     private void createNewChip(String chipName) {
         Chip newChip = new Chip(NoteDetailsActivity.this);
         newChip.setText(chipName);
@@ -207,13 +215,20 @@ public class NoteDetailsActivity extends AppCompatActivity
         chipGroup.addView(newChip);
     }
 
+    /**
+     * Dialog for adding a new chip to a note
+     */
     private void showAddChipDialog() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         AddChipDialogFragment addChipDialogFragment = new AddChipDialogFragment();
         addChipDialogFragment.show(fragmentManager, "fragment_add_chip");
     }
 
-    // popup window to delete chip from notes
+    /**
+     * Popup window to delete a specific chip from a note
+     * @param context
+     * @param anchorView
+     */
     private void displayChipPopupWindow(Context context, View anchorView) {
         PopupWindow popup = new PopupWindow(context);
         View layout = getLayoutInflater().inflate(R.layout.popup_content_chip, null);
@@ -257,8 +272,29 @@ public class NoteDetailsActivity extends AppCompatActivity
         });
     }
 
-    // initializes all the prediction features
-    private void initPredictions() {
+    /**
+     * Init predictions for a note
+     * @param view
+     */
+    private void initPredictions(View view) {
+        // loading UI
+        nellieConfetti = view.findViewById(R.id.nellieConfetti);
+        if (note.getPredictions() == null || note.getPredictions().size() == 0) {
+            nellieConfetti.setVisibility(View.VISIBLE);
+        } else {
+            nellieConfetti.setVisibility(View.GONE);
+        }
+
+        // attach fragment of note predictions
+        createPredictionFragment = CreatePredictionFragment.newInstance(note);
+        getSupportFragmentManager().beginTransaction().add(R.id.flCreatePrediction, createPredictionFragment).commit();
+
+        fabCreatePrediction = binding.fabCreatePrediction;
+        sheetCreatePrediction = binding.sheetCreatePrediction;
+        mBottomSheetLayout = view.findViewById(R.id.bottom_sheet_layout);
+        sheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
+        header_Arrow_Image = view.findViewById(R.id.bottom_sheet_arrow);
+
         // to start creating a prediction
         fabCreatePrediction.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -309,6 +345,9 @@ public class NoteDetailsActivity extends AppCompatActivity
         viewPager.setPageTransformer(new ZoomOutPageTransformer());
     }
 
+    /**
+     * Toggle for hiding / showing UI when going fullscreen
+     */
     private void toggle() {
         if (mVisible) {
             hide();
@@ -317,6 +356,9 @@ public class NoteDetailsActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Hides UI when entering fullscreen mode
+     */
     private void hide() {
         // Hide UI first
         ActionBar actionBar = getSupportActionBar();
@@ -332,6 +374,9 @@ public class NoteDetailsActivity extends AppCompatActivity
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
     }
 
+    /**
+     * Shows UI when entering fullscreen mode
+     */
     private void show() {
         // Show the system bar
         mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -356,6 +401,9 @@ public class NoteDetailsActivity extends AppCompatActivity
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
+    /**
+     * Hide runnable for UI
+     */
     private final Runnable mHideRunnable = new Runnable() {
         @Override
         public void run() {
@@ -363,6 +411,9 @@ public class NoteDetailsActivity extends AppCompatActivity
         }
     };
 
+    /**
+     * Hide runnable for status and nav bar, and action bar
+     */
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -392,6 +443,9 @@ public class NoteDetailsActivity extends AppCompatActivity
         }
     };
 
+    /**
+     * Show runnable for UI
+     */
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
@@ -415,6 +469,9 @@ public class NoteDetailsActivity extends AppCompatActivity
         }
     };
 
+    /**
+     * Touch listener for hiding UI
+     */
     private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -445,7 +502,9 @@ public class NoteDetailsActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    // for viewPager
+    /**
+     * Resets viewPager onBackPressed
+     */
     @Override
     public void onBackPressed() {
         if (viewPager.getCurrentItem() == 0) {
@@ -458,7 +517,10 @@ public class NoteDetailsActivity extends AppCompatActivity
         }
     }
 
-    // action to take in the activity when pin in fragment is tapped
+    /**
+     * Pin on image file in noteImagesFragment is tapped, scroll to respective location in viewPager
+     * @param index
+     */
     @Override
     public void onPinItemSelected(int index) {
         Log.d(TAG, "scrolling to index " + index);
@@ -466,12 +528,19 @@ public class NoteDetailsActivity extends AppCompatActivity
         sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
+    /**
+     * On exiting fullscreen in noteImagesFragment, shows UI
+     */
     @Override
     public void onExitFullscreen() {
         toggle();
     }
 
-    // updates activity with new tag and updates notes / chips database
+    /**
+     * On creating a new chip in addChipDialogFragment, updates chip group with new chip,
+     * and updates firebase notes / chips database
+     * @param inputText
+     */
     @Override
     public void onFinishAddChipDialog(String inputText) {
         Log.d(TAG, "adding chip to note");
@@ -490,7 +559,10 @@ public class NoteDetailsActivity extends AppCompatActivity
         Firebase.addChipRef(NoteDetailsActivity.this, note, inputText);
     }
 
-    // removes a pin from note image
+    /**
+     * Upon removing a pin on the image file in noteImagesFragment
+     * @param prediction
+     */
     @Override
     public void removePinFromImage(Prediction prediction) {
         noteImagesFragment.removePin(prediction);
@@ -499,7 +571,9 @@ public class NoteDetailsActivity extends AppCompatActivity
         }
     }
 
-    // when create prediction layout is closed
+    /**
+     * UI changes for closing the create predictions fragment
+     */
     @Override
     public void onCancelCreatePrediction() {
         // exit out of create prediction view
@@ -509,7 +583,10 @@ public class NoteDetailsActivity extends AppCompatActivity
         mBottomSheetLayout.setVisibility(View.VISIBLE);
     }
 
-    // adds a pin to note image
+    /**
+     * WHen adding a pin prediction to a note, updates viewPager and adapter
+     * @param firstPrediction
+     */
     @Override
     public void addPinToImage(Boolean firstPrediction) {
         noteImagesFragment.addPin();

@@ -38,11 +38,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Util class for firebase calls
+ */
 public class Firebase {
 
     public static final String TAG = "Firebase";
 
-    // upload a note image to firebase database
+    /**
+     * Uploads a note image file to firebase storage, then onSuccess the note data will be uploaded
+     * to firebase notes database
+     * @param context
+     * @param pbLoading
+     * @param note
+     * @param id nanonets id for note
+     * @param photoFile
+     */
     public static void uploadImage(Context context, ProgressBar pbLoading, Note note, String id, File photoFile) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
@@ -50,23 +61,30 @@ public class Firebase {
 
         Uri file = Uri.fromFile(photoFile);
         UploadTask uploadTask = fileRef.putFile(file);
-        // Register observers to listen for when the download is done or if it fails
+        // onFailure and onSuccess failures
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
+                // Handle unsuccessful image uploads
                 Log.e(TAG, "OnFailure upload photo to firebase storage");
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                 Log.i(TAG, "OnSuccess upload photo to firebase storage");
                 uploadNote(context, pbLoading, note, id, photoFile);
             }
         });
     }
 
+    /**
+     * Uploads note data to firebase notes database
+     * @param context
+     * @param pbLoading
+     * @param note
+     * @param id nanonets id for note
+     * @param photoFile
+     */
     public static void uploadNote(Context context, ProgressBar pbLoading, Note note, String id, File photoFile) {
         // upload Note object to firebase database
         FirebaseDatabase.getInstance().getReference("Notes")
@@ -91,16 +109,38 @@ public class Firebase {
         });
     }
 
+    /**
+     * Calling by UploadFragment to upload note and photo file data, used over uploadImage() for
+     * more readable method names
+     * @param context
+     * @param pbLoading
+     * @param note
+     * @param id nanonets id for note
+     * @param photoFile
+     */
     public static void uploadNoteInfo(Context context, ProgressBar pbLoading, Note note, String id, File photoFile) {
         uploadImage(context, pbLoading, note, id, photoFile);
     }
 
+    /**
+     * Gets the note ids associated with each chip, and updates / re-filters notes list
+     * @param checkedChipIdsSet set of chip ids in allChipsGroup that are selected
+     * @param allChipsGroup chip group of all chips associated with a user
+     * @param adapter adapter for notes list
+     * @param searchView searchView with query input
+     * @param allNotes list of all notes associated with a user
+     * @param currentNotes list of current notes based on query and filter
+     * @param chippedNoteIds empty set to stop duplicate notes being retrieved
+     */
     public static void getChippedNotes(Set<Integer> checkedChipIdsSet, ChipGroup allChipsGroup,
                                        NotesAdapter adapter, SearchView searchView,
                                        Map<String, Note> allNotes, List<Note> currentNotes, Set<String> chippedNoteIds) {
+        // loop through all selected chips
         for (Integer id : checkedChipIdsSet) {
             Chip chip = allChipsGroup.findViewById(id);
             Log.d(TAG, chip.getText().toString());
+
+            // retrieve note ids associated with a specific chip
             FirebaseDatabase.getInstance().getReference("Chips")
                     .child(FirebaseAuth.getInstance().getUid())
                     .child(chip.getText().toString())
@@ -114,7 +154,7 @@ public class Firebase {
                         Iterable<DataSnapshot> iterable = task.getResult().getChildren();
                         for (DataSnapshot data : iterable) {
                             Log.d(TAG, "iterating: " + data.getKey());
-                            // check if file is in the treeSet
+                            // check if note file is already added to notes list
                             if (!chippedNoteIds.contains(data.getKey())) {
                                 currentNotes.add(allNotes.get(data.getKey()));
                             }
@@ -133,6 +173,11 @@ public class Firebase {
         }
     }
 
+    /**
+     * Delete a note from firebase notes database
+     * @param context
+     * @param note
+     */
     public static void deleteNote(Context context, Note note) {
         // Continue with delete operation
         FirebaseDatabase.getInstance().getReference("Notes")
@@ -155,6 +200,11 @@ public class Firebase {
         });
     }
 
+    /**
+     * Used when deleting a note, deletes note id references within the firebase chips database
+     * @param context
+     * @param note
+     */
     public static void deleteNoteChips(Context context, Note note) {
         // loop through chips and delete reference to this note
         List<String> chipNames = note.getChips();
@@ -182,6 +232,11 @@ public class Firebase {
         }
     }
 
+    /**
+     * Delete a note's photo file in firebase storage
+     * @param context
+     * @param note
+     */
     public static void deletePhotoFile(Context context, Note note) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
@@ -205,6 +260,10 @@ public class Firebase {
         });
     }
 
+    /**
+     * Retrieves a note's photo file from firebase storage
+     * @param note
+     */
     public static void getImage(Note note) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
@@ -233,7 +292,13 @@ public class Firebase {
         }
     }
 
-    // removes note reference within chip database
+    /**
+     * Used when deleting a chip from a note, deletes the note id in the firebase chips database,
+     * then updates the chip list in the firebase notes database
+     * @param context
+     * @param note
+     * @param chipName
+     */
     public static void deleteChipRef(Context context, Note note, String chipName) {
         // Continue with delete operation
         FirebaseDatabase.getInstance().getReference("Chips")
@@ -256,7 +321,13 @@ public class Firebase {
         });
     }
 
-    // add note reference within chip database
+    /**
+     * Used when adding a chip to a note, adds the note id in the firebase chips database,
+     * then updates the chip list in the firebase notes database
+     * @param context
+     * @param note
+     * @param chipName
+     */
     public static void addChipRef(Context context, Note note, String chipName) {
         // Continue with delete operation
         FirebaseDatabase.getInstance().getReference("Chips")
@@ -279,6 +350,11 @@ public class Firebase {
         });
     }
 
+    /**
+     * Updates the chips for a note in the firebase notes database
+     * @param context
+     * @param note
+     */
     public static void updateNoteChips(Context context, Note note) {
         // update note's chip list
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Notes")
@@ -302,6 +378,11 @@ public class Firebase {
         });
     }
 
+    /**
+     * Updates the predictions for a note in the firebase notes database
+     * @param context
+     * @param note
+     */
     public static void updateNotePredictions(Context context, Note note) {
         // update note's predictions
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Notes")

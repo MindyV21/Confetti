@@ -1,5 +1,8 @@
 package com.codepath.confetti.models;
 
+/**
+ * Class to store user data in firebase
+ */
 public class User {
 
     private String fullName, email;

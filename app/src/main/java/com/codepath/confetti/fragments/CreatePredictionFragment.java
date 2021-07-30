@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -30,7 +29,7 @@ import com.codepath.confetti.databinding.FragmentCreatePredictionBinding;
 import com.codepath.confetti.models.Note;
 import com.codepath.confetti.models.Prediction;
 import com.codepath.confetti.utlils.Firebase;
-import com.codepath.confetti.utlils.PinView;
+import com.codepath.confetti.models.PinView;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.google.android.material.tabs.TabLayout;
 

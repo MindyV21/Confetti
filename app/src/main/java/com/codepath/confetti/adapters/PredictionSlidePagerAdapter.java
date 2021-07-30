@@ -24,6 +24,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Adapter for the Predictions ViewPager
+ */
 public class PredictionSlidePagerAdapter extends RecyclerView.Adapter<PredictionSlidePagerAdapter.ViewHolder> {
 
     public static final String TAG = "PredictionSlidePagerAdapter";
@@ -71,6 +74,9 @@ public class PredictionSlidePagerAdapter extends RecyclerView.Adapter<Prediction
         return predictions;
     }
 
+    /**
+     * ViewHolder to bind views for a note's prediction
+     */
     class ViewHolder extends RecyclerView.ViewHolder {
 
         private CardView cardPrediction;
@@ -86,6 +92,13 @@ public class PredictionSlidePagerAdapter extends RecyclerView.Adapter<Prediction
             tvLabel = itemView.findViewById(R.id.tvLabel);
             tvText = itemView.findViewById(R.id.tvText);
 
+            initDeletePrediction();
+        }
+
+        /**
+         * Sets up logic for when a note prediction is deleted
+         */
+        private void initDeletePrediction() {
             // listener to delete a prediction
             ivDeletePrediction.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -98,11 +111,9 @@ public class PredictionSlidePagerAdapter extends RecyclerView.Adapter<Prediction
                         deleteMessage = "keyword '" + tvText.getText().toString() + "'";
                     }
 
+                    // alert dialog to delete a prediction
                     new AlertDialog.Builder(context)
                             .setMessage("Delete " + deleteMessage + "?")
-
-                            // Specifying a listener allows you to take an action before dismissing the dialog.
-                            // The dialog is automatically dismissed when a dialog button is clicked.
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Log.i(TAG, "deleting prediction " + tvText.getText().toString());
@@ -119,13 +130,9 @@ public class PredictionSlidePagerAdapter extends RecyclerView.Adapter<Prediction
                                     listener.removePinFromImage(prediction);
                                 }
                             })
-
-                            // A null listener allows the button to dismiss the dialog and take no further action.
                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                                 @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-
-                                }
+                                public void onClick(DialogInterface dialogInterface, int i) {}
                             })
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
@@ -143,8 +150,11 @@ public class PredictionSlidePagerAdapter extends RecyclerView.Adapter<Prediction
         }
     }
 
-    // Defines the listener interface
+    /**
+     * Interface for fragment and activity communication
+     */
     public interface UpdatePredictions {
+        // removes pin from note image
         public void removePinFromImage(Prediction prediction);
     }
 }

@@ -23,11 +23,16 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+/**
+ * Activity for logging in
+ */
 public class LoginActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
     public static final String TAG = "LoginActivity";
+    private FirebaseAuth mAuth;
+
     public static final int VALID = 1;
+    public static final int INVALID = 0;
 
     private ImageView ivLogo;
     private EditText etEmail;
@@ -57,8 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: improve input checks
-                // check input values
+                // check input field values
                 if (checkEmailInput() != VALID) return;
                 if (checkPasswordInput() != VALID) return;
 
@@ -75,30 +79,43 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Intent to go to SignUpActivity
+     */
     private void goToSignUpActivity() {
         clearFields();
         Intent i = new Intent(this, SignUpActivity.class);
         startActivity(i);
     }
 
+    /**
+     * Intent to go to a user's account
+     */
     private void goToMainActivity() {
         clearFields();
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
     }
 
-    // returns VALID if valid password, 0 otherwise
+    /**
+     * Check for password input
+     * @return VALID if valid password, INVALID otherwise
+     */
     private int checkPasswordInput() {
         String password = etPassword.getText().toString().trim();
         if (password.isEmpty()) {
             Log.i(TAG, "Password is empty");
             etPassword.setError("Password is required!");
             etPassword.requestFocus();
-            return 0;
+            return INVALID;
         }
         return VALID;
     }
 
+    /**
+     * Check for email input
+     * @return VALID if valid password, INVALID otherwise
+     */
     private int checkEmailInput() {
         String email = etEmail.getText().toString().trim();
 
@@ -106,19 +123,22 @@ public class LoginActivity extends AppCompatActivity {
             Log.i(TAG, "Email is empty");
             etEmail.setError("Email is required!");
             etEmail.requestFocus();
-            return 0;
+            return INVALID;
         }
 
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             Log.i(TAG, "Email is invalid");
             etEmail.setError("Please provide valid email!");
             etEmail.requestFocus();
-            return 0;
+            return INVALID;
         }
 
         return VALID;
     }
 
+    /**
+     * Set up app, checks if a user is logged in
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -130,6 +150,9 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Logs in user with Firebase Auth
+     */
     private void loginUser() {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
@@ -154,6 +177,9 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Clears input fields
+     */
     private void clearFields() {
         etEmail.setText("");
         etPassword.setText("");

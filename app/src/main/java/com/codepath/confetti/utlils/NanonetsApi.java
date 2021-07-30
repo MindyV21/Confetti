@@ -27,12 +27,20 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+/**
+ * Util class for nanonets api calls
+ */
 public class NanonetsApi {
 
     public static final String TAG = "NanonetsApi";
 
-    // finds all predicted files from nanonets database
+    /**
+     * Finds all predicted files from nanonets database for a given model
+     * @param apiKey
+     * @param modelId
+     */
     public static void queryNotes(String apiKey, String modelId) {
+        // start day is when model was created
         int startDay = 18820;
         int endDay = (int) LocalDate.now().toEpochDay();
         String url = String.format("https://app.nanonets.com/api/v2/Inferences/Model/%s/" +
@@ -78,7 +86,14 @@ public class NanonetsApi {
         });
     }
 
-    // finds a specific predicted file from the nanonets database
+    /**
+     * Finds a specific predicted file from the nanonets database
+     * @param context
+     * @param apiKey
+     * @param modelId
+     * @param id predicted file id
+     * @param file note photofile
+     */
     public static void queryNote(Context context, String apiKey, String modelId, String id, File file) {
         String url = String.format("https://app.nanonets.com/api/v2/Inferences/Model/%s/ImageLevelInferences/%s",
                 modelId, id);
@@ -112,7 +127,6 @@ public class NanonetsApi {
                 try {
                     jsonObject = new JSONObject(responseBody);
 
-
                     // create Note object from jsonObject
                     Note note = new Note();
                     note.setName("change name later");
@@ -129,7 +143,14 @@ public class NanonetsApi {
         });
     }
 
-    // sends image file to nanonets to predict data
+    /**
+     * Asynchronously sends image file to nanonets to predict data, api call returns an id to request
+     * file once. Originally used for testing
+     * @param context
+     * @param apiKey
+     * @param modelId
+     * @param file note photofile
+     */
     public static void asyncPredictFile(Context context, String apiKey, String modelId, File file) {
         OkHttpClient client = new OkHttpClient();
         MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpeg");
@@ -181,7 +202,15 @@ public class NanonetsApi {
         });
     }
 
-    // sends image file to nanonets to predict data
+    /**
+     * Predict data from note image file
+     * @param context
+     * @param pbLoading
+     * @param fileName
+     * @param apiKey
+     * @param modelId
+     * @param file note photofile
+     */
     public static void predictFile(Context context, ProgressBar pbLoading, String fileName, String apiKey, String modelId, File file) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(5, TimeUnit.MINUTES) // connect timeout
@@ -223,7 +252,7 @@ public class NanonetsApi {
 
                 // query file in nanonets database
                 try {
-                    // extract data from async upload response
+                    // extract data from response
                     JSONObject jsonObject = new JSONObject(responseBody);
                     JSONObject result = jsonObject.getJSONArray("result").getJSONObject(0);
                     Log.d(TAG, "predictFile json: " + result.toString());
@@ -237,9 +266,6 @@ public class NanonetsApi {
 
                     // upload note to database and then photo to storage
                     Firebase.uploadNoteInfo(context, pbLoading, note, id, file);
-
-//                    // query file in nanonets database
-//                    queryNote(context, apiKey, modelId, id, file);
                 } catch (JSONException e) {
                     Log.e(TAG, "Error in nanonets data handling");
                     e.printStackTrace();

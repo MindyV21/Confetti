@@ -4,9 +4,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
 
+/**
+ * Class for prediction data stored in Firebase
+ */
 @Parcel
 public class Prediction {
 
+    // currently using xMin and yMax for pin placement
     public String label;
     public int xMin;
     public int yMin;
@@ -26,6 +30,11 @@ public class Prediction {
         this.text = text;
     }
 
+    /**
+     * Retrieves pprediction data from nanonets api
+     * @param jsonObject
+     * @throws JSONException
+     */
     public Prediction(JSONObject jsonObject) throws JSONException {
         label = jsonObject.getString("label");
         xMin = jsonObject.getInt("xmin");
