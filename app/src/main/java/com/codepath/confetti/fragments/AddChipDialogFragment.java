@@ -1,6 +1,5 @@
 package com.codepath.confetti.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,31 +13,21 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.codepath.confetti.R;
 import com.codepath.confetti.databinding.FragmentAddChipBinding;
-import com.codepath.confetti.databinding.FragmentNoteImagesBinding;
 
+/**
+ * Dialog fragment to create a new chip for a specific note
+ */
 public class AddChipDialogFragment extends DialogFragment implements View.OnClickListener {
 
     public static final String TAG = "AddChipDialogFragment";
     private FragmentAddChipBinding binding;
-    private AddChipDialogListener listener;
 
     private EditText etChipName;
     private Button btnAddChip;
 
     public AddChipDialogFragment() {
         // Empty constructor is required for DialogFragment
-        // Make sure not to add arguments to the constructor
-        // Use `newInstance` instead as shown below
-    }
-
-    public static AddChipDialogFragment newInstance(String title) {
-        AddChipDialogFragment frag = new AddChipDialogFragment();
-        Bundle args = new Bundle();
-        args.putString("title", title);
-        frag.setArguments(args);
-        return frag;
     }
 
     @Override
@@ -54,15 +43,12 @@ public class AddChipDialogFragment extends DialogFragment implements View.OnClic
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Get field from view
+
         etChipName = binding.etChipName;
         btnAddChip = binding.btnAddChip;
 
         btnAddChip.setOnClickListener(this);
 
-        // Fetch arguments from bundle and set title
-        String title = getArguments().getString("title");
-        getDialog().setTitle(title);
         // Show soft keyboard automatically and request focus to field
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -78,13 +64,17 @@ public class AddChipDialogFragment extends DialogFragment implements View.OnClic
             return;
         }
 
+        // updates note details view with new chip
         AddChipDialogListener listener = (AddChipDialogListener) getActivity();
         listener.onFinishAddChipDialog(etChipName.getText().toString().trim());
         getDialog().dismiss();
     }
 
-    // Defines the listener interface
+    /**
+     * Interface for fragment and activity communication
+     */
     public interface AddChipDialogListener {
+        // updates note details view
         public void onFinishAddChipDialog(String inputText);
     }
 }

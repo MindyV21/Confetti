@@ -46,13 +46,15 @@ import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_OK;
 
+/**
+ * Fragment to create a new prediction for a specific note
+ */
 public class CreatePredictionFragment extends Fragment {
 
     public static final String TAG = "CreatePredictionFragment";
     private FragmentCreatePredictionBinding binding;
 
     private Bitmap takenImage;
-    private Note note;
     private Prediction newPrediction;
 
     private ImageView ivCancel;
@@ -61,12 +63,21 @@ public class CreatePredictionFragment extends Fragment {
     private EditText etText;
     private Button btnCreatePrediction;
 
+    // the fragment initialization parameters
+    private static final String NOTE = "note";
+    private Note note;
+
     public CreatePredictionFragment() {}
 
+    /**
+     * Sets note predictions to be inflated
+     * @param note note
+     * @return new instance of fragment for a specified note
+     */
     public static CreatePredictionFragment newInstance(Note note) {
         CreatePredictionFragment frag = new CreatePredictionFragment();
         Bundle args = new Bundle();
-        args.putParcelable("note", Parcels.wrap(note));
+        args.putParcelable(NOTE, Parcels.wrap(note));
         frag.setArguments(args);
         return frag;
     }
@@ -74,9 +85,11 @@ public class CreatePredictionFragment extends Fragment {
     @Override
     public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // get back arguments
-        note = Parcels.unwrap(getArguments().getParcelable("note"));
-        Log.d(TAG, note.getName());
+        if (getArguments() != null) {
+            // get back arguments
+            note = Parcels.unwrap(getArguments().getParcelable("note"));
+            Log.d(TAG, note.getName());
+        }
     }
 
     @Override
@@ -124,14 +137,14 @@ public class CreatePredictionFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 Log.d(TAG, "tab selected " + tab.getText().toString());
-                if (tab.getText().toString().equals("Example")) {
+                if (tab.getText().toString().equals(getString(R.string.example))) {
                     etText.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                if (tab.getText().toString().equals("Example")) {
+                if (tab.getText().toString().equals(getString(R.string.example))) {
                     etText.setVisibility(View.VISIBLE);
                 }
             }
@@ -142,17 +155,17 @@ public class CreatePredictionFragment extends Fragment {
             }
         });
 
-        // set up image for touch
+        // set up gesture detector for canvas (image)
         initImage();
 
-        // create a new prediction !
+        // creates a new prediction !
         btnCreatePrediction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick btn create prediction !");
                 String label = tabLayoutCreatePrediction.getSelectedTabPosition() == 0 ?
-                        "Topic" :
-                        "Example";
+                        getString(R.string.topic) :
+                        getString(R.string.example);
                 Boolean firstPrediction = false;
 
                 // check if pin is placed
@@ -178,6 +191,7 @@ public class CreatePredictionFragment extends Fragment {
                     firstPrediction = true;
                 }
                 note.getPredictions().add(newPrediction);
+
                 // update canvas
                 CreatePredictionListener listener = (CreatePredictionListener) getActivity();
                 listener.addPinToImage(firstPrediction);
@@ -193,6 +207,9 @@ public class CreatePredictionFragment extends Fragment {
         });
     }
 
+    /**
+     * Sets up gesture detection for canvas
+     */
     private void initImage() {
         // handle touch events
         final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
@@ -222,9 +239,13 @@ public class CreatePredictionFragment extends Fragment {
         });
     }
 
-    // Defines the listener interface
+    /**
+     * Interface for fragment and activity communication
+     */
     public interface CreatePredictionListener {
+        // when exiting creating a new prediction
         public void onCancelCreatePrediction();
+        // when a new prediction is created
         public void addPinToImage(Boolean firstPrediction);
     }
 

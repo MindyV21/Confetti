@@ -35,6 +35,7 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import org.jetbrains.annotations.NotNull;
+import org.parceler.Parcels;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -46,55 +47,40 @@ import java.util.ArrayList;
 import static android.app.Activity.RESULT_OK;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link NoteImagesFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment to set up photo file for a note
  */
 public class NoteImagesFragment extends Fragment {
 
     public static final String TAG = "NoteImagesFragment";
     private FragmentNoteImagesBinding binding;
-
-    private Note note;
+    private OnItemSelectedListener listener;
 
     private Bitmap takenImage;
     private PinView ssivNote;
     private ImageView ivExitFullscreen;
     private Boolean isFullscreen;
 
-    private OnItemSelectedListener listener;
-
     public NoteImagesFragment(Note note) {
         this.note = note;
     }
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    // the fragment initialization parameters
+    private static final String NOTE = "note";
+    private Note note;
 
     public NoteImagesFragment() {
         // Required empty public constructor
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment NoteImagesFragment.
+     * Sets note photo file to be blown up
+     * @param note note
+     * @return new instance of fragment for a specified note
      */
-    // TODO: Rename and change types and number of parameters
-    public static NoteImagesFragment newInstance(String param1, String param2) {
+    public static NoteImagesFragment newInstance(Note note) {
         NoteImagesFragment fragment = new NoteImagesFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelable(NOTE, Parcels.wrap(note));
         fragment.setArguments(args);
         return fragment;
     }
@@ -103,8 +89,9 @@ public class NoteImagesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            // get back arguments
+            note = Parcels.unwrap(getArguments().getParcelable("note"));
+            Log.d(TAG, note.getName());
         }
     }
 
@@ -131,7 +118,7 @@ public class NoteImagesFragment extends Fragment {
         ssivNote = binding.ssivNote;
         ssivNote.setZoomEnabled(false);
 
-        // fullscreen stuff
+        // fullscreen logic
         isFullscreen = false;
         ivExitFullscreen = binding.ivExitFullscreen;
         ivExitFullscreen.setOnClickListener(new View.OnClickListener() {
@@ -139,9 +126,8 @@ public class NoteImagesFragment extends Fragment {
             public void onClick(View view) {
                 Log.d(TAG, "exit fullscreen !");
 
-                // re place pins
+                // reset views to when it is not fullscreen
                 createPins();
-
                 isFullscreen = false;
                 ivExitFullscreen.setVisibility(View.GONE);
                 listener.onExitFullscreen();
@@ -159,6 +145,9 @@ public class NoteImagesFragment extends Fragment {
         onUploadPhoto();
     }
 
+    /**
+     * Sets up view for fullscreen function
+     */
     public void enableFullscreen() {
         isFullscreen = true;
         ivExitFullscreen.setVisibility(View.VISIBLE);
@@ -167,14 +156,20 @@ public class NoteImagesFragment extends Fragment {
         ssivNote.removeAllPins();
     }
 
-    // Define the events that the fragment will use to communicate
+    /**
+     * Interface for fragment and activity communication
+     */
     public interface OnItemSelectedListener {
-        // This can be any number of events to be sent to the activity
+        // when a prediction pin is selected
         public void onPinItemSelected(int index);
+        // when fullscreen is exited
         public void onExitFullscreen();
     }
 
-    // Store the listener (activity) that will have events fired once the fragment is attached
+    /**
+     * Stores the listener (activity) that will have events fired once the fragment is attached
+     * @param context
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -186,11 +181,18 @@ public class NoteImagesFragment extends Fragment {
         }
     }
 
+    /**
+     * Communicator method for parent activity to remove a pin
+     * @param prediction the pin to be removed
+     */
     public void removePin(Prediction prediction) {
         Log.d(TAG, "removing prediction pin");
         ssivNote.removePin(prediction);
     }
 
+    /**
+     * Communicator method for parent activity to add a pin
+     */
     public void addPin() {
         Log.d(TAG, "adding prediction pin");
         Prediction prediction = note.getPredictions().get(note.getPredictions().size() - 1);
@@ -250,6 +252,9 @@ public class NoteImagesFragment extends Fragment {
         }
     }
 
+    /**
+     * Creates all the prediction pins on the canvas, and sets up gesture detection for pin taps
+     */
     public void createPins() {
         // add pins to photo
         for (Prediction prediction : note.predictions) {
@@ -273,6 +278,7 @@ public class NoteImagesFragment extends Fragment {
                     int blockWidth = 75;
                     int blockHeight = 75;
 
+                    // limit to first pin found
                     int tappedPredictionIndex = -1;
 
                     // check if a pin is tapped

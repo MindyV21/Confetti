@@ -158,7 +158,7 @@ public class NoteDetailsActivity extends AppCompatActivity
         });
 
         // attach hscroll of note images
-        noteImagesFragment = new NoteImagesFragment(note);
+        noteImagesFragment = NoteImagesFragment.newInstance(note);
         getSupportFragmentManager().beginTransaction().add(R.id.flNoteImages, noteImagesFragment).commit();
 
         // set up prediction info bottom sheet
@@ -209,7 +209,7 @@ public class NoteDetailsActivity extends AppCompatActivity
 
     private void showAddChipDialog() {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        AddChipDialogFragment addChipDialogFragment = AddChipDialogFragment.newInstance("test");
+        AddChipDialogFragment addChipDialogFragment = new AddChipDialogFragment();
         addChipDialogFragment.show(fragmentManager, "fragment_add_chip");
     }
 

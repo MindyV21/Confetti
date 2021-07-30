@@ -1,9 +1,18 @@
 <resources>
-    <string name="app_name">Confetti</string>
+    <!--default-->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="nanonets_all_notes_url">https://app.nanonets.com/api/v2/Inferences/Model/{{model_id}}/ImageLevelInferences?start_day_interval={start_day}&amp;current_batch_day={end_day}</string>
-    <string name="nanonets_note_url">https://app.nanonets.com/api/v2/Inferences/Model/{%s}/ImageLevelInferences/{{id}}</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <string name="app_name">Confetti</string>
+
+    <!--urls-->
+    <string name="nanonets_all_notes_url">https://app.nanonets.com/api/v2/Inferences/Model/{{model_id}}/ImageLevelInferences?start_day_interval={start_day}&amp;current_batch_day={end_day}</string>
+    <string name="nanonets_note_url">https://app.nanonets.com/api/v2/Inferences/Model/{%s}/ImageLevelInferences/{{id}}</string>
+
+    <!--nanonet label names-->
+    <string name="topic">Topic</string>
+    <string name="example">Example</string>
+
     <string name="search_hint">Throw some confetti...</string>
 </resources>

@@ -24,7 +24,7 @@
                 android:layout_weight="2"/>
 
             <ImageView
-                android:id="@+id/ivSearchToggle"
+                android:id="@+id/ivChipToggle"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 tools:srcCompat="@drawable/ic_baseline_label_24"

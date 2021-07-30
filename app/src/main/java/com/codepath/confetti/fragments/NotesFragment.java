@@ -1,39 +1,27 @@
 package com.codepath.confetti.fragments;
 
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.Toast;
 
-import com.codepath.confetti.MainActivity;
-import com.codepath.confetti.utlils.Firebase;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.codepath.confetti.R;
 import com.codepath.confetti.adapters.NotesAdapter;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
-import com.codepath.confetti.utlils.Chips;
 import com.codepath.confetti.models.Note;
-import com.codepath.confetti.utlils.NanonetsApi;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.chip.Chip;
+import com.codepath.confetti.utlils.Chips;
+import com.codepath.confetti.utlils.Firebase;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -41,7 +29,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -55,67 +42,36 @@ import java.util.TreeSet;
 import pl.droidsonroids.gif.GifImageView;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link NotesFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment containing the list of notes for a user
  */
 public class NotesFragment extends Fragment {
 
     public static final String TAG = "NotesFragment";
+    private FragmentNotesBinding binding;
 
+    // firebase
+    private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+    // loading UI
     private GifImageView nellieConfetti;
 
-    private FragmentNotesBinding binding;
+    // notes list
     protected NotesAdapter adapter;
     private RecyclerView rvNotes;
     protected List<Note> currentNotes;
     protected Map<String, Note> allNotes;
 
+    // search and filter
     protected SearchView searchView;
-    private ImageView ivSearchToggle;
+    private ImageView ivChipToggle;
 
+    // chips
     protected ChipGroup chipGroup;
-    protected Map<String, Boolean> allChips;
+    protected TreeMap<String, Boolean> allChips;
     protected Set<String> currentChips;
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public NotesFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment NotesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static NotesFragment newInstance(String param1, String param2) {
-        NotesFragment fragment = new NotesFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -145,132 +101,18 @@ public class NotesFragment extends Fragment {
         rvNotes.setLayoutManager(new LinearLayoutManager(getContext()));
 
         searchView = binding.searchView;
-        searchView.setQueryHint(getString(R.string.search_hint));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                adapter.getFilter().filter(s);
-                return false;
-            }
-        });
-
+        ivChipToggle = binding.ivChipToggle;
         chipGroup = binding.chipGroup;
 
-        ivSearchToggle = binding.ivSearchToggle;
-        Drawable drawable = AppCompatResources.getDrawable(getContext(), R.drawable.ic_baseline_label_24);
-        ivSearchToggle.setImageDrawable(drawable);
-        ivSearchToggle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i(TAG, "tags!");
-                Log.d(TAG, "NOTES LIST allChips size - " + allChips.size());
-                ChipsBottomSheetFragment tagFragment = new ChipsBottomSheetFragment(allChips);
-                tagFragment.show(getChildFragmentManager(), tagFragment.getTag());
-            }
-        });
+        initSearchBar();
+        initNotesList();
+        initChips();
+    }
 
-        // Get a reference to our notes
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference refNotes = database.getReference("Notes/" + FirebaseAuth.getInstance().getUid() + "/Files");
-
-        // child added - called once  for each existing child, then again every time a new child added
-        refNotes.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
-                nellieConfetti.setVisibility(View.GONE);
-
-                Log.i(TAG, "note added" + snapshot.toString());
-                // create note from firebase database
-                Note note = snapshot.getValue(Note.class);
-                note.setId(snapshot.getKey());
-
-//                // get image
-//                Firebase.getImage(note);
-
-                currentNotes.add(note);
-                allNotes.put(snapshot.getKey(), note);
-
-                // update currentNotes taking into account filters and query input
-                Log.d(TAG, "" + chipGroup.getChildCount());
-                if (chipGroup.getChildCount() == 0) {
-                    adapter.setNotesFull(currentNotes);
-                    adapter.getFilter().filter(searchView.getQuery().toString().trim());
-                } else {
-                    // TODO: future listener for when you add a chip to a note on creation
-                    List<Integer> checkedChipIds = chipGroup.getCheckedChipIds();
-                    Log.d(TAG, "CHECKED CHIP IDS FOR NOTES LIST " + checkedChipIds.size());
-                    refreshChips(checkedChipIds, chipGroup, false);
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
-                Log.i(TAG, "note changed " + snapshot.toString());
-                Note note = snapshot.getValue(Note.class);
-                note.setId(snapshot.getKey());
-                note.setImageFile(allNotes.get(snapshot.getKey()).getImageFile());
-                // update allNotes
-                allNotes.put(snapshot.getKey(), note);
-
-                // update currentNotes
-                // check if note is in current notes and refresh currentNotes
-                for (int i = 0; i < currentNotes.size(); i++) {
-                    if (note.getId().equals(currentNotes.get(i).getId())) {
-                        currentNotes.set(i, note);
-                        if (chipGroup.getChildCount() == 0) {
-                            Log.d(TAG, "refresh notes list");
-                            adapter.setNotesFull(currentNotes);
-                            adapter.getFilter().filter(searchView.getQuery().toString().trim());
-                        } else {
-                            Log.d(TAG, "refresh notes list with chips");
-                            List<Integer> checkedChipIds = chipGroup.getCheckedChipIds();
-                            refreshChips(checkedChipIds, chipGroup, false);
-                        }
-                        return;
-                    }
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull @NotNull DataSnapshot snapshot) {
-                Log.i(TAG, "note removed " + snapshot.toString());
-                String id = snapshot.getKey();
-                // update adapter within adapter ??
-
-                // check if note is in current notes and remove
-                for (int i = 0; i < currentNotes.size(); i++) {
-                    if (id.equals(currentNotes.get(i).getId())) {
-                        currentNotes.remove(i);
-                        return;
-                    }
-                }
-
-                // remove note from allNotes
-                allNotes.remove(id);
-                adapter.setNotesFull(currentNotes);
-
-                if (allNotes.isEmpty()) {
-                    nellieConfetti.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onChildMoved(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                Log.i(TAG, "The notes read failed: " + error.getCode());
-            }
-        });
-
-        // Attach a listener to read the data at our chips reference ONCE
+    /**
+     * listener to read data at chips reference
+     */
+    private void initChips() {
         DatabaseReference refChips = database.getReference("Chips/" + FirebaseAuth.getInstance().getUid());
         refChips.addChildEventListener(new ChildEventListener() {
             @Override
@@ -305,6 +147,143 @@ public class NotesFragment extends Fragment {
         });
     }
 
+    /**
+     * listener to read data at notes reference
+     */
+    private void initNotesList() {
+        DatabaseReference refNotes = database.getReference("Notes/" + FirebaseAuth.getInstance().getUid() + "/Files");
+        refNotes.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+                Log.i(TAG, "note added" + snapshot.toString());
+                nellieConfetti.setVisibility(View.GONE);
+
+                // create note from firebase database
+                Note note = snapshot.getValue(Note.class);
+                note.setId(snapshot.getKey());
+
+//                // get image
+//                Firebase.getImage(note);
+
+                // update notes list
+                currentNotes.add(note);
+                allNotes.put(snapshot.getKey(), note);
+
+                // update currentNotes taking into account filters and query input
+                Log.d(TAG, "" + chipGroup.getChildCount());
+                if (chipGroup.getChildCount() == 0) {
+                    adapter.setNotesFull(currentNotes);
+                    adapter.getFilter().filter(searchView.getQuery().toString().trim());
+                } else {
+                    List<Integer> checkedChipIds = chipGroup.getCheckedChipIds();
+                    Log.d(TAG, "CHECKED CHIP IDS FOR NOTES LIST " + checkedChipIds.size());
+                    refreshChips(checkedChipIds, chipGroup, false);
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+                Log.i(TAG, "note changed " + snapshot.toString());
+
+                // replace note in allNotes
+                Note note = snapshot.getValue(Note.class);
+                note.setId(snapshot.getKey());
+                note.setImageFile(allNotes.get(snapshot.getKey()).getImageFile());
+                allNotes.put(snapshot.getKey(), note);
+
+                // update currentNotes
+                for (int i = 0; i < currentNotes.size(); i++) {
+                    // check if note is in current notes and refresh currentNotes
+                    if (note.getId().equals(currentNotes.get(i).getId())) {
+                        currentNotes.set(i, note);
+                        if (chipGroup.getChildCount() == 0) {
+                            Log.d(TAG, "refresh notes list");
+                            adapter.setNotesFull(currentNotes);
+                            adapter.getFilter().filter(searchView.getQuery().toString().trim());
+                        } else {
+                            Log.d(TAG, "refresh notes list with chips");
+                            List<Integer> checkedChipIds = chipGroup.getCheckedChipIds();
+                            refreshChips(checkedChipIds, chipGroup, false);
+                        }
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull @NotNull DataSnapshot snapshot) {
+                Log.i(TAG, "note removed " + snapshot.toString());
+                String id = snapshot.getKey();
+
+                // check if note is in current notes and remove
+                for (int i = 0; i < currentNotes.size(); i++) {
+                    if (id.equals(currentNotes.get(i).getId())) {
+                        currentNotes.remove(i);
+                        return;
+                    }
+                }
+
+                // remove note from allNotes
+                allNotes.remove(id);
+                adapter.setNotesFull(currentNotes);
+
+                // loading ui
+                if (allNotes.isEmpty()) {
+                    nellieConfetti.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onChildMoved(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                Log.i(TAG, "The notes read failed: " + error.getCode());
+            }
+        });
+    }
+
+    /**
+     * set up searching features
+     */
+    private void initSearchBar() {
+        // set up searchView for query with adapter
+        searchView.setQueryHint(getString(R.string.search_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                adapter.getFilter().filter(s);
+                return false;
+            }
+        });
+
+        // set up toggle to open chips bottom sheet fragment
+        Drawable drawable = AppCompatResources.getDrawable(getContext(), R.drawable.ic_baseline_label_24);
+        ivChipToggle.setImageDrawable(drawable);
+        ivChipToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "tags!");
+                Log.d(TAG, "NOTES LIST allChips size - " + allChips.size());
+                ChipsBottomSheetFragment tagFragment = ChipsBottomSheetFragment.newInstance(allChips);
+                tagFragment.show(getChildFragmentManager(), tagFragment.getTag());
+            }
+        });
+    }
+
+    /**
+     * Called by nested fragment to update notes list with query input and new chips selected
+     * @param checkedChipIds chips selected in chip bottom sheet fragment
+     * @param allChipsGroup chip group in chip bottom sheet fragment
+     * @param resetChips true to reset hscroll of chips, false otherwise
+     */
     protected void refreshChips(List<Integer> checkedChipIds, ChipGroup allChipsGroup, Boolean resetChips) {
         Log.i(TAG, "updating chips and currentNotes like based on chips selected");
 

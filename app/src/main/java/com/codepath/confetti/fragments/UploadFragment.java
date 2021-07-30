@@ -48,9 +48,7 @@ import java.util.List;
 import static android.app.Activity.RESULT_OK;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link UploadFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment where user can upload photo files of their notes
  */
 public class UploadFragment extends Fragment {
 
@@ -70,44 +68,8 @@ public class UploadFragment extends Fragment {
     private Bitmap selectedImage;
     File photoFile;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     public UploadFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment UploadFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static UploadFragment newInstance(String param1, String param2) {
-        UploadFragment fragment = new UploadFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -133,6 +95,7 @@ public class UploadFragment extends Fragment {
 
         etFileName.setText("");
 
+        // take a photo with phone's camera
         btnTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -141,6 +104,7 @@ public class UploadFragment extends Fragment {
             }
         });
 
+        // upload a note photo file from phone's gallery
         btnUploadGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,6 +113,7 @@ public class UploadFragment extends Fragment {
             }
         });
 
+        // submit a note
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,64 +132,7 @@ public class UploadFragment extends Fragment {
                 Log.i(TAG, "upload photo to nanonets database for prediction!");
                 pbLoading.setVisibility(View.VISIBLE);
 
-                // TODO: delete - for testing
-                Note note = new Note(fileName);
-
-                List<Prediction> predictions = new ArrayList<>();
-                predictions.add(new Prediction(404, 1, 1000, 3, "bread"));
-                predictions.add(new Prediction(800, 1, 2000, 3, "toast"));
-                note.setPredictions(predictions);
-
-                List<String> chipNames = new ArrayList<>();
-                chipNames.add("hole");
-                chipNames.add("french breads");
-                chipNames.add("only one");
-                note.setChips(chipNames);
-                // add chips to chip database
-                FirebaseDatabase.getInstance().getReference("Chips")
-                        .child(FirebaseAuth.getInstance().getUid())
-                        .child("hole")
-                        .child("testId")
-                        .setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            Log.d(TAG, "onSuccess to add dummy note's chip references from firebase");
-                        } else {
-                            Log.d(TAG, "onFailure to add dummy note's chip references from firebase");
-                        }
-                    }
-                });
-                FirebaseDatabase.getInstance().getReference("Chips")
-                        .child(FirebaseAuth.getInstance().getUid())
-                        .child("french breads")
-                        .child("testId")
-                        .setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            Log.d(TAG, "onSuccess to add dummy note's chip references from firebase");
-                        } else {
-                            Log.d(TAG, "onFailure to add dummy note's chip references from firebase");
-                        }
-                    }
-                });
-                FirebaseDatabase.getInstance().getReference("Chips")
-                        .child(FirebaseAuth.getInstance().getUid())
-                        .child("only one")
-                        .child("testId")
-                        .setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            Log.d(TAG, "onSuccess to add dummy note's chip references from firebase");
-                        } else {
-                            Log.d(TAG, "onFailure to add dummy note's chip references from firebase");
-                        }
-                    }
-                });
-
-                Firebase.uploadNoteInfo(getContext(), pbLoading, note, "testId", photoFile);
+                dummyData(fileName);
 
                 //NanonetsApi.predictFile(getContext(), pbLoading, fileName, getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), photoFile);
             }
@@ -232,17 +140,80 @@ public class UploadFragment extends Fragment {
 
     }
 
-    // upload photo from gallery stuff
+    //TODO: tbd dummy data to not overload firebase storage
+    public void dummyData(String fileName) {
+        Note note = new Note(fileName);
+
+        List<Prediction> predictions = new ArrayList<>();
+        predictions.add(new Prediction(404, 1, 1000, 3, "bread"));
+        predictions.add(new Prediction(800, 1, 2000, 3, "toast"));
+        note.setPredictions(predictions);
+
+        List<String> chipNames = new ArrayList<>();
+        chipNames.add("hole");
+        chipNames.add("french breads");
+        chipNames.add("only one");
+        note.setChips(chipNames);
+        // add chips to chip database
+        FirebaseDatabase.getInstance().getReference("Chips")
+                .child(FirebaseAuth.getInstance().getUid())
+                .child("hole")
+                .child("testId")
+                .setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    Log.d(TAG, "onSuccess to add dummy note's chip references from firebase");
+                } else {
+                    Log.d(TAG, "onFailure to add dummy note's chip references from firebase");
+                }
+            }
+        });
+        FirebaseDatabase.getInstance().getReference("Chips")
+                .child(FirebaseAuth.getInstance().getUid())
+                .child("french breads")
+                .child("testId")
+                .setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    Log.d(TAG, "onSuccess to add dummy note's chip references from firebase");
+                } else {
+                    Log.d(TAG, "onFailure to add dummy note's chip references from firebase");
+                }
+            }
+        });
+        FirebaseDatabase.getInstance().getReference("Chips")
+                .child(FirebaseAuth.getInstance().getUid())
+                .child("only one")
+                .child("testId")
+                .setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    Log.d(TAG, "onSuccess to add dummy note's chip references from firebase");
+                } else {
+                    Log.d(TAG, "onFailure to add dummy note's chip references from firebase");
+                }
+            }
+        });
+
+        Firebase.uploadNoteInfo(getContext(), pbLoading, note, "testId", photoFile);
+    }
+
+    /**
+     * Launches intent to upload photo from gallery
+     */
     public void onUploadPhoto(){
         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, PICK_PHOTO_CODE);
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // setting photo from photo in gallery
         if(requestCode == PICK_PHOTO_CODE && resultCode == RESULT_OK && data != null){
             Uri photoUri = data.getData();
             selectedImage = null;
@@ -257,7 +228,7 @@ public class UploadFragment extends Fragment {
 
             // write bitmap to an image file
             File testDir = getContext().getFilesDir();
-            photoFile = new File(testDir, "photo.jpg");
+            photoFile = new File(testDir, photoFileName);
             OutputStream os;
             try {
                 os = new FileOutputStream(photoFile);
@@ -272,6 +243,7 @@ public class UploadFragment extends Fragment {
                 Log.e(getClass().getSimpleName(), "Error writing bitmap", e);
             }
         } else if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            // setting photo from taken photo
             if (resultCode == RESULT_OK) {
                 // by this point we have the camera photo on disk
                 selectedImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
@@ -284,7 +256,10 @@ public class UploadFragment extends Fragment {
         }
     }
 
-    // take photo with camera stuff
+    /**
+     * Launches intent to take photo with camera
+     * @param view
+     */
     public void onLaunchCamera(View view) {
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -305,7 +280,11 @@ public class UploadFragment extends Fragment {
         }
     }
 
-    // Returns the File for a photo stored on disk given the fileName
+    /**
+     * Returns the File for a photo stored on disk given the fileName
+     * @param fileName name of photo file
+     * @return photo file
+     */
     public File getPhotoFileUri(String fileName) {
         // Get safe storage directory for photos
         // Use `getExternalFilesDir` on Context to access package-specific directories.
