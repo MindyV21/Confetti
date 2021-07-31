@@ -21,8 +21,17 @@ public class Conversion {
      * @param dp
      * @return converted float
      */
-    public static float convertDptoFloat(Float dp) {
+    public static float convertDpToFloat(float dp) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, Resources.getSystem().getDisplayMetrics());
+    };
+
+    /**
+     * Converts float to dip
+     * @param fl
+     * @return converted dip
+     */
+    public static float convertFloatToDp(float fl) {
+        return (fl * Resources.getSystem().getDisplayMetrics().density + 0.5f);
     };
 
     /**

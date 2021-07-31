@@ -20,6 +20,7 @@ import com.codepath.confetti.R;
 import com.codepath.confetti.adapters.NotesAdapter;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
 import com.codepath.confetti.models.Note;
+import com.codepath.confetti.utlils.Animations;
 import com.codepath.confetti.utlils.Chips;
 import com.codepath.confetti.utlils.Firebase;
 import com.google.android.material.chip.ChipGroup;
@@ -156,7 +157,7 @@ public class NotesFragment extends Fragment {
             @Override
             public void onChildAdded(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
                 Log.i(TAG, "note added" + snapshot.toString());
-                nellieConfetti.setVisibility(View.GONE);
+                Animations.fadeOut(nellieConfetti);
 
                 // create note from firebase database
                 Note note = snapshot.getValue(Note.class);
@@ -229,7 +230,7 @@ public class NotesFragment extends Fragment {
 
                 // loading ui
                 if (allNotes.isEmpty()) {
-                    nellieConfetti.setVisibility(View.VISIBLE);
+                    Animations.fadeIn(nellieConfetti);
                 }
             }
 

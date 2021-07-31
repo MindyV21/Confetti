@@ -29,9 +29,9 @@ public class Chips {
     public static void setChipAppearance(Chip newChip) {
         // general
         newChip.setChipBackgroundColorResource(R.color.white);
-        newChip.setChipStrokeWidth(Conversion.convertDptoFloat(2.0f));
+        newChip.setChipStrokeWidth(Conversion.convertDpToFloat(2.0f));
         newChip.setChipStrokeColorResource(R.color.stroke_tint);
-        newChip.setChipCornerRadius(Conversion.convertDptoFloat(5.0f));
+        newChip.setChipCornerRadius(Conversion.convertDpToFloat(5.0f));
 
         // icon
         newChip.setChipIconTintResource(R.color.shrine_pink_900);

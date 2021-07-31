@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -37,6 +38,7 @@ import com.codepath.confetti.models.Note;
 import com.codepath.confetti.models.Prediction;
 import com.codepath.confetti.utlils.Animations;
 import com.codepath.confetti.utlils.Chips;
+import com.codepath.confetti.utlils.Conversion;
 import com.codepath.confetti.utlils.Firebase;
 import com.codepath.confetti.utlils.ZoomOutPageTransformer;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -84,6 +86,7 @@ public class NoteDetailsActivity extends AppCompatActivity
     private ChipGroup chipGroup;
 
     // note image file
+    private FrameLayout flNoteImages;
     private NoteImagesFragment noteImagesFragment;
 
     // predictions
@@ -113,6 +116,7 @@ public class NoteDetailsActivity extends AppCompatActivity
         Log.d(TAG, String.format("Showing details for '%s", note.getName()));
 
         // attach fragment of note images
+        flNoteImages = binding.flNoteImages;
         noteImagesFragment = NoteImagesFragment.newInstance(note);
         getSupportFragmentManager().beginTransaction().add(R.id.flNoteImages, noteImagesFragment).commit();
 
@@ -269,9 +273,9 @@ public class NoteDetailsActivity extends AppCompatActivity
         // loading UI
         nellieConfetti = view.findViewById(R.id.nellieConfetti);
         if (note.getPredictions() == null || note.getPredictions().size() == 0) {
-            nellieConfetti.setVisibility(View.VISIBLE);
+            Animations.fadeIn(nellieConfetti);
         } else {
-            nellieConfetti.setVisibility(View.GONE);
+            Animations.fadeOut(nellieConfetti);
         }
 
         // attach fragment of note predictions
@@ -416,6 +420,9 @@ public class NoteDetailsActivity extends AppCompatActivity
 
             Animations.slideUp((View) mControlsViewHeader, 0);
             Animations.slideDown((View) mControlsPredictions, 0);
+
+            // reset note image padding
+            flNoteImages.setPadding(0, 0, 0, 0);
         }
     };
 
@@ -436,6 +443,9 @@ public class NoteDetailsActivity extends AppCompatActivity
 
             Animations.reverseSlideUp((View) mControlsViewHeader);
             Animations.reverseSlideDown((View) mControlsPredictions);
+
+            // reset note image padding
+            flNoteImages.setPadding((int) Conversion.convertFloatToDp(10.0f), 0, (int) Conversion.convertFloatToDp(10.0f), (int) Conversion.convertFloatToDp(40.0f));
         }
     };
 
@@ -537,7 +547,7 @@ public class NoteDetailsActivity extends AppCompatActivity
     public void removePinFromImage(Prediction prediction) {
         noteImagesFragment.removePin(prediction);
         if (note.getPredictions().size() == 0) {
-            nellieConfetti.setVisibility(View.VISIBLE);
+            Animations.fadeIn(nellieConfetti);
         }
     }
 
@@ -566,6 +576,6 @@ public class NoteDetailsActivity extends AppCompatActivity
             pagerAdapter.notifyItemInserted(note.getPredictions().size() - 1);
         }
 
-        nellieConfetti.setVisibility(View.GONE);
+        Animations.fadeOut(nellieConfetti);
     }
 }
