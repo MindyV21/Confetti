@@ -240,6 +240,9 @@ public class CreatePredictionBottomSheetFragment extends BottomSheetDialogFragme
             @Override public void onShow(DialogInterface dialogInterface) {
                 BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
                 setupFullHeight(bottomSheetDialog);
+
+                BottomSheetBehavior bottomSheetBehavior = ((BottomSheetDialog) dialogInterface).getBehavior();
+                bottomSheetBehavior.setDraggable(false);
             }
         });
         return  dialog;

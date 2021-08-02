@@ -205,7 +205,8 @@ public class UploadBottomSheetFragment extends BottomSheetDialogFragment {
                 BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
                 setupFullHeight(bottomSheetDialog);
 
-
+                BottomSheetBehavior bottomSheetBehavior = ((BottomSheetDialog) dialogInterface).getBehavior();
+                bottomSheetBehavior.setDraggable(false);
             }
         });
         return  dialog;
