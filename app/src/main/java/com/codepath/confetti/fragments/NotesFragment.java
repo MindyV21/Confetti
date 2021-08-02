@@ -3,6 +3,7 @@ package com.codepath.confetti.fragments;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -340,8 +341,14 @@ public class NotesFragment extends Fragment {
     public void dismissCreateNote(Note note) {
         uploadBottomSheetFragment.dismiss();
 
-        // got to new note details activity
-        goToNote(note);
+        // got to new note details activity after a delay
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                goToNote(note);
+            }
+        }, 1000);
     }
 
     /**
