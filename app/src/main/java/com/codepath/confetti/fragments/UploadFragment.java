@@ -121,6 +121,12 @@ public class UploadFragment extends BottomSheetDialogFragment {
         tvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // check if loading
+                if (isLoading()) {
+                    Toast.makeText(getContext(), "Loading! Have some confetti while you wait!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Log.i(TAG, "cancel creating prediction");
                 dismiss();
             }
@@ -130,6 +136,12 @@ public class UploadFragment extends BottomSheetDialogFragment {
         btnTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // check if loading
+                if (isLoading()) {
+                    Toast.makeText(getContext(), "Loading! Have some confetti while you wait!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Log.i(TAG, "camera intent!");
                 onLaunchCamera(view);
             }
@@ -139,6 +151,12 @@ public class UploadFragment extends BottomSheetDialogFragment {
         btnUploadGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // check if loading
+                if (isLoading()) {
+                    Toast.makeText(getContext(), "Loading! Have some confetti while you wait!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Log.i(TAG, "photo gallery intent!");
                 onUploadPhoto();
             }
@@ -148,6 +166,12 @@ public class UploadFragment extends BottomSheetDialogFragment {
         tvCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // check if loading
+                if (isLoading()) {
+                    Toast.makeText(getContext(), "Loading! Have some confetti while you wait!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 // make sure there is a file name
                 String fileName = etFileName.getText().toString().trim();
                 if (etFileName == null || fileName.equals("")) {
@@ -217,6 +241,14 @@ public class UploadFragment extends BottomSheetDialogFragment {
     @Override
     public void onDismiss(@NonNull @NotNull DialogInterface dialog) {
         super.onDismiss(dialog);
+    }
+
+    /**
+     * Stops click functionality when something is loading
+     * @return
+     */
+    private boolean isLoading() {
+        return pbLoading.getVisibility() == View.VISIBLE;
     }
 
     //TODO: tbd dummy data to not overload firebase storage

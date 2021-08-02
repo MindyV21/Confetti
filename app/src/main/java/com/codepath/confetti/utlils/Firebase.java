@@ -382,8 +382,10 @@ public class Firebase {
      * Updates the predictions for a note in the firebase notes database
      * @param context
      * @param note
+     * @param toastMessage "upload" or "deletion"
+     * @param pbLoading null if not applicable
      */
-    public static void updateNotePredictions(Context context, Note note) {
+    public static void updateNotePredictions(Context context, Note note, String toastMessage, ProgressBar pbLoading) {
         // update note's predictions
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Notes")
                 .child(FirebaseAuth.getInstance().getUid())
@@ -397,10 +399,15 @@ public class Firebase {
                 if (task.isSuccessful()){
                     // update predictions
                     Log.i(TAG, "onSuccess to update predictions in note database from firebase");
+                    Toast.makeText(context, "Prediction " + toastMessage + " success!.", Toast.LENGTH_SHORT).show();
                 } else {
                     // update predictions failed
                     Log.i(TAG, "onFailure to update predictions in note database from firebase");
-                    Toast.makeText(context, "Prediction update failed! Try again.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Prediction " + toastMessage + " failed! Try again.", Toast.LENGTH_SHORT).show();
+                }
+
+                if (pbLoading != null) {
+                    pbLoading.setVisibility(View.INVISIBLE);
                 }
             }
         });

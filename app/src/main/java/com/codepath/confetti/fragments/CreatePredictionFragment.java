@@ -136,6 +136,12 @@ public class CreatePredictionFragment extends BottomSheetDialogFragment {
         tvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // check if loading
+                if (isLoading()) {
+                    Toast.makeText(getContext(), "Loading! Have some confetti while you wait!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 dismiss();
             }
         });
@@ -176,6 +182,12 @@ public class CreatePredictionFragment extends BottomSheetDialogFragment {
                         getString(R.string.example);
                 Boolean firstPrediction = false;
 
+                // check if loading
+                if (isLoading()) {
+                    Toast.makeText(getContext(), "Loading! Have some confetti while you wait!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 // check if pin is placed
                 if (ssivCreatePrediction.getPin(newPrediction) == null) {
                     Toast.makeText(getContext(), "Place a pin!", Toast.LENGTH_SHORT).show();
@@ -205,7 +217,8 @@ public class CreatePredictionFragment extends BottomSheetDialogFragment {
                 listener.addPinToImage(firstPrediction);
 
                 // update note database in firebase
-                Firebase.updateNotePredictions(getContext(), note);
+                pbLoading.setVisibility(View.VISIBLE);
+                Firebase.updateNotePredictions(getContext(), note, "upload", pbLoading);
 
                 // reset view
                 etText.setText("");
@@ -213,6 +226,14 @@ public class CreatePredictionFragment extends BottomSheetDialogFragment {
                 newPrediction = new Prediction();
             }
         });
+    }
+
+    /**
+     * Stops click functionality when something is loading
+     * @return
+     */
+    private boolean isLoading() {
+        return pbLoading.getVisibility() == View.VISIBLE;
     }
 
     @NonNull

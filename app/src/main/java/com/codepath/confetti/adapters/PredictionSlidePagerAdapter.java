@@ -121,7 +121,7 @@ public class PredictionSlidePagerAdapter extends RecyclerView.Adapter<Prediction
                                     note.predictions.remove(getAdapterPosition());
 
                                     // update predictions in notes database
-                                    Firebase.updateNotePredictions(context, note);
+                                    Firebase.updateNotePredictions(context, note, "deletion", null);
 
                                     // update viewpager
                                     notifyItemRemoved(getAdapterPosition());
