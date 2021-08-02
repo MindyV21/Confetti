@@ -10,7 +10,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.codepath.confetti.MainActivity;
 import com.codepath.confetti.adapters.NotesAdapter;
+import com.codepath.confetti.fragments.UploadBottomSheetFragment;
 import com.codepath.confetti.models.Note;
 import com.codepath.confetti.models.Prediction;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -98,13 +100,27 @@ public class Firebase {
                     // note uploaded to firebase
                     Log.i(TAG, "onSuccess to upload note to firebase");
                     Toast.makeText(context, "Note uploaded successfully!", Toast.LENGTH_SHORT).show();
-                    pbLoading.setVisibility(View.INVISIBLE);
+
+                    // dismiss bottom sheet
+                    if (context instanceof MainActivity) {
+                        Log.d(TAG, "context found in uploadNote");
+                        // set up note
+                        note.setId(id);
+                        note.setImageFile(photoFile);
+
+                        MainActivity mainActivity = (MainActivity) context;
+                        mainActivity.dismissCreateNote(note);
+                    } else {
+                        throw new ClassCastException(context.toString()
+                                + " must implement MainActivity");
+                    }
                 } else {
                     // note failed to upload to firebase
                     Log.i(TAG, "onFailure to upload note to firebase");
-                    pbLoading.setVisibility(View.INVISIBLE);
                     Toast.makeText(context, "Note upload failed! Try again.", Toast.LENGTH_SHORT).show();
                 }
+
+                pbLoading.setVisibility(View.INVISIBLE);
             }
         });
     }

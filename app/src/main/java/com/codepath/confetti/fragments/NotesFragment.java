@@ -1,5 +1,6 @@
 package com.codepath.confetti.fragments;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.codepath.confetti.NoteDetailsActivity;
 import com.codepath.confetti.R;
 import com.codepath.confetti.adapters.NotesAdapter;
 import com.codepath.confetti.databinding.FragmentNotesBinding;
@@ -33,6 +35,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.jetbrains.annotations.NotNull;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +77,7 @@ public class NotesFragment extends Fragment {
 
     // create note
     private FloatingActionButton fabCreateNote;
+    private UploadBottomSheetFragment uploadBottomSheetFragment;
 
     public NotesFragment() {
         // Required empty public constructor
@@ -295,7 +299,7 @@ public class NotesFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "create note !");
-                UploadBottomSheetFragment uploadBottomSheetFragment = new UploadBottomSheetFragment();
+                uploadBottomSheetFragment = new UploadBottomSheetFragment();
                 uploadBottomSheetFragment.show(getChildFragmentManager(), uploadBottomSheetFragment.getTag());
             }
         });
@@ -326,5 +330,27 @@ public class NotesFragment extends Fragment {
             // populate parent fragment chip group with all chips selected
             Chips.populateChipsDeletable(getContext(), chipGroup, checkedChipIds, checkedChipIdsSet, allChipsGroup, adapter, searchView, allNotes, currentNotes, allChips);
         }
+    }
+
+    /**
+     * Called upon completion of uploading a new note to firebase,
+     * dismisses uploadBottomSheetFragment, and start intent for the new note's details page
+     * @param note the newly created note
+     */
+    public void dismissCreateNote(Note note) {
+        uploadBottomSheetFragment.dismiss();
+
+        // got to new note details activity
+        goToNote(note);
+    }
+
+    /**
+     * Intent to go to NoteDetailsActivity for clicked note
+     * @param note
+     */
+    private void goToNote(Note note) {
+        Intent intent = new Intent(getContext(), NoteDetailsActivity.class);
+        intent.putExtra(Note.class.getSimpleName(), Parcels.wrap(note));
+        getContext().startActivity(intent);
     }
 }
