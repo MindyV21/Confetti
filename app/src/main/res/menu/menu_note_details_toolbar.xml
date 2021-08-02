@@ -3,6 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/action_create_prediction"
+        android:icon="@drawable/ic_baseline_add_24"
+        android:title="Create Prediction"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_fullscreen"
         android:icon="@drawable/ic_baseline_fullscreen_24"
         android:title="Fullscreen"

@@ -90,10 +90,6 @@ public class NoteDetailsActivity extends AppCompatActivity
     private NoteImagesFragment noteImagesFragment;
 
     // predictions
-    private CreatePredictionFragment createPredictionFragment;
-    private FloatingActionButton fabCreatePrediction;
-    private CircularRevealFrameLayout sheetCreatePrediction;
-
     private LinearLayout mBottomSheetLayout;
     private BottomSheetBehavior sheetBehavior;
     private ImageView header_Arrow_Image;
@@ -278,27 +274,9 @@ public class NoteDetailsActivity extends AppCompatActivity
             Animations.fadeOut(nellieConfetti);
         }
 
-        // attach fragment of note predictions
-        createPredictionFragment = CreatePredictionFragment.newInstance(note);
-        getSupportFragmentManager().beginTransaction().add(R.id.flCreatePrediction, createPredictionFragment).commit();
-
-        fabCreatePrediction = binding.fabCreatePrediction;
-        sheetCreatePrediction = binding.sheetCreatePrediction;
         mBottomSheetLayout = view.findViewById(R.id.bottom_sheet_layout);
         sheetBehavior = BottomSheetBehavior.from(mBottomSheetLayout);
         header_Arrow_Image = view.findViewById(R.id.bottom_sheet_arrow);
-
-        // to start creating a prediction
-        fabCreatePrediction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // expand create predictions menu
-                fabCreatePrediction.setExpanded(true);
-
-                // hide chip and predictions layout
-                Animations.slideDown((View) mBottomSheetLayout, 0);
-            }
-        });
 
         // listener to expand / collapse dialog
         header_Arrow_Image.setOnClickListener(new View.OnClickListener() {
@@ -318,12 +296,6 @@ public class NoteDetailsActivity extends AppCompatActivity
         sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                // hide fab when sliding, fab shown when sheet collapsed completely
-                if (BottomSheetBehavior.STATE_DRAGGING == newState || BottomSheetBehavior.STATE_EXPANDED == newState) {
-                    fabCreatePrediction.animate().scaleX(0).scaleY(0).setDuration(300).start();
-                } else if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
-                    fabCreatePrediction.animate().scaleX(1).scaleY(1).setDuration(300).start();
-                }
             }
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
@@ -477,6 +449,11 @@ public class NoteDetailsActivity extends AppCompatActivity
 
             // to consume menu item
             return true;
+        } else if (item.getItemId() == R.id.action_create_prediction) {
+            Log.i(TAG, "create prediction");
+            // attach fragment of note predictions
+            CreatePredictionFragment createPredictionFragment = CreatePredictionFragment.newInstance(note);
+            createPredictionFragment.show(getSupportFragmentManager(), createPredictionFragment.getTag());
         }
 
         return super.onOptionsItemSelected(item);
@@ -549,18 +526,6 @@ public class NoteDetailsActivity extends AppCompatActivity
         if (note.getPredictions().size() == 0) {
             Animations.fadeIn(nellieConfetti);
         }
-    }
-
-    /**
-     * UI changes for closing the create predictions fragment
-     */
-    @Override
-    public void onCancelCreatePrediction() {
-        // exit out of create prediction view
-        fabCreatePrediction.setExpanded(false);
-
-        // show chips and prediction views
-        Animations.reverseSlideDown((View) mBottomSheetLayout);
     }
 
     /**

@@ -10,64 +10,101 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/etFileName"
-            android:layout_width="300dp"
+        <!--header-->
+        <RelativeLayout
+            android:id="@+id/relLayoutHeader"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_above="@+id/layoutPhotoButtons"/>
+            android:layout_margin="10dp">
 
-        <LinearLayout
-            android:id="@+id/layoutPhotoButtons"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/ivPreview"
-            android:orientation="horizontal"
-            android:layout_centerHorizontal="true">
-
-            <ImageButton
-                android:id="@+id/btnUploadGallery"
+            <TextView
+                android:id="@+id/tvCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_baseline_insert_photo_24"
-                android:backgroundTint="?attr/colorPrimary"/>
+                android:text="Cancel"
+                android:textColor="?attr/colorPrimaryVariant"
+                android:textSize="16dp"
+                android:clickable="true"/>
 
-            <ImageButton
-                android:id="@+id/btnTakePhoto"
+            <TextView
+                android:id="@+id/tvCreateNoteHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/btnUploadGallery"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_baseline_camera_alt_24"
-                android:backgroundTint="?attr/colorPrimary"/>
+                android:layout_centerInParent="true"
+                android:text="New Note"
+                android:textColor="?attr/colorPrimaryVariant"
+                android:textSize="16dp"
+                android:textStyle="bold" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/tvCreate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create"
+                android:textColor="?attr/colorPrimaryVariant"
+                android:textSize="16dp"
+                android:clickable="true"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/ivPreview"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_centerInParent="true"
-            android:scaleType="centerCrop"
-            app:srcCompat="@drawable/confetti" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/relLayoutHeader">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:id="@+id/ivPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/confetti"
+                    android:layout_marginBottom="20dp"/>
 
-        <Button
-            android:id="@+id/btnSubmit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Submit"
-            android:layout_below="@id/ivPreview"
-            android:layout_centerHorizontal="true"/>
+                <LinearLayout
+                    android:id="@+id/layoutPhotoButtons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ivPreview"
+                    android:orientation="horizontal"
+                    android:layout_centerHorizontal="true">
 
-        <ProgressBar
-            android:id="@+id/pbLoading"
-            android:visibility="invisible"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/btnSubmit"
-            android:layout_centerHorizontal="true"/>
+                    <ImageButton
+                        android:id="@+id/btnUploadGallery"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/ic_baseline_insert_photo_24"
+                        android:backgroundTint="?attr/colorPrimary"/>
 
+                    <ImageButton
+                        android:id="@+id/btnTakePhoto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@id/btnUploadGallery"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/ic_baseline_camera_alt_24"
+                        android:backgroundTint="?attr/colorPrimary"/>
+
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/etFileName"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/layoutPhotoButtons"/>
+
+                <ProgressBar
+                    android:id="@+id/pbLoading"
+                    android:visibility="invisible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/etFileName"
+                    android:layout_centerHorizontal="true"/>
+            </RelativeLayout>
+        </ScrollView>
     </RelativeLayout>
 
 </FrameLayout>

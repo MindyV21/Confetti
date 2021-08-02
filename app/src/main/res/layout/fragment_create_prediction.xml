@@ -1,40 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardPrediction"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:cardBackgroundColor="#E6E6E6"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="8dp">
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/relLayoutHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:id="@+id/tvCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:textColor="?attr/colorPrimaryVariant"
+            android:textSize="16dp"
+            android:clickable="true"/>
+
+        <TextView
+            android:id="@+id/tvCreateNoteHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="New Keyword"
+            android:textColor="?attr/colorPrimaryVariant"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvCreate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create"
+            android:textColor="?attr/colorPrimaryVariant"
+            android:textSize="16dp"
+            android:clickable="true"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/relLayoutHeader">
 
         <RelativeLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:background="@color/white">
 
-            <ImageView
-                android:id="@+id/ivCancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:clickable="true"
-                tools:srcCompat="@drawable/ic_baseline_cancel_24" />
-
             <com.codepath.confetti.models.PinView
                 android:id="@+id/ssivCreatePrediction"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="500dp"
                 android:clickable="true"
                 android:adjustViewBounds="true"
-                android:scaleType="fitStart"
-                android:layout_below="@id/ivCancel"/>
+                android:scaleType="fitStart"/>
 
             <com.google.android.material.tabs.TabLayout
                 android:layout_width="match_parent"
@@ -67,14 +93,14 @@
                     android:hint="Enter keyword..."
                     android:singleLine="true"
                     />
-                <Button
-                    android:id="@+id/btnCreatePrediction"
+                <ProgressBar
+                    android:id="@+id/pbLoading"
+                    android:visibility="invisible"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:layout_below="@id/etText"
-                    android:text="Create Prediction"/>
+                    android:layout_centerHorizontal="true"/>
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
-</androidx.cardview.widget.CardView>
+</RelativeLayout>

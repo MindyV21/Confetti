@@ -109,9 +109,12 @@ public class NotesFragment extends Fragment {
         ivChipToggle = binding.ivChipToggle;
         chipGroup = binding.chipGroup;
 
+        fabCreateNote = binding.fabCreateNote;
+
         initSearchBar();
         initNotesList();
         initChips();
+        initCreateNote();
     }
 
     /**
@@ -279,6 +282,21 @@ public class NotesFragment extends Fragment {
                 Log.d(TAG, "NOTES LIST allChips size - " + allChips.size());
                 ChipsBottomSheetFragment tagFragment = ChipsBottomSheetFragment.newInstance(allChips);
                 tagFragment.show(getChildFragmentManager(), tagFragment.getTag());
+            }
+        });
+    }
+
+    /**
+     * set up create note function
+     */
+    private void initCreateNote() {
+        // set up create note fab
+        fabCreateNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "create note !");
+                UploadFragment uploadFragment = new UploadFragment();
+                uploadFragment.show(getChildFragmentManager(), uploadFragment.getTag());
             }
         });
     }

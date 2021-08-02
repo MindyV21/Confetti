@@ -72,37 +72,7 @@
         android:id="@+id/coordinatorLayoutPredictions"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <include layout="@layout/bottom_sheet_predictions" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabCreatePrediction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:layout_margin="15dp"
-            android:backgroundTint="?attr/colorPrimary"
-            android:src="@drawable/ic_baseline_add_24"
-            app:fabSize="mini"
-            app:layout_anchor="@+id/bottom_sheet_layout"
-            app:layout_anchorGravity="top|end"
-            app:layout_dodgeInsetEdges="bottom" />
-
-        <com.google.android.material.circularreveal.CircularRevealFrameLayout
-            android:id="@+id/sheetCreatePrediction"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:visibility="invisible"
-            android:layout_margin="15dp"
-            app:layout_behavior="com.google.android.material.transformation.FabTransformationSheetBehavior">
-
-            <FrameLayout
-                android:id="@+id/flCreatePrediction"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-        </com.google.android.material.circularreveal.CircularRevealFrameLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </RelativeLayout>

@@ -1,5 +1,8 @@
 package com.codepath.confetti.fragments;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,15 +18,18 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.confetti.utlils.Firebase;
@@ -34,6 +40,9 @@ import com.codepath.confetti.models.Note;
 import com.codepath.confetti.models.Prediction;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -52,18 +61,26 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Fragment where user can upload photo files of their notes
  */
-public class UploadFragment extends Fragment {
+public class UploadFragment extends BottomSheetDialogFragment {
 
     public static final String TAG = "UploadFragment";
 
     private FragmentUploadBinding binding;
+
+    // to disable click events when backend running
+    private Boolean isLoading;
+
+    // header
+    private TextView tvCancel;
+
     private EditText etFileName;
     private ImageButton btnTakePhoto;
     private ImageButton btnUploadGallery;
     private ImageView ivPreview;
-    private Button btnSubmit;
+    private TextView tvCreate;
     private ProgressBar pbLoading;
 
+    // photo upload / camera
     public final static int PICK_PHOTO_CODE = 1046;
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     public String photoFileName = "photo.jpg";
@@ -88,14 +105,26 @@ public class UploadFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        isLoading = false;
+
+        tvCancel = binding.tvCancel;
         etFileName = binding.etFileName;
         btnTakePhoto = binding.btnTakePhoto;
         btnUploadGallery = binding.btnUploadGallery;
         ivPreview = binding.ivPreview;
-        btnSubmit = binding.btnSubmit;
+        tvCreate = binding.tvCreate;
         pbLoading = binding.pbLoading;
 
         etFileName.setText("");
+
+        // dismiss
+        tvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "cancel creating prediction");
+                dismiss();
+            }
+        });
 
         // take a photo with phone's camera
         btnTakePhoto.setOnClickListener(new View.OnClickListener() {
@@ -116,7 +145,7 @@ public class UploadFragment extends Fragment {
         });
 
         // submit a note
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
+        tvCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // make sure there is a file name
@@ -141,6 +170,53 @@ public class UploadFragment extends Fragment {
             }
         });
 
+    }
+
+    @NonNull
+    @NotNull
+    @Override
+    public Dialog onCreateDialog(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override public void onShow(DialogInterface dialogInterface) {
+                BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
+                setupFullHeight(bottomSheetDialog);
+            }
+        });
+        return  dialog;
+    }
+
+    /**
+     * Sets the bottom sheet height to fit the screen
+     * @param bottomSheetDialog
+     */
+    private void setupFullHeight(BottomSheetDialog bottomSheetDialog) {
+        FrameLayout bottomSheet = (FrameLayout) bottomSheetDialog.findViewById(R.id.design_bottom_sheet);
+        BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
+        ViewGroup.LayoutParams layoutParams = bottomSheet.getLayoutParams();
+
+        int windowHeight = getWindowHeight();
+        if (layoutParams != null) {
+            layoutParams.height = windowHeight;
+        }
+        bottomSheet.setLayoutParams(layoutParams);
+        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+
+    /**
+     * Gets the window height
+     * @return
+     */
+    private int getWindowHeight() {
+        // Calculate window height for fullscreen use
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.heightPixels;
+    }
+
+    @Override
+    public void onDismiss(@NonNull @NotNull DialogInterface dialog) {
+        super.onDismiss(dialog);
     }
 
     //TODO: tbd dummy data to not overload firebase storage

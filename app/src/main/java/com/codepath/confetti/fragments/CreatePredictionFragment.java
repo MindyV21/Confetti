@@ -1,5 +1,8 @@
 package com.codepath.confetti.fragments;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -16,7 +20,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,6 +38,9 @@ import com.codepath.confetti.models.Prediction;
 import com.codepath.confetti.utlils.Firebase;
 import com.codepath.confetti.models.PinView;
 import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.tabs.TabLayout;
 
 import org.jetbrains.annotations.NotNull;
@@ -48,7 +58,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Fragment to create a new prediction for a specific note
  */
-public class CreatePredictionFragment extends Fragment {
+public class CreatePredictionFragment extends BottomSheetDialogFragment {
 
     public static final String TAG = "CreatePredictionFragment";
     private FragmentCreatePredictionBinding binding;
@@ -56,11 +66,12 @@ public class CreatePredictionFragment extends Fragment {
     private Bitmap takenImage;
     private Prediction newPrediction;
 
-    private ImageView ivCancel;
+    private TextView tvCancel;
     private PinView ssivCreatePrediction;
     private TabLayout tabLayoutCreatePrediction;
     private EditText etText;
-    private Button btnCreatePrediction;
+    private TextView tvCreate;
+    private ProgressBar pbLoading;
 
     // the fragment initialization parameters
     private static final String NOTE = "note";
@@ -107,11 +118,12 @@ public class CreatePredictionFragment extends Fragment {
 
         newPrediction = new Prediction();
 
-        ivCancel = binding.ivCancel;
+        tvCancel = binding.tvCancel;
         ssivCreatePrediction = binding.ssivCreatePrediction;
         tabLayoutCreatePrediction = binding.tabLayoutCreatePrediction;
         etText = binding.etText;
-        btnCreatePrediction = binding.btnCreatePrediction;
+        tvCreate = binding.tvCreate;
+        pbLoading = binding.pbLoading;
 
         ssivCreatePrediction.setZoomEnabled(false);
 
@@ -121,13 +133,10 @@ public class CreatePredictionFragment extends Fragment {
         onUploadPhoto();
 
         // to exit creating a prediction
-        Drawable drawable = AppCompatResources.getDrawable(getContext(), R.drawable.ic_baseline_cancel_24);
-        ivCancel.setImageDrawable(drawable);
-        ivCancel.setOnClickListener(new View.OnClickListener() {
+        tvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CreatePredictionListener listener = (CreatePredictionListener) getActivity();
-                listener.onCancelCreatePrediction();
+                dismiss();
             }
         });
 
@@ -158,7 +167,7 @@ public class CreatePredictionFragment extends Fragment {
         initImage();
 
         // creates a new prediction !
-        btnCreatePrediction.setOnClickListener(new View.OnClickListener() {
+        tvCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick btn create prediction !");
@@ -206,6 +215,48 @@ public class CreatePredictionFragment extends Fragment {
         });
     }
 
+    @NonNull
+    @NotNull
+    @Override
+    public Dialog onCreateDialog(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override public void onShow(DialogInterface dialogInterface) {
+                BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
+                setupFullHeight(bottomSheetDialog);
+            }
+        });
+        return  dialog;
+    }
+
+    /**
+     * Sets the bottom sheet height to fit the screen
+     * @param bottomSheetDialog
+     */
+    private void setupFullHeight(BottomSheetDialog bottomSheetDialog) {
+        FrameLayout bottomSheet = (FrameLayout) bottomSheetDialog.findViewById(R.id.design_bottom_sheet);
+        BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
+        ViewGroup.LayoutParams layoutParams = bottomSheet.getLayoutParams();
+
+        int windowHeight = getWindowHeight();
+        if (layoutParams != null) {
+            layoutParams.height = windowHeight;
+        }
+        bottomSheet.setLayoutParams(layoutParams);
+        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+
+    /**
+     * Gets the window height
+     * @return
+     */
+    private int getWindowHeight() {
+        // Calculate window height for fullscreen use
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.heightPixels;
+    }
+
     /**
      * Sets up gesture detection for canvas
      */
@@ -242,8 +293,6 @@ public class CreatePredictionFragment extends Fragment {
      * Interface for fragment and activity communication
      */
     public interface CreatePredictionListener {
-        // when exiting creating a new prediction
-        public void onCancelCreatePrediction();
         // when a new prediction is created
         public void addPinToImage(Boolean firstPrediction);
     }
