@@ -3,11 +3,13 @@ package com.codepath.confetti.fragments;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
@@ -124,7 +126,8 @@ public class UploadFragment extends Fragment {
                     return;
                 }
                 // check an image is loaded in
-                if (photoFile == null || ivPreview.getDrawable() == null) {
+                Drawable drawable = AppCompatResources.getDrawable(getContext(), R.drawable.confetti);
+                if (photoFile == null || ivPreview.getDrawable() == drawable) {
                     Toast.makeText(getContext(), "There is no image!", Toast.LENGTH_SHORT).show();
                     return;
                 }

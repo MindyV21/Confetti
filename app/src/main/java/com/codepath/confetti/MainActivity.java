@@ -17,6 +17,7 @@ import com.codepath.confetti.fragments.NotesFragment;
 import com.codepath.confetti.fragments.SettingsBottomSheetFragment;
 import com.codepath.confetti.fragments.UploadFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
 
     final FragmentManager fragmentManager = getSupportFragmentManager();
-    private BottomNavigationView bottomNavigationView;
+    private NotesFragment notesFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,27 +50,9 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle(getString(R.string.app_name));
         setSupportActionBar(toolbar);
 
-        // set up bottom navigation
-        bottomNavigationView = binding.bottomNavigation;
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment;
-                switch (item.getItemId()) {
-                    case R.id.action_upload:
-                        switchFragments(getString(R.string.upload_fragment), getString(R.string.notes_fragment));
-                        break;
-                    case R.id.action_home:
-                    default:
-                        switchFragments(getString(R.string.notes_fragment), getString(R.string.upload_fragment));
-                        break;
-                }
-                return true;
-            }
-        });
-
-        // Set default selection
-        bottomNavigationView.setSelectedItemId(R.id.action_home);
+        // set up notes list
+        notesFragment = new NotesFragment();
+        fragmentManager.beginTransaction().add(R.id.flContainer, notesFragment).commit();
     }
 
     @Override

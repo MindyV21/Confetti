@@ -24,6 +24,7 @@ import com.codepath.confetti.utlils.Animations;
 import com.codepath.confetti.utlils.Chips;
 import com.codepath.confetti.utlils.Firebase;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -70,6 +71,9 @@ public class NotesFragment extends Fragment {
     protected ChipGroup chipGroup;
     protected TreeMap<String, Boolean> allChips;
     protected Set<String> currentChips;
+
+    // create note
+    private FloatingActionButton fabCreateNote;
 
     public NotesFragment() {
         // Required empty public constructor
