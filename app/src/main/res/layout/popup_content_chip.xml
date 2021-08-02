@@ -2,14 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/black">
+    android:padding="10dp"
+    android:background="@drawable/shape_view_border">
+
     <TextView
         android:id="@+id/tvDeleteChip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_centerInParent="true"
         android:text="Delete tag"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#ffffff" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 </RelativeLayout>
