@@ -32,10 +32,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codepath.confetti.databinding.FragmentUploadBottomSheetBinding;
 import com.codepath.confetti.utlils.Firebase;
-import com.codepath.confetti.utlils.NanonetsApi;
 import com.codepath.confetti.R;
-import com.codepath.confetti.databinding.FragmentUploadBinding;
 import com.codepath.confetti.models.Note;
 import com.codepath.confetti.models.Prediction;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -61,11 +60,11 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Fragment where user can upload photo files of their notes
  */
-public class UploadFragment extends BottomSheetDialogFragment {
+public class UploadBottomSheetFragment extends BottomSheetDialogFragment {
 
-    public static final String TAG = "UploadFragment";
+    public static final String TAG = "UploadBottomSheetFragment";
 
-    private FragmentUploadBinding binding;
+    private FragmentUploadBottomSheetBinding binding;
 
     // to disable click events when backend running
     private Boolean isLoading;
@@ -87,14 +86,14 @@ public class UploadFragment extends BottomSheetDialogFragment {
     private Bitmap selectedImage;
     File photoFile;
 
-    public UploadFragment() {
+    public UploadBottomSheetFragment() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentUploadBinding.inflate(getLayoutInflater(), container, false);
+        binding = FragmentUploadBottomSheetBinding.inflate(getLayoutInflater(), container, false);
         // layout of fragment is stored in a special property called root
         View view = binding.getRoot();
         // Inflate the layout for this fragment
@@ -205,6 +204,8 @@ public class UploadFragment extends BottomSheetDialogFragment {
             @Override public void onShow(DialogInterface dialogInterface) {
                 BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
                 setupFullHeight(bottomSheetDialog);
+
+
             }
         });
         return  dialog;

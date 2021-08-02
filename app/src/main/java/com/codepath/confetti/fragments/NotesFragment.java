@@ -295,8 +295,8 @@ public class NotesFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Log.i(TAG, "create note !");
-                UploadFragment uploadFragment = new UploadFragment();
-                uploadFragment.show(getChildFragmentManager(), uploadFragment.getTag());
+                UploadBottomSheetFragment uploadBottomSheetFragment = new UploadBottomSheetFragment();
+                uploadBottomSheetFragment.show(getChildFragmentManager(), uploadBottomSheetFragment.getTag());
             }
         });
     }

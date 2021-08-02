@@ -1,7 +1,6 @@
 package com.codepath.confetti;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -32,7 +31,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.codepath.confetti.adapters.PredictionSlidePagerAdapter;
 import com.codepath.confetti.databinding.ActivityNoteDetailsBinding;
 import com.codepath.confetti.fragments.AddChipDialogFragment;
-import com.codepath.confetti.fragments.CreatePredictionFragment;
+import com.codepath.confetti.fragments.CreatePredictionBottomSheetFragment;
 import com.codepath.confetti.fragments.NoteImagesFragment;
 import com.codepath.confetti.models.Note;
 import com.codepath.confetti.models.Prediction;
@@ -44,8 +43,6 @@ import com.codepath.confetti.utlils.ZoomOutPageTransformer;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.circularreveal.CircularRevealFrameLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
 import org.parceler.Parcels;
@@ -60,7 +57,7 @@ import pl.droidsonroids.gif.GifImageView;
  */
 public class NoteDetailsActivity extends AppCompatActivity
         implements NoteImagesFragment.OnItemSelectedListener, AddChipDialogFragment.AddChipDialogListener, PredictionSlidePagerAdapter.UpdatePredictions,
-        CreatePredictionFragment.CreatePredictionListener {
+        CreatePredictionBottomSheetFragment.CreatePredictionListener {
 
     public static final String TAG = "NoteDetailsActivity";
     private ActivityNoteDetailsBinding binding;
@@ -452,8 +449,8 @@ public class NoteDetailsActivity extends AppCompatActivity
         } else if (item.getItemId() == R.id.action_create_prediction) {
             Log.i(TAG, "create prediction");
             // attach fragment of note predictions
-            CreatePredictionFragment createPredictionFragment = CreatePredictionFragment.newInstance(note);
-            createPredictionFragment.show(getSupportFragmentManager(), createPredictionFragment.getTag());
+            CreatePredictionBottomSheetFragment createPredictionBottomSheetFragment = CreatePredictionBottomSheetFragment.newInstance(note);
+            createPredictionBottomSheetFragment.show(getSupportFragmentManager(), createPredictionBottomSheetFragment.getTag());
         }
 
         return super.onOptionsItemSelected(item);

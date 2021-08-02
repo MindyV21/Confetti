@@ -15,9 +15,7 @@ import android.view.View;
 import com.codepath.confetti.databinding.ActivityMainBinding;
 import com.codepath.confetti.fragments.NotesFragment;
 import com.codepath.confetti.fragments.SettingsBottomSheetFragment;
-import com.codepath.confetti.fragments.UploadFragment;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.codepath.confetti.fragments.UploadBottomSheetFragment;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.jetbrains.annotations.NotNull;
@@ -89,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             //if the fragment does not exist, add it to fragment manager.
             Fragment fragment;
             if (currentTag.equals(getString(R.string.upload_fragment)))
-                fragment = new UploadFragment();
+                fragment = new UploadBottomSheetFragment();
             else
                 fragment = new NotesFragment();
 

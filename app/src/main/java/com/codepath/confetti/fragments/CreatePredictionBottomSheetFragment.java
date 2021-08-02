@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,21 +17,17 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.fragment.app.Fragment;
 
 import com.codepath.confetti.R;
-import com.codepath.confetti.databinding.FragmentCreatePredictionBinding;
+import com.codepath.confetti.databinding.FragmentCreatePredictionBottomSheetBinding;
 import com.codepath.confetti.models.Note;
 import com.codepath.confetti.models.Prediction;
 import com.codepath.confetti.utlils.Firebase;
@@ -58,10 +53,10 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Fragment to create a new prediction for a specific note
  */
-public class CreatePredictionFragment extends BottomSheetDialogFragment {
+public class CreatePredictionBottomSheetFragment extends BottomSheetDialogFragment {
 
-    public static final String TAG = "CreatePredictionFragment";
-    private FragmentCreatePredictionBinding binding;
+    public static final String TAG = "CreatePredictionBottomSheetFragment";
+    private FragmentCreatePredictionBottomSheetBinding binding;
 
     private Bitmap takenImage;
     private Prediction newPrediction;
@@ -77,15 +72,15 @@ public class CreatePredictionFragment extends BottomSheetDialogFragment {
     private static final String NOTE = "note";
     private Note note;
 
-    public CreatePredictionFragment() {}
+    public CreatePredictionBottomSheetFragment() {}
 
     /**
      * Sets note predictions to be inflated
      * @param note note
      * @return new instance of fragment for a specified note
      */
-    public static CreatePredictionFragment newInstance(Note note) {
-        CreatePredictionFragment frag = new CreatePredictionFragment();
+    public static CreatePredictionBottomSheetFragment newInstance(Note note) {
+        CreatePredictionBottomSheetFragment frag = new CreatePredictionBottomSheetFragment();
         Bundle args = new Bundle();
         args.putParcelable(NOTE, Parcels.wrap(note));
         frag.setArguments(args);
@@ -105,7 +100,7 @@ public class CreatePredictionFragment extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentCreatePredictionBinding.inflate(getLayoutInflater(), container, false);
+        binding = FragmentCreatePredictionBottomSheetBinding.inflate(getLayoutInflater(), container, false);
         // layout of fragment is stored in a special property called root
         View view = binding.getRoot();
         // Inflate the layout for this fragment

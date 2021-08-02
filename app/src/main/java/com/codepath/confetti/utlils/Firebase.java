@@ -110,7 +110,7 @@ public class Firebase {
     }
 
     /**
-     * Calling by UploadFragment to upload note and photo file data, used over uploadImage() for
+     * Calling by UploadBottomSheetFragment to upload note and photo file data, used over uploadImage() for
      * more readable method names
      * @param context
      * @param pbLoading
