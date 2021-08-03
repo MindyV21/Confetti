@@ -24,7 +24,8 @@
                 android:text="Cancel"
                 android:textColor="?attr/colorPrimaryVariant"
                 android:textSize="16dp"
-                android:clickable="true"/>
+                android:clickable="true"
+                android:background="?android:attr/selectableItemBackground"/>
 
             <TextView
                 android:id="@+id/tvCreateNoteHeader"
@@ -44,7 +45,8 @@
                 android:textColor="?attr/colorPrimaryVariant"
                 android:textSize="16dp"
                 android:clickable="true"
-                android:layout_alignParentEnd="true"/>
+                android:layout_alignParentEnd="true"
+                android:background="?android:attr/selectableItemBackground"/>
         </RelativeLayout>
 
         <ScrollView

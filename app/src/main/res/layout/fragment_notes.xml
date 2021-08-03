@@ -31,7 +31,8 @@
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/searchView"
                 android:clickable="true"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:background="?android:attr/selectableItemBackground"/>
         </LinearLayout>
 
         <HorizontalScrollView
