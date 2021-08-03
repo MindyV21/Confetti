@@ -227,6 +227,11 @@ public class SignUpActivity extends AppCompatActivity {
      * Clears input fields
      */
     private void clearFields(){
+        etFullName.setFocusable(false);
+        etEmail.setFocusable(false);
+        etPassword.setFocusable(false);
+        etConfirmPassword.setFocusable(false);
+
         etFullName.setText("");
         etEmail.setText("");
         etPassword.setText("");

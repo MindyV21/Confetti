@@ -65,13 +65,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|left"
-                android:layout_margin="16dp"
+                android:layout_margin="8dp"
                 android:backgroundTint="?attr/colorPrimary"
                 android:src="@drawable/ic_baseline_add_24"
-                app:backgroundTint="@color/white"
+                app:fabSize="mini"
                 app:layout_anchor="@id/rvNotes"
                 app:layout_anchorGravity="bottom|left|end"
-                app:layout_behavior=".utlils.ScrollAwareFABBehavior"/>
+                app:layout_behavior=".utlils.ScrollAwareFABBehavior" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

@@ -94,7 +94,9 @@
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_below="@+id/layoutPhotoButtons"/>
+                    android:layout_below="@+id/layoutPhotoButtons"
+                    android:hint="Throw some confetti..."
+                    android:singleLine="true"/>
 
                 <ProgressBar
                     android:id="@+id/pbLoading"

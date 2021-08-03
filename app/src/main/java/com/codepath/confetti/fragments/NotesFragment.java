@@ -171,6 +171,7 @@ public class NotesFragment extends Fragment {
                 Log.i(TAG, "note added" + snapshot.toString());
                 Animations.fadeOut(nellieConfetti);
 
+
                 // create note from firebase database
                 Note note = snapshot.getValue(Note.class);
                 note.setId(snapshot.getKey());
