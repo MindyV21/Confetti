@@ -82,6 +82,7 @@ public class SignUpActivity extends AppCompatActivity {
     private void goToMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     /**
@@ -207,6 +208,7 @@ public class SignUpActivity extends AppCompatActivity {
                                         clearFields();
                                         // redirect to login layout!
                                         finish();
+                                        overridePendingTransition(R.anim.left_in, R.anim.right_out);
                                     } else {
                                         // failed to upload user to database
                                         Toast.makeText(SignUpActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
@@ -227,11 +229,6 @@ public class SignUpActivity extends AppCompatActivity {
      * Clears input fields
      */
     private void clearFields(){
-        etFullName.setFocusable(false);
-        etEmail.setFocusable(false);
-        etPassword.setFocusable(false);
-        etConfirmPassword.setFocusable(false);
-
         etFullName.setText("");
         etEmail.setText("");
         etPassword.setText("");

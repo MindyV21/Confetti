@@ -86,6 +86,7 @@ public class LoginActivity extends AppCompatActivity {
         clearFields();
         Intent i = new Intent(this, SignUpActivity.class);
         startActivity(i);
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     /**
@@ -181,9 +182,7 @@ public class LoginActivity extends AppCompatActivity {
      * Clears input fields
      */
     private void clearFields() {
-        etEmail.setFocusable(false);
         etEmail.setText("");
-        etPassword.setFocusable(false);
         etPassword.setText("");
     }
 }
