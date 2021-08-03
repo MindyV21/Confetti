@@ -38,7 +38,7 @@ public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
     private NotesFragment parentFragment;
     private ChipGroup chipGroup;
 
-    private TextView tvCancelDone;
+    private TextView tvDone;
 
     // the fragment initialization parameters
     private static final String ALL_CHIPS = "allChips";
@@ -88,12 +88,12 @@ public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
         parentFragment = ((NotesFragment) ChipsBottomSheetFragment.this.getParentFragment());
 
         chipGroup = binding.chipGroup;
-        tvCancelDone = binding.tvCancelDone;
+        tvDone = binding.tvDone;
 
         // populate fragment with all chips available
         Chips.populateChipsSelectable(getContext(), chipGroup, allChips);
 
-        tvCancelDone.setOnClickListener(new View.OnClickListener() {
+        tvDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
@@ -134,6 +134,8 @@ public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
             @Override public void onShow(DialogInterface dialogInterface) {
                 BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
                 UtilsGeneral.setupBottomSheetHeight(bottomSheetDialog, getContext(), 0.9f);
+
+
             }
         });
         return  dialog;

@@ -67,6 +67,7 @@ public class Chips {
 
             setChipAppearance(context, newChip);
             newChip.setChipStrokeColorResource(R.color.grey);
+            newChip.setChipStrokeWidth(UtilsGeneral.convertDpToFloat(1.5f));
             newChip.setTextColor(context.getColor(R.color.grey));
 
             chipGroup.addView(newChip);

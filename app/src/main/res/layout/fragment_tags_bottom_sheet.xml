@@ -18,8 +18,7 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="20dp"
             android:paddingTop="20dp"
-            android:paddingBottom="15dp"
-            android:background="@drawable/shape_view_border_bottom">
+            android:paddingBottom="15dp">
 
             <TextView
                 android:id="@+id/tvTagHeader"
@@ -27,15 +26,16 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:text="Filter by Tag"
+                android:textColor="@color/white"
                 android:textSize="16dp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvCancelDone"
+                android:id="@+id/tvDone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cancel"
-                android:textColor="?attr/colorPrimaryVariant"
+                android:text="Done"
+                android:textColor="@color/white"
                 android:textSize="16dp"
                 android:clickable="true"
                 android:layout_alignParentEnd="true"
@@ -45,13 +45,17 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/relLayoutHeader">
+            android:layout_below="@id/relLayoutHeader"
+            android:paddingTop="10dp"
+            android:paddingHorizontal="20dp"
+            android:background="@color/white">
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chipGroup"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:singleSelection="false"
+                app:chipSpacing="10dp"
                 android:layout_below="@id/relLayoutHeader">
 
                 <!-- Chips can be declared here, or added dynamically. -->

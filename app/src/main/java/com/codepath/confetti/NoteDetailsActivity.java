@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -141,6 +143,8 @@ public class NoteDetailsActivity extends AppCompatActivity
         ivTag.setImageDrawable(drawable);
         chipAdd.setText("Add tag");
         chipAdd.setChipIconTintResource(R.color.shrine_pink_900);
+        chipAdd.setChecked(true);
+        chipAdd.setTextColor(getColor(R.color.shrine_pink_900));
         Chips.setChipAppearance(this, chipAdd);
         chipAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,6 +191,7 @@ public class NoteDetailsActivity extends AppCompatActivity
     private void createNewChip(String chipName) {
         Chip newChip = new Chip(NoteDetailsActivity.this);
         newChip.setText(chipName);
+        newChip.setTextColor(getColor(R.color.shrine_pink_900));
         newChip.setChecked(true);
         Chips.setChipAppearance(this, newChip);
 
@@ -194,8 +199,38 @@ public class NoteDetailsActivity extends AppCompatActivity
         newChip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // display popup
-                displayChipPopupWindow(NoteDetailsActivity.this, view);
+                // alert dialog to delete a chip
+                new AlertDialog.Builder(NoteDetailsActivity.this)
+                        .setMessage("Delete tag '" + newChip.getText().toString() + "'?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.i(TAG, "deleting chip " + newChip.getText().toString());
+                                chipGroup.removeView(view);
+
+                                // remove chip from note chips
+                                List<String> chipNames = note.getChips();
+                                String chipName = ((Chip) view).getText().toString();
+                                int index = 0;
+                                boolean foundChip = false;
+                                while(index < chipNames.size() && !foundChip) {
+                                    if (chipName.equals(chipNames.get(index))) {
+                                        chipNames.remove(index);
+                                        foundChip = true;
+                                    }
+                                    index++;
+                                }
+
+                                // remove chip in firebase from note AND chip databases
+                                Log.d(TAG, "updating note chips in firebase");
+                                Firebase.deleteChipRef(NoteDetailsActivity.this, note, chipName);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) { }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             }
         });
 
@@ -209,54 +244,6 @@ public class NoteDetailsActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         AddChipDialogFragment addChipDialogFragment = new AddChipDialogFragment();
         addChipDialogFragment.show(fragmentManager, "fragment_add_chip");
-    }
-
-    /**
-     * Popup window to delete a specific chip from a note
-     * @param context
-     * @param anchorView
-     */
-    private void displayChipPopupWindow(Context context, View anchorView) {
-        PopupWindow popup = new PopupWindow(context);
-        View layout = getLayoutInflater().inflate(R.layout.popup_content_chip, null);
-        popup.setContentView(layout);
-        // Set content width and height
-        popup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-        popup.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-        // Closes the popup window when touch outside of it - when looses focus
-        popup.setOutsideTouchable(true);
-        popup.setFocusable(true);
-        // Show anchored to button
-        popup.setBackgroundDrawable(new BitmapDrawable());
-        popup.showAsDropDown(anchorView);
-
-        // click listener to delete chip
-        TextView tvDeleteChip = layout.findViewById(R.id.tvDeleteChip);
-        tvDeleteChip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "deleting chip");
-                popup.dismiss();
-                chipGroup.removeView(anchorView);
-
-                // remove chip from note chips
-                List<String> chipNames = note.getChips();
-                String chipName = ((Chip) anchorView).getText().toString();
-                int index = 0;
-                boolean foundChip = false;
-                while(index < chipNames.size() && !foundChip) {
-                    if (chipName.equals(chipNames.get(index))) {
-                        chipNames.remove(index);
-                        foundChip = true;
-                    }
-                    index++;
-                }
-
-                // remove chip in firebase from note AND chip databases
-                Log.d(TAG, "updating note chips in firebase");
-                Firebase.deleteChipRef(context, note, chipName);
-            }
-        });
     }
 
     /**
