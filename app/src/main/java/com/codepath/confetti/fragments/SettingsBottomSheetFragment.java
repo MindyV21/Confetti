@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.confetti.R;
@@ -34,6 +35,7 @@ public class SettingsBottomSheetFragment extends BottomSheetDialogFragment {
     public static final String TAG = "SettingsBottomSheetFragment";
     private FragmentSettingsBottomSheetBinding binding;
 
+    private TextView tvDone;
     private RelativeLayout layoutLogout;
 
     public SettingsBottomSheetFragment() {
@@ -54,6 +56,15 @@ public class SettingsBottomSheetFragment extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        tvDone = binding.tvDone;
+
+        tvDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
+
         layoutLogout = binding.layoutLogout;
 
         layoutLogout.setOnClickListener(new View.OnClickListener() {
@@ -62,6 +73,7 @@ public class SettingsBottomSheetFragment extends BottomSheetDialogFragment {
                 logout();
             }
         });
+
     }
 
 
@@ -69,17 +81,14 @@ public class SettingsBottomSheetFragment extends BottomSheetDialogFragment {
     @NotNull
     @Override
     public Dialog onCreateDialog(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        BottomSheetDialog dialog = new BottomSheetDialog(getContext(), R.style.BottomSheetDialog); // for rounded corners
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override public void onShow(DialogInterface dialogInterface) {
                 BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
-                UtilsGeneral.setupBottomSheetHeight(bottomSheetDialog, getContext(), 1);
-
-                BottomSheetBehavior bottomSheetBehavior = ((BottomSheetDialog) dialogInterface).getBehavior();
-                bottomSheetBehavior.setDraggable(false);
+                UtilsGeneral.setupBottomSheetHeight(bottomSheetDialog, getContext(), 0.9f);
             }
         });
-        return  dialog;
+        return dialog;
     }
 
     /**

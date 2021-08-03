@@ -129,13 +129,10 @@ public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         BottomSheetDialog dialog = new BottomSheetDialog(getContext(), R.style.BottomSheetDialog); // for rounded corners
-//        Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override public void onShow(DialogInterface dialogInterface) {
                 BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
                 UtilsGeneral.setupBottomSheetHeight(bottomSheetDialog, getContext(), 0.9f);
-
-
             }
         });
         return  dialog;
