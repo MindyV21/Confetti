@@ -118,7 +118,7 @@ public class NoteImagesFragment extends Fragment {
 //        }
 
 
-        onUploadPhoto();
+//        onUploadPhoto();
     }
 
     /**

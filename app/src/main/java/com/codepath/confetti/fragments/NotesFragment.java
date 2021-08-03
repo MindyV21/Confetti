@@ -347,18 +347,13 @@ public class NotesFragment extends Fragment {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                goToNote(note);
+                NotesFragmentListener listener = (NotesFragmentListener) getContext();
+                listener.goToNote(note);
             }
         }, 1000);
     }
 
-    /**
-     * Intent to go to NoteDetailsActivity for clicked note
-     * @param note
-     */
-    private void goToNote(Note note) {
-        Intent intent = new Intent(getContext(), NoteDetailsActivity.class);
-        intent.putExtra(Note.class.getSimpleName(), Parcels.wrap(note));
-        getContext().startActivity(intent);
+    public interface NotesFragmentListener {
+        public void goToNote(Note note);
     }
 }

@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -20,11 +21,12 @@ import com.codepath.confetti.models.Note;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.jetbrains.annotations.NotNull;
+import org.parceler.Parcels;
 
 /**
  * Activity for viewing and creating notes
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NotesFragment.NotesFragmentListener {
 
     private FirebaseAuth mAuth;
     public static final String TAG = "MainActivity";
@@ -82,5 +84,14 @@ public class MainActivity extends AppCompatActivity {
      */
     public void dismissCreateNote(Note note) {
         notesFragment.dismissCreateNote(note);
+    }
+
+    @Override
+    public void goToNote(Note note) {
+        Log.d(TAG, "note details of " + note.getName());
+        Intent intent = new Intent(MainActivity.this, NoteDetailsActivity.class);
+        intent.putExtra(Note.class.getSimpleName(), Parcels.wrap(note));
+        startActivity(intent);
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 }

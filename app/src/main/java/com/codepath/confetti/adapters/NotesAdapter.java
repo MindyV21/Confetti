@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
+import com.codepath.confetti.MainActivity;
 import com.codepath.confetti.NoteDetailsActivity;
 import com.codepath.confetti.R;
 import com.codepath.confetti.models.Note;
@@ -220,7 +221,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                     if (position != RecyclerView.NO_POSITION) {
                         Note note = notes.get(position);
 
-                        goToNote(note);
+                        if (context instanceof MainActivity) {
+                            MainActivity mainActivity = (MainActivity) context;
+                            mainActivity.goToNote(note);
+                        }
 //                        // check that there's a photo
 //                        if (note.isPhotoLoaded()) {
 //                            goToNote(note);

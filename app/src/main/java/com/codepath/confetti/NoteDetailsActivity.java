@@ -165,6 +165,7 @@ public class NoteDetailsActivity extends AppCompatActivity
             public void onClick(View view) {
                 // return to main activity
                 finish();
+                overridePendingTransition(R.anim.left_in, R.anim.right_out);
             }
         });
     }
