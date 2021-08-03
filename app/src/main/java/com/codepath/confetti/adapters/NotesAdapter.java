@@ -242,6 +242,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                 @Override
                 public void onClick(View view) {
                     Log.i(TAG, "user swiped on " + tvNoteName.getText().toString());
+                    // reverse swiped
+                    viewBinderHelper.closeLayout(String.valueOf(tvNoteName.getText().toString()));
 
                     // alert dialog to delete a note
                     new AlertDialog.Builder(context)
@@ -267,10 +269,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                             })
                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                                 @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    // reverse swiped
-                                    viewBinderHelper.closeLayout(String.valueOf(tvNoteName.getText().toString()));
-                                }
+                                public void onClick(DialogInterface dialogInterface, int i) { }
                             })
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();

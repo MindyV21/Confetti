@@ -52,6 +52,7 @@ public class Chips {
             newChip.setEnabled(false);
 
             setChipAppearance(newChip);
+            newChip.setChipStrokeColorResource(R.color.grey);
 
             chipGroup.addView(newChip);
         }
