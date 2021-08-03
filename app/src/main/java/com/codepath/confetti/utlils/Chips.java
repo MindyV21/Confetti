@@ -1,7 +1,6 @@
 package com.codepath.confetti.utlils;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.view.View;
 import android.widget.SearchView;
 
@@ -10,7 +9,6 @@ import com.codepath.confetti.adapters.NotesAdapter;
 import com.codepath.confetti.models.Note;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.shape.ShapeAppearanceModel;
 
 import java.util.List;
 import java.util.Map;
@@ -29,9 +27,9 @@ public class Chips {
     public static void setChipAppearance(Chip newChip) {
         // general
         newChip.setChipBackgroundColorResource(R.color.white);
-        newChip.setChipStrokeWidth(Conversion.convertDpToFloat(2.0f));
+        newChip.setChipStrokeWidth(UtilsGeneral.convertDpToFloat(2.0f));
         newChip.setChipStrokeColorResource(R.color.stroke_tint);
-        newChip.setChipCornerRadius(Conversion.convertDpToFloat(5.0f));
+        newChip.setChipCornerRadius(UtilsGeneral.convertDpToFloat(5.0f));
 
         // icon
         newChip.setChipIconTintResource(R.color.shrine_pink_900);

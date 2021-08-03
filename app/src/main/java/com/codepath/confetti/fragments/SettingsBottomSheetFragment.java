@@ -1,5 +1,7 @@
 package com.codepath.confetti.fragments;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,6 +18,9 @@ import android.widget.Toast;
 import com.codepath.confetti.R;
 import com.codepath.confetti.databinding.FragmentSettingsBottomSheetBinding;
 import com.codepath.confetti.databinding.FragmentTagsBottomSheetBinding;
+import com.codepath.confetti.utlils.UtilsGeneral;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -57,6 +62,24 @@ public class SettingsBottomSheetFragment extends BottomSheetDialogFragment {
                 logout();
             }
         });
+    }
+
+
+    @NonNull
+    @NotNull
+    @Override
+    public Dialog onCreateDialog(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override public void onShow(DialogInterface dialogInterface) {
+                BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
+                UtilsGeneral.setupFullHeight(bottomSheetDialog, getContext());
+
+                BottomSheetBehavior bottomSheetBehavior = ((BottomSheetDialog) dialogInterface).getBehavior();
+                bottomSheetBehavior.setDraggable(false);
+            }
+        });
+        return  dialog;
     }
 
     /**

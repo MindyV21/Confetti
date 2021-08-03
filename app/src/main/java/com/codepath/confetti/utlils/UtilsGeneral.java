@@ -1,20 +1,28 @@
 package com.codepath.confetti.utlils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 
+import com.codepath.confetti.R;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+
 /**
  * Util class for conversion
  */
-public class Conversion {
+public class UtilsGeneral {
 
     /**
      * Converts dip to float
@@ -53,5 +61,33 @@ public class Conversion {
         drawable.draw(canvas);
 
         return bitmap;
+    }
+
+    /**
+     * Sets the bottom sheet height to fit the screen
+     * @param bottomSheetDialog
+     */
+    public static void setupFullHeight(BottomSheetDialog bottomSheetDialog, Context context) {
+        FrameLayout bottomSheet = (FrameLayout) bottomSheetDialog.findViewById(R.id.design_bottom_sheet);
+        BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
+        ViewGroup.LayoutParams layoutParams = bottomSheet.getLayoutParams();
+
+        int windowHeight = getWindowHeight(context);
+        if (layoutParams != null) {
+            layoutParams.height = windowHeight;
+        }
+        bottomSheet.setLayoutParams(layoutParams);
+        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+
+    /**
+     * Gets the window height
+     * @return
+     */
+    private static int getWindowHeight(Context context) {
+        // Calculate window height for fullscreen use
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.heightPixels;
     }
 }

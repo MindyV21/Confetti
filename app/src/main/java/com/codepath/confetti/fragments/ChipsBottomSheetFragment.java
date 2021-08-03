@@ -1,5 +1,6 @@
 package com.codepath.confetti.fragments;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +12,9 @@ import androidx.annotation.Nullable;
 
 import com.codepath.confetti.databinding.FragmentTagsBottomSheetBinding;
 import com.codepath.confetti.utlils.Chips;
+import com.codepath.confetti.utlils.UtilsGeneral;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.chip.ChipGroup;
 
@@ -106,5 +110,23 @@ public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
 
         // refresh notes list and chips in parent fragment
         parentFragment.refreshChips(checkedChipIds, chipGroup, true);
+    }
+
+
+    @NonNull
+    @NotNull
+    @Override
+    public Dialog onCreateDialog(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override public void onShow(DialogInterface dialogInterface) {
+                BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
+                UtilsGeneral.setupFullHeight(bottomSheetDialog, getContext());
+
+                BottomSheetBehavior bottomSheetBehavior = ((BottomSheetDialog) dialogInterface).getBehavior();
+                bottomSheetBehavior.setDraggable(false);
+            }
+        });
+        return  dialog;
     }
 }

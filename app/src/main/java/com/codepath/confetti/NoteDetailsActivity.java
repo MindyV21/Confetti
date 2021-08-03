@@ -37,7 +37,7 @@ import com.codepath.confetti.models.Note;
 import com.codepath.confetti.models.Prediction;
 import com.codepath.confetti.utlils.Animations;
 import com.codepath.confetti.utlils.Chips;
-import com.codepath.confetti.utlils.Conversion;
+import com.codepath.confetti.utlils.UtilsGeneral;
 import com.codepath.confetti.utlils.Firebase;
 import com.codepath.confetti.utlils.ZoomOutPageTransformer;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -415,7 +415,7 @@ public class NoteDetailsActivity extends AppCompatActivity
             Animations.reverseSlideDown((View) mControlsPredictions);
 
             // reset note image padding
-            flNoteImages.setPadding((int) Conversion.convertFloatToDp(10.0f), 0, (int) Conversion.convertFloatToDp(10.0f), (int) Conversion.convertFloatToDp(40.0f));
+            flNoteImages.setPadding((int) UtilsGeneral.convertFloatToDp(10.0f), 0, (int) UtilsGeneral.convertFloatToDp(10.0f), (int) UtilsGeneral.convertFloatToDp(40.0f));
         }
     };
 

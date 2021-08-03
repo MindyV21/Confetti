@@ -2,19 +2,10 @@ package com.codepath.confetti.models;
 
 import android.content.Context;
 import android.graphics.*;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
-
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.codepath.confetti.R;
-import com.codepath.confetti.models.Prediction;
-import com.codepath.confetti.utlils.Conversion;
+import com.codepath.confetti.utlils.UtilsGeneral;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 import java.util.ArrayList;
@@ -103,7 +94,7 @@ public class PinView extends SubsamplingScaleImageView {
      */
     private void initialise() {
         float density = getResources().getDisplayMetrics().densityDpi;
-        pin = Conversion.getBitmapFromVectorDrawable(this.getContext(), R.drawable.arrow_right_drop_circle);
+        pin = UtilsGeneral.getBitmapFromVectorDrawable(this.getContext(), R.drawable.arrow_right_drop_circle);
         float w = (density/420f) * pin.getWidth();
         float h = (density/420f) * pin.getHeight();
         pin = Bitmap.createScaledBitmap(pin, (int)w, (int)h, true);
