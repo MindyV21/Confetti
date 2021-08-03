@@ -219,6 +219,8 @@ public class CreatePredictionBottomSheetFragment extends BottomSheetDialogFragme
                 etText.setText("");
                 ssivCreatePrediction.removeAllPins();
                 newPrediction = new Prediction();
+
+                dismiss();
             }
         });
     }

@@ -31,6 +31,7 @@ public class PredictionSlidePagerAdapter extends RecyclerView.Adapter<Prediction
 
     public static final String TAG = "PredictionSlidePagerAdapter";
 
+    private long baseId = 0;
     private Context context;
     private Note note;
     private List<Prediction> predictions;
@@ -68,6 +69,28 @@ public class PredictionSlidePagerAdapter extends RecyclerView.Adapter<Prediction
     @Override
     public int getItemCount() {
         return predictions.size();
+    }
+
+    /**
+     * Gives an ID different from position when position has been changed. When deleting a page or
+     * making order changes call notifyChangeInPosition(1) before notifyDataSetChanged(). Fixes
+     * UI / UX.
+     * @param position
+     * @return
+     */
+    @Override
+    public long getItemId(int position) {
+        return baseId + position;
+    }
+
+    /**
+     * Notify that the position of a fragment has been changed.
+     * Create a new ID for each position to force recreation of the fragment
+     * @param n number of items which have been changed
+     */
+    public void notifyChangeInPosition(int n) {
+        // shift the ID returned by getItemId outside the range of all previous fragments
+        baseId += getItemCount() + n;
     }
 
     public List<Prediction> getPredictions() {
@@ -124,7 +147,8 @@ public class PredictionSlidePagerAdapter extends RecyclerView.Adapter<Prediction
                                     Firebase.updateNotePredictions(context, note, "deletion", null);
 
                                     // update viewpager
-                                    notifyItemRemoved(getAdapterPosition());
+                                    notifyChangeInPosition(1);
+                                    notifyDataSetChanged();
                                     // update note image canvas
                                     UpdatePredictions listener = (UpdatePredictions) context;
                                     listener.removePinFromImage(prediction);
