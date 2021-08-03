@@ -67,14 +67,14 @@ public class UtilsGeneral {
      * Sets the bottom sheet height to fit the screen
      * @param bottomSheetDialog
      */
-    public static void setupFullHeight(BottomSheetDialog bottomSheetDialog, Context context) {
+    public static void setupBottomSheetHeight(BottomSheetDialog bottomSheetDialog, Context context, float percentage) {
         FrameLayout bottomSheet = (FrameLayout) bottomSheetDialog.findViewById(R.id.design_bottom_sheet);
         BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
         ViewGroup.LayoutParams layoutParams = bottomSheet.getLayoutParams();
 
         int windowHeight = getWindowHeight(context);
         if (layoutParams != null) {
-            layoutParams.height = windowHeight;
+            layoutParams.height = (int) (windowHeight * percentage);
         }
         bottomSheet.setLayoutParams(layoutParams);
         behavior.setState(BottomSheetBehavior.STATE_EXPANDED);

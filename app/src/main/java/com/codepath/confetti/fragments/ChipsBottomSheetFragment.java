@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.codepath.confetti.R;
 import com.codepath.confetti.databinding.FragmentTagsBottomSheetBinding;
 import com.codepath.confetti.utlils.Chips;
 import com.codepath.confetti.utlils.UtilsGeneral;
@@ -35,6 +37,8 @@ public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
     private FragmentTagsBottomSheetBinding binding;
     private NotesFragment parentFragment;
     private ChipGroup chipGroup;
+
+    private TextView tvCancelDone;
 
     // the fragment initialization parameters
     private static final String ALL_CHIPS = "allChips";
@@ -84,9 +88,17 @@ public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
         parentFragment = ((NotesFragment) ChipsBottomSheetFragment.this.getParentFragment());
 
         chipGroup = binding.chipGroup;
+        tvCancelDone = binding.tvCancelDone;
 
         // populate fragment with all chips available
         Chips.populateChipsSelectable(getContext(), chipGroup, allChips);
+
+        tvCancelDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
     }
 
     @Override
@@ -112,19 +124,16 @@ public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
         parentFragment.refreshChips(checkedChipIds, chipGroup, true);
     }
 
-
     @NonNull
     @NotNull
     @Override
     public Dialog onCreateDialog(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        BottomSheetDialog dialog = new BottomSheetDialog(getContext(), R.style.BottomSheetDialog); // for rounded corners
+//        Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override public void onShow(DialogInterface dialogInterface) {
                 BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
-                UtilsGeneral.setupFullHeight(bottomSheetDialog, getContext());
-
-                BottomSheetBehavior bottomSheetBehavior = ((BottomSheetDialog) dialogInterface).getBehavior();
-                bottomSheetBehavior.setDraggable(false);
+                UtilsGeneral.setupBottomSheetHeight(bottomSheetDialog, getContext(), 0.9f);
             }
         });
         return  dialog;

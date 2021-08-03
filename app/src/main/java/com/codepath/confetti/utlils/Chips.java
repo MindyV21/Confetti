@@ -1,6 +1,7 @@
 package com.codepath.confetti.utlils;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.SearchView;
 
@@ -21,19 +22,34 @@ import java.util.TreeSet;
 public class Chips {
 
     /**
+     * Sets the chip text color based on if selected
+     * @param newChip
+     */
+    public static void setChipText(Context context, Chip newChip) {
+        Log.d("WHY", "" + newChip.isChecked());
+        if (newChip.isChecked()) {
+            // chip is now selected !
+            newChip.setTextColor(context.getColor(R.color.white));
+        } else {
+            // chip is not selected !
+            newChip.setTextColor(context.getColor(R.color.shrine_pink_900));
+        }
+    }
+
+    /**
      * Sets the default settings for chips
      * @param newChip
      */
-    public static void setChipAppearance(Chip newChip) {
+    public static void setChipAppearance(Context context, Chip newChip) {
         // general
-        newChip.setChipBackgroundColorResource(R.color.white);
+        newChip.setChipBackgroundColorResource(R.color.chip_bg_tint);
         newChip.setChipStrokeWidth(UtilsGeneral.convertDpToFloat(2.0f));
-        newChip.setChipStrokeColorResource(R.color.stroke_tint);
+        newChip.setChipStrokeColorResource(R.color.chip_stroke_tint);
         newChip.setChipCornerRadius(UtilsGeneral.convertDpToFloat(5.0f));
+        newChip.setTextColor(context.getColor(R.color.shrine_pink_100));
 
-        // icon
-        newChip.setChipIconTintResource(R.color.shrine_pink_900);
-        newChip.setCheckedIconTintResource(R.color.shrine_pink_900);
+        // no checked icon == ugly
+        newChip.setCheckedIconVisible(false);
     }
 
     /**
@@ -49,8 +65,9 @@ public class Chips {
             newChip.setText(chipName);
             newChip.setEnabled(false);
 
-            setChipAppearance(newChip);
+            setChipAppearance(context, newChip);
             newChip.setChipStrokeColorResource(R.color.grey);
+            newChip.setTextColor(context.getColor(R.color.grey));
 
             chipGroup.addView(newChip);
         }
@@ -67,17 +84,23 @@ public class Chips {
             Chip newChip = new Chip(context);
             newChip.setText(chip.getKey());
             newChip.setCheckable(true);
-            setChipAppearance(newChip);
+            setChipAppearance(context, newChip);
 
             // checks if chip has been previously selected
             if (chip.getValue()) {
                 newChip.setChecked(true);
             }
 
+            // set chip text depending on selected or not
+            setChipText(context, newChip);
+
             // listener to update things when ship is selected / unselected
             newChip.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    // update chip text
+                    setChipText(context, newChip);
+
                     // update chips checked state in the treemap
                     allChips.put(chip.getKey(), !chip.getValue());
                 }
@@ -112,12 +135,15 @@ public class Chips {
             Chip newChip = new Chip(context);
             newChip.setText(selectedChip.getText().toString());
             newChip.setCloseIconVisible(true);
+            newChip.setCloseIconTintResource(R.color.white);
             newChip.setCheckedIconVisible(false);
-            setChipAppearance(newChip);
+            setChipAppearance(context, newChip);
 
             // to get list of them back
             newChip.setCheckable(true);
             newChip.setChecked(true);
+
+            setChipText(context, newChip);
 
             // listener to re-filter notes list when item is closed
             newChip.setOnClickListener(new View.OnClickListener() {

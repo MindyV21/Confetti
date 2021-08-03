@@ -141,7 +141,7 @@ public class NoteDetailsActivity extends AppCompatActivity
         ivTag.setImageDrawable(drawable);
         chipAdd.setText("Add tag");
         chipAdd.setChipIconTintResource(R.color.shrine_pink_900);
-        Chips.setChipAppearance(chipAdd);
+        Chips.setChipAppearance(this, chipAdd);
         chipAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -188,7 +188,7 @@ public class NoteDetailsActivity extends AppCompatActivity
         Chip newChip = new Chip(NoteDetailsActivity.this);
         newChip.setText(chipName);
         newChip.setChecked(true);
-        Chips.setChipAppearance(newChip);
+        Chips.setChipAppearance(this, newChip);
 
         // listener for popup
         newChip.setOnClickListener(new View.OnClickListener() {

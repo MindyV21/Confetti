@@ -204,7 +204,7 @@ public class UploadBottomSheetFragment extends BottomSheetDialogFragment {
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override public void onShow(DialogInterface dialogInterface) {
                 BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
-                UtilsGeneral.setupFullHeight(bottomSheetDialog, getContext());
+                UtilsGeneral.setupBottomSheetHeight(bottomSheetDialog, getContext(), 1);
 
                 BottomSheetBehavior bottomSheetBehavior = ((BottomSheetDialog) dialogInterface).getBehavior();
                 bottomSheetBehavior.setDraggable(false);
