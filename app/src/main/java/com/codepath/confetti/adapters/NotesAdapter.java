@@ -186,8 +186,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         private SwipeRevealLayout swipeRevealLayout;
         private LinearLayout itemMainLayout;
 
+        // disable click events when loading
+        private Boolean isLoading;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            isLoading = false;
+
             // connect vars to layout
             tvNoteName = itemView.findViewById(R.id.tvNoteName);
             ivImage = itemView.findViewById(R.id.ivImage);
@@ -202,6 +208,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
             itemMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (isLoading) {
+                        Toast.makeText(context, "Loading! Have some confetti while you wait!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     Log.i(TAG, "item main layout clicked! - " + tvNoteName.getText().toString());
                     // get position
                     int position = getAdapterPosition();
