@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.codepath.confetti.databinding.ActivityMainBinding;
 import com.codepath.confetti.fragments.NotesFragment;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements NotesFragment.Not
     public static final String TAG = "MainActivity";
 
     private Toolbar toolbar;
+    private TextView tvToolbar;
     private KonfettiView konfettiView;
 
     final FragmentManager fragmentManager = getSupportFragmentManager();
@@ -54,8 +56,17 @@ public class MainActivity extends AppCompatActivity implements NotesFragment.Not
 
         // set up toolbar
         toolbar = binding.toolbar;
-        toolbar.setTitle(getString(R.string.app_name));
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
+
+        tvToolbar = binding.tvToolbar;
+        tvToolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "scroll to top of notes list !");
+                notesFragment.scrollToTop();
+            }
+        });
 
         // confetti
         konfettiView = binding.konfettiView;

@@ -353,7 +353,19 @@ public class NotesFragment extends Fragment {
         }, 1000);
     }
 
+    /**
+     * Interface for fragment and activity communication
+     */
     public interface NotesFragmentListener {
+        // goes to note details activity
         public void goToNote(Note note);
+    }
+
+    /**
+     * Scrolls to top of notes list
+     */
+    public void scrollToTop() {
+        if (currentNotes.size() != 0)
+            rvNotes.smoothScrollToPosition(0);
     }
 }

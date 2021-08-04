@@ -77,6 +77,7 @@ public class NoteDetailsActivity extends AppCompatActivity
     private Note note;
 
     private Toolbar toolbar;
+    private TextView tvToolbar;
 
     // chips
     private RelativeLayout relLayoutTags;
@@ -160,7 +161,7 @@ public class NoteDetailsActivity extends AppCompatActivity
      */
     private void initToolbar() {
         toolbar = binding.toolbar;
-        toolbar.setTitle(note.getName());
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -172,6 +173,9 @@ public class NoteDetailsActivity extends AppCompatActivity
                 overridePendingTransition(R.anim.left_in, R.anim.right_out);
             }
         });
+
+        tvToolbar = binding.tvToolbar;
+        tvToolbar.setText(note.getName());
     }
 
     /**

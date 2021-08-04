@@ -18,7 +18,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:titleTextColor="@android:color/white"
-            android:background="?attr/colorPrimary"/>
+            android:background="?attr/colorPrimary">
+
+            <TextView
+                android:id="@+id/tvToolbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/bubbler_one"
+                android:letterSpacing="0.25"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                tools:text="note name" />
+
+        </androidx.appcompat.widget.Toolbar>
 
         <RelativeLayout
             android:id="@+id/relLayoutTags"

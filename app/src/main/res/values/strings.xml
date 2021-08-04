@@ -4,7 +4,7 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
-    <string name="app_name">Confetti</string>
+    <string name="app_name">confetti</string>
 
     <!--fragment tags-->
     <string name="notes_fragment">notes</string>
