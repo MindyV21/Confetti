@@ -71,6 +71,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull NotesAdapter.ViewHolder holder, int position) {
         Note note = notes.get(position);
 
+        if (note == null)
+            return;
+
         viewBinderHelper.setOpenOnlyOne(true);
         // Save/restore the open/close state.
         viewBinderHelper.bind(holder.swipeRevealLayout, String.valueOf(note.getName()));
@@ -169,7 +172,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
             Log.i(TAG, "publishing query results");
             notes.clear();
-            notes.addAll((List) filterResults.values);
+            if (filterResults.values != null)
+                notes.addAll((List) filterResults.values);
             notifyDataSetChanged();
         }
     };

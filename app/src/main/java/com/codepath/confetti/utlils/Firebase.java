@@ -266,7 +266,8 @@ public class Firebase {
                     // Local temp file has been created
                     Log.i(TAG, "onSuccess to delete note image from firebase");
                     Toast.makeText(context, "Note deleted successfully!", Toast.LENGTH_SHORT).show();
-                    deleteNoteChips(context, note);
+                    if (note.getChips() != null)
+                        deleteNoteChips(context, note);
                 } else {
                     // image file failed to retrieve from firebase
                     Log.i(TAG, "onFailure to delete note image from firebase");
