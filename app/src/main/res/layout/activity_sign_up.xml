@@ -10,9 +10,9 @@
     <ImageView
         android:id="@+id/ivProfile"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        app:srcCompat="@drawable/ic_baseline_person_24"
-        android:layout_above="@id/etFullName"/>
+        android:layout_height="wrap_content"
+        android:layout_above="@id/etFullName"
+        app:srcCompat="@drawable/confetti_create_account" />
 
     <EditText
         android:id="@+id/etFullName"
