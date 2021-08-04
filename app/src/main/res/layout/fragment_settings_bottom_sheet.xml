@@ -27,7 +27,10 @@
                 android:text="Settings and Help"
                 android:textColor="@color/white"
                 android:textSize="16dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:fontFamily="@font/bubbler_one"
+                android:letterSpacing="0.25"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <TextView
                 android:id="@+id/tvDone"

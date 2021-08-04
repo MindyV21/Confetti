@@ -33,7 +33,9 @@
             android:textColor="?attr/colorPrimaryVariant"
             android:textSize="16dp"
             android:textStyle="bold"
-            android:background="?android:attr/selectableItemBackground"/>
+            android:fontFamily="@font/bubbler_one"
+            android:letterSpacing="0.25"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 
         <TextView
             android:id="@+id/tvCreate"
@@ -43,7 +45,8 @@
             android:textColor="?attr/colorPrimaryVariant"
             android:textSize="16dp"
             android:clickable="true"
-            android:layout_alignParentEnd="true"/>
+            android:layout_alignParentEnd="true"
+            android:background="?android:attr/selectableItemBackground"/>
     </RelativeLayout>
 
     <ScrollView
