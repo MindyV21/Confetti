@@ -1,7 +1,7 @@
 # Confetti
 
 ## Demo Video
-[![Confetti App Demo](ConfettiAppDemo.mp4)
+[![Confetti App Demo](ConfettiAppDemoSmallSize.mp4)
 
 ## Table of Contents
 1. [Overview](#Overview)
