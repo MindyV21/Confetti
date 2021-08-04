@@ -110,15 +110,12 @@ public class NoteImagesFragment extends Fragment {
         // fullscreen logic
         isFullscreen = false;
 
-//        // testing to see if file actually contains image file
-//        takenImage = BitmapFactory.decodeFile(note.getImageFile().getAbsolutePath());
-//        ssivNote.setImage(ImageSource.bitmap(takenImage));
-//        if (note.predictions != null) {
-//            createPins();
-//        }
-
-
-//        onUploadPhoto();
+        // testing to see if file actually contains image file
+        takenImage = BitmapFactory.decodeFile(note.getImageFile().getAbsolutePath());
+        ssivNote.setImage(ImageSource.bitmap(takenImage));
+        if (note.predictions != null) {
+            createPins();
+        }
     }
 
     /**
@@ -173,58 +170,6 @@ public class NoteImagesFragment extends Fragment {
         Prediction prediction = note.getPredictions().get(note.getPredictions().size() - 1);
         ssivNote.setPin(new PointF(prediction.xMin + getContext().getResources().getInteger(R.integer.xMinOffset),
                 prediction.yMax + getContext().getResources().getInteger(R.integer.yMaxOffset)), prediction);
-    }
-
-    // TODO: delete upload photo stuff
-    public Bitmap getImage() {
-        return takenImage;
-    }
-    public final static int PICK_PHOTO_CODE = 1046;
-    private Bitmap selectedImage;
-    File photoFile;
-
-    public void onUploadPhoto(){
-        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i, PICK_PHOTO_CODE);
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == PICK_PHOTO_CODE && resultCode == RESULT_OK && data != null){
-            Uri photoUri = data.getData();
-            selectedImage = null;
-            try {
-                selectedImage = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photoUri);
-            }catch (FileNotFoundException e){
-                e.printStackTrace();
-                Log.e(TAG, "File not found");
-            } catch (IOException e){
-                Log.d(TAG, e.getLocalizedMessage());
-            }
-
-            // write bitmap to an image file
-            File testDir = getContext().getFilesDir();
-            photoFile = new File(testDir, "photo.jpg");
-            OutputStream os;
-            try {
-                os = new FileOutputStream(photoFile);
-                selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, os);
-                os.flush();
-                os.close();
-
-                // testing to see if file actually contains image file
-                takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                ssivNote.setImage(ImageSource.bitmap(takenImage));
-                if (note.predictions != null) {
-                    createPins();
-                }
-            } catch (Exception e) {
-                Log.e(getClass().getSimpleName(), "Error writing bitmap", e);
-            }
-        }
     }
 
     /**

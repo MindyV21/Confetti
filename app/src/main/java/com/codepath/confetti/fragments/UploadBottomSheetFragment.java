@@ -37,6 +37,7 @@ import com.codepath.confetti.utlils.Firebase;
 import com.codepath.confetti.R;
 import com.codepath.confetti.models.Note;
 import com.codepath.confetti.models.Prediction;
+import com.codepath.confetti.utlils.NanonetsApi;
 import com.codepath.confetti.utlils.UtilsGeneral;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -188,9 +189,7 @@ public class UploadBottomSheetFragment extends BottomSheetDialogFragment {
                 Log.i(TAG, "upload photo to nanonets database for prediction!");
                 pbLoading.setVisibility(View.VISIBLE);
 
-                dummyData(fileName);
-
-                //NanonetsApi.predictFile(getContext(), pbLoading, fileName, getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), photoFile);
+                NanonetsApi.predictFile(getContext(), pbLoading, fileName, getString(R.string.nanonets_api_key), getString(R.string.nanonets_notes_model_id), photoFile);
             }
         });
 
@@ -224,67 +223,6 @@ public class UploadBottomSheetFragment extends BottomSheetDialogFragment {
      */
     private boolean isLoading() {
         return pbLoading.getVisibility() == View.VISIBLE;
-    }
-
-    //TODO: tbd dummy data to not overload firebase storage
-    public void dummyData(String fileName) {
-        Note note = new Note(fileName);
-
-        List<Prediction> predictions = new ArrayList<>();
-        predictions.add(new Prediction(404, 1, 1000, 3, "bread"));
-        predictions.add(new Prediction(800, 1, 2000, 3, "toast"));
-        note.setPredictions(predictions);
-
-        List<String> chipNames = new ArrayList<>();
-        chipNames.add("hole");
-        chipNames.add("french breads");
-        chipNames.add("only one");
-        note.setChips(chipNames);
-        // add chips to chip database
-        FirebaseDatabase.getInstance().getReference("Chips")
-                .child(FirebaseAuth.getInstance().getUid())
-                .child("hole")
-                .child("testId")
-                .setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull @NotNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    Log.d(TAG, "onSuccess to add dummy note's chip references from firebase");
-                } else {
-                    Log.d(TAG, "onFailure to add dummy note's chip references from firebase");
-                }
-            }
-        });
-        FirebaseDatabase.getInstance().getReference("Chips")
-                .child(FirebaseAuth.getInstance().getUid())
-                .child("french breads")
-                .child("testId")
-                .setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull @NotNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    Log.d(TAG, "onSuccess to add dummy note's chip references from firebase");
-                } else {
-                    Log.d(TAG, "onFailure to add dummy note's chip references from firebase");
-                }
-            }
-        });
-        FirebaseDatabase.getInstance().getReference("Chips")
-                .child(FirebaseAuth.getInstance().getUid())
-                .child("only one")
-                .child("testId")
-                .setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull @NotNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    Log.d(TAG, "onSuccess to add dummy note's chip references from firebase");
-                } else {
-                    Log.d(TAG, "onFailure to add dummy note's chip references from firebase");
-                }
-            }
-        });
-
-        Firebase.uploadNoteInfo(getContext(), pbLoading, note, "testId", photoFile);
     }
 
     /**

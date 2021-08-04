@@ -221,16 +221,15 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                     if (position != RecyclerView.NO_POSITION) {
                         Note note = notes.get(position);
 
-                        if (context instanceof MainActivity) {
-                            MainActivity mainActivity = (MainActivity) context;
-                            mainActivity.goToNote(note);
+                        // check that there's a photo
+                        if (note.isPhotoLoaded()) {
+                            if (context instanceof MainActivity) {
+                                MainActivity mainActivity = (MainActivity) context;
+                                mainActivity.goToNote(note);
+                            }
+                        } else {
+                            Toast.makeText(context, "Loading note. Please wait.", Toast.LENGTH_SHORT).show();
                         }
-//                        // check that there's a photo
-//                        if (note.isPhotoLoaded()) {
-//                            goToNote(note);
-//                        } else {
-//                            Toast.makeText(context, "Loading note. Please wait.", Toast.LENGTH_SHORT).show();
-//                        }
                     }
                 }
             });

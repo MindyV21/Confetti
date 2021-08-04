@@ -124,9 +124,8 @@ public class CreatePredictionBottomSheetFragment extends BottomSheetDialogFragme
         ssivCreatePrediction.setZoomEnabled(false);
 
         // loading in image file
-//        takenImage = BitmapFactory.decodeFile(note.getImageFile().getAbsolutePath());
-//        ssivCreatePrediction.setImage(ImageSource.bitmap(takenImage));
-        onUploadPhoto();
+        takenImage = BitmapFactory.decodeFile(note.getImageFile().getAbsolutePath());
+        ssivCreatePrediction.setImage(ImageSource.bitmap(takenImage));
 
         // to exit creating a prediction
         tvCancel.setOnClickListener(new View.OnClickListener() {
@@ -289,51 +288,5 @@ public class CreatePredictionBottomSheetFragment extends BottomSheetDialogFragme
     public interface CreatePredictionListener {
         // when a new prediction is created
         public void addPinToImage(Boolean firstPrediction);
-    }
-
-    // TODO: TBD upload photo testing stuff
-    public final static int PICK_PHOTO_CODE = 1046;
-    private Bitmap selectedImage;
-    File photoFile;
-
-    public void onUploadPhoto(){
-        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i, PICK_PHOTO_CODE);
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == PICK_PHOTO_CODE && resultCode == RESULT_OK && data != null){
-            Uri photoUri = data.getData();
-            selectedImage = null;
-            try {
-                selectedImage = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), photoUri);
-            }catch (FileNotFoundException e){
-                e.printStackTrace();
-                Log.e(TAG, "File not found");
-            } catch (IOException e){
-                Log.d(TAG, e.getLocalizedMessage());
-            }
-
-            // write bitmap to an image file
-            File testDir = getContext().getFilesDir();
-            photoFile = new File(testDir, "photo.jpg");
-            OutputStream os;
-            try {
-                os = new FileOutputStream(photoFile);
-                selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, os);
-                os.flush();
-                os.close();
-
-                // testing to see if file actually contains image file
-                takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                ssivCreatePrediction.setImage(ImageSource.bitmap(takenImage));
-            } catch (Exception e) {
-                Log.e(getClass().getSimpleName(), "Error writing bitmap", e);
-            }
-        }
     }
 }
