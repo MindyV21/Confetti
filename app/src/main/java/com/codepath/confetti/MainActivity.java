@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -23,6 +24,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import org.jetbrains.annotations.NotNull;
 import org.parceler.Parcels;
 
+import nl.dionsegijn.konfetti.KonfettiView;
+import nl.dionsegijn.konfetti.models.Shape;
+import nl.dionsegijn.konfetti.models.Size;
+
 /**
  * Activity for viewing and creating notes
  */
@@ -32,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements NotesFragment.Not
     public static final String TAG = "MainActivity";
 
     private Toolbar toolbar;
+    private KonfettiView konfettiView;
 
     final FragmentManager fragmentManager = getSupportFragmentManager();
     private NotesFragment notesFragment;
@@ -50,6 +56,9 @@ public class MainActivity extends AppCompatActivity implements NotesFragment.Not
         toolbar = binding.toolbar;
         toolbar.setTitle(getString(R.string.app_name));
         setSupportActionBar(toolbar);
+
+        // confetti
+        konfettiView = binding.konfettiView;
 
         // set up notes list
         notesFragment = new NotesFragment();
@@ -72,6 +81,19 @@ public class MainActivity extends AppCompatActivity implements NotesFragment.Not
 
             // to consume menu item
             return true;
+        } else if (item.getItemId() == R.id.action_confetti) {
+            Log.i(TAG, "confetti :D");
+
+            konfettiView.build()
+                    .addColors(getColor(R.color.shrine_pink_100), getColor(R.color.shrine_pink_900), Color.WHITE)
+                    .setDirection(0.0, 359.0)
+                    .setSpeed(1f, 5f)
+                    .setFadeOutEnabled(true)
+                    .setTimeToLive(2000L)
+                    .addShapes(Shape.Square.INSTANCE, Shape.Circle.INSTANCE)
+                    .addSizes(new Size(12, 5f))
+                    .setPosition(-50f, konfettiView.getWidth() + 50f, -50f, -50f)
+                    .streamFor(300, 5000L);
         }
 
         return super.onOptionsItemSelected(item);
