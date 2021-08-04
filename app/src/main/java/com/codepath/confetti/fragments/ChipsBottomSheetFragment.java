@@ -132,7 +132,7 @@ public class ChipsBottomSheetFragment extends BottomSheetDialogFragment {
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override public void onShow(DialogInterface dialogInterface) {
                 BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
-                UtilsGeneral.setupBottomSheetHeight(bottomSheetDialog, getContext(), 0.9f);
+                UtilsGeneral.setupBottomSheetHeight(bottomSheetDialog, getContext(), 0.7f);
             }
         });
         return  dialog;

@@ -90,4 +90,7 @@ dependencies {
 
     // confetti
     implementation 'nl.dionsegijn:konfetti:1.3.2'
+
+    // fonts
+    implementation 'com.vstechlab.easyfonts:easyfonts:1.0.0'
 }
