@@ -8,12 +8,27 @@
     android:layout_centerVertical="true"
     tools:context=".LoginActivity">
 
+
+
     <ImageView
         android:id="@+id/ivLogo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_baseline_person_24"
-        android:layout_above="@id/etEmail"/>
+        android:layout_above="@id/tvAppName"
+        app:srcCompat="@drawable/confetti_drawing" />
+
+    <TextView
+        android:id="@+id/tvAppName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/etEmail"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/bubbler_one"
+        android:letterSpacing="0.25"
+        android:text="@string/app_name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textSize="40dp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/etEmail"
